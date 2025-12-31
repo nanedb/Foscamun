@@ -1,0 +1,61 @@
+﻿using System;
+using System.Windows;
+
+namespace Foscamun2026
+{
+    public partial class SetupWindow : Window
+    {
+        public SetupWindow()
+        {
+            InitializeComponent();
+        }
+
+        private void LanguageSelector_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (LanguageSelector.SelectedItem is System.Windows.Controls.ComboBoxItem item)
+            {
+                string? culture = item.Tag as string;
+                if (!string.IsNullOrEmpty(culture))
+                {
+                    ChangeLanguage(culture);
+                }
+            }
+        }
+
+        private void ChangeLanguage(string culture)
+        {
+            var dict = new ResourceDictionary();
+            switch (culture)
+            {
+                case "fr-FR":
+                    dict.Source = new Uri("Resources/Strings.fr.xaml", UriKind.Relative);
+                    break;
+                case "es-ES":
+                    dict.Source = new Uri("Resources/Strings.es.xaml", UriKind.Relative);
+                    break;
+                default:
+                    dict.Source = new Uri("Resources/Strings.en.xaml", UriKind.Relative);
+                    break;
+            }
+
+            Application.Current.Resources.MergedDictionaries.Clear();
+            Application.Current.Resources.MergedDictionaries.Add(dict);
+
+            // Salva la preferenza
+            Properties.Settings.Default.Lang = culture;
+            Properties.Settings.Default.Save();
+        }
+
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Chiude la finestra SetupWindow
+            this.Close();
+        }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+    }
+}
