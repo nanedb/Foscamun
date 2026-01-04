@@ -1,0 +1,8 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Font AkkoPro -->
+    <FontFamily x:Key="AkkoProRegular">/Foscamun2026;component/Resources/Fonts/AkkoPro/#Akko Pro</FontFamily>
+    <FontFamily x:Key="AkkoProBold">/Foscamun2026;component/Resources/Fonts/AkkoPro/#Akko Pro Bold</FontFamily>
+
+</ResourceDictionary>

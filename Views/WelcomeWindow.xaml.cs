@@ -11,12 +11,12 @@ namespace Foscamun2026.Views
             InitializeComponent();
         }
 
-        private void ExitButton_Click(object sender, RoutedEventArgs e)
+        private void ExitBtn_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
         }
 
-        private void ConfigureButton_Click(object sender, RoutedEventArgs e)
+        private void ConfigureBtn_Click(object sender, RoutedEventArgs e)
         {
             // Nascondi la finestra corrente
             this.Hide();
@@ -31,23 +31,14 @@ namespace Foscamun2026.Views
             setup.ShowDialog();
         }
 
-        private void NextButton_Click(object sender, RoutedEventArgs e)
+        private void NextBtn_Click(object sender, RoutedEventArgs e)
         {
-            var app = Application.Current as App;
-            if (app?.Services is null)
-            {
-                MessageBox.Show("Errore: i servizi dell'applicazione non sono disponibili.", "Errore", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            var mainWindow = new MainWindow
-            {
-                DataContext = app.Services.GetRequiredService<CommitteeListViewModel>()
-            };
-
-            mainWindow.Show();
-            this.Close();
-
+            //var app = Application.Current as App;
+            //if (app?.Services is null)
+            //{
+            //    MessageBox.Show("Errore: i servizi dell'applicazione non sono disponibili.", "Errore", MessageBoxButton.OK, MessageBoxImage.Error);
+            //    return;
+            //}
         }
     }
 }

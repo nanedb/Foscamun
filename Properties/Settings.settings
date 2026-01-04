@@ -5,5 +5,17 @@
     <Setting Name="Lang" Type="System.String" Scope="User">
       <Value Profile="(Default)">en-US</Value>
     </Setting>
+    <Setting Name="SelCommID" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="SelCommName" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DbPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Foscamun.db</Value>
+    </Setting>
+    <Setting Name="Year" Type="System.String" Scope="User">
+      <Value Profile="(Default)">2026</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

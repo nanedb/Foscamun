@@ -1,0 +1,99 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!-- ========================= -->
+    <!--        COLORI BASE        -->
+    <!-- ========================= -->
+
+    <Color x:Key="FoscamunBlueColor">#FF5598D3</Color>
+    <Color x:Key="FoscamunDarkBlueColor">#FF0A2A44</Color>
+    <Color x:Key="FoscamunWhiteColor">#FFF2F2EA</Color>
+    <Color x:Key="FoscamunGrayColor">#E6E6E6</Color>
+    <Color x:Key="FoscamunDarkGrayColor">#444444</Color>
+
+    <!-- ========================= -->
+    <!--          BRUSHES          -->
+    <!-- ========================= -->
+
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource FoscamunBlueColor}"/>
+    <SolidColorBrush x:Key="PrimaryDarkBrush" Color="{StaticResource FoscamunDarkBlueColor}"/>
+    <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource FoscamunGrayColor}"/>
+    <SolidColorBrush x:Key="TextDarkBrush" Color="{StaticResource FoscamunDarkGrayColor}"/>
+    <SolidColorBrush x:Key="WhiteBrush" Color="{StaticResource FoscamunWhiteColor}"/>
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#D9D9D9"/>
+    <SolidColorBrush x:Key="TextMutedBrush" Color="#A0A0A0"/>
+
+    <!-- ========================= -->
+    <!--           FONT            -->
+    <!-- ========================= -->
+
+    <FontFamily x:Key="FontPrimary">pack://application:,,,/Resources/Fonts/#Akko Pro</FontFamily>
+
+    <!-- ========================= -->
+    <!--      DIMENSIONI UI        -->
+    <!-- ========================= -->
+
+    <CornerRadius x:Key="CornerRadiusSmall">6</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusMedium">10</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusLarge">16</CornerRadius>
+    <sys:Double x:Key="ButtonHeight">48</sys:Double>
+    <Thickness x:Key="ButtonPadding">14,0,14,0</Thickness>
+
+    <Style x:Key="H1" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource FontPrimary}"/>
+        <Setter Property="FontWeight" Value="Black"/>
+        <Setter Property="FontSize" Value="60"/>
+        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+        <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+        <Setter Property="TextOptions.TextRenderingMode" Value="ClearType"/>
+        <Setter Property="Margin" Value="0 0 0 10"/>
+    </Style>
+
+    <Style x:Key="H1Inverted" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource FontPrimary}"/>
+        <Setter Property="FontWeight" Value="Black"/>
+        <Setter Property="FontSize" Value="55"/>
+        <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+        <Setter Property="Background" Value="{StaticResource TextPrimaryBrush}"/>
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+        <Setter Property="TextOptions.TextRenderingMode" Value="ClearType"/>
+        <Setter Property="Margin" Value="0 0 0 10"/>
+    </Style>
+
+    <Style x:Key="H2" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource FontPrimary}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="36"/>
+        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+        <Setter Property="Margin" Value="0 0 0 8"/>
+    </Style>
+
+    <Style x:Key="H3" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource FontPrimary}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+        <Setter Property="Margin" Value="0 0 0 6"/>
+    </Style>
+
+    <Style x:Key="Body" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource FontPrimary}"/>
+        <Setter Property="FontWeight" Value="Regular"/>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="Margin" Value="0 0 0 4"/>
+    </Style>
+
+    <Style x:Key="Caption" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource FontPrimary}"/>
+        <Setter Property="FontWeight" Value="Regular"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+
+</ResourceDictionary>

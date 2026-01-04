@@ -3,89 +3,143 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
         mc:Ignorable="d"
-        Title="Foscamun 2026" Height="500" Width="1000"
+        Title="Foscamun 2026"
+        Height="400" Width="1000"
         WindowStartupLocation="CenterScreen"
-        FontFamily="Century Gothic" FontSize="18" FontWeight="Bold"
         Icon="/Foscamun2026;component/Resources/Foscamun.ico"
         Background="{StaticResource FoscamunBlue}">
 
+    <!-- Layout principale: colonna sinistra per il pannello pulsanti, colonna destra per il contenuto esistente -->
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <!--<RowDefinition Height="*" />-->
-            <RowDefinition Height="*" />
-            <RowDefinition Height="auto" />
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="160"/> <!-- pannello pulsanti -->
+            <ColumnDefinition Width="*"/> <!-- contenuto principale (titolo, banner) -->
+        </Grid.ColumnDefinitions>
 
-        <!-- Titolo di benvenuto -->
-        <TextBlock Grid.Row="0" FontSize="60"
-                   Text="{DynamicResource WelcomeMessage}"
-                   Padding="30,20,0,20"
-                   Background="White"
-                   Foreground="{StaticResource FoscamunBlue}"/>
+        <!-- Contenuto principale (mantiene la struttura a righe) -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-        <!-- Testo centrale -->
-        <!--<TextBlock Grid.Row="1"
-                   x:Name="WelcomeText"
-                   FontSize="50"
-                   Margin="0 -1 0 0"
-                   Padding="0 20 0 0"
-                   TextAlignment="Center"
-                   Background="White"
-                   Foreground="{StaticResource FoscamunBlue}"
-                   Text="Model United Nations 2026"/>-->
+            <!-- Titolo -->
+            <TextBlock Style="{StaticResource H1Inverted}"
+                       Margin="-1,-1,-1,-1"
+                       Padding="10,0,0,0">
+                <Run Text="{DynamicResource WelcomeMessage}"/>
+                <Run Text="{DynamicResource YearResource}"/>
+            </TextBlock>
 
-        <!-- Banner -->
-        <Image Grid.Row="1" Margin="-1,-1,-1,-1"
-               Source="pack://application:,,,/Resources/Banner.png" VerticalAlignment="Top"/>
+            <!-- Banner -->
+            <Image Grid.Row="1"
+                   Margin="-1,-1,-1,-1"
+                   Source="pack://application:,,,/Resources/Banner.png"
+                   VerticalAlignment="Top"/>
 
-        <!-- Pulsanti -->
-        <Grid Grid.Row="2" Background="{StaticResource FoscamunBlue}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <!-- Exit -->
-            <Button Grid.Column="0" x:Name="ExitButton"
-                    Margin="20,20,30,20" FontWeight="Normal"
-                    HorizontalContentAlignment="Left"
-                    Click="ExitButton_Click">
-                <StackPanel Orientation="Horizontal">
-                    <Image Margin="10,0,0,0" MaxHeight="30"
-                           Source="pack://application:,,,/Foscamun2026;component/Resources/LogOut.png"/>
-                    <TextBlock Text="{DynamicResource ExitButton}"
-                               Padding="10 10 0 10" VerticalAlignment="Center"/>
-                </StackPanel>
-            </Button>
-
-            <!-- Configure -->
-            <Button Grid.Column="1" x:Name="ConfigureButton"
-                    Margin="20,20,20,20" FontWeight="Normal"
-                    Click="ConfigureButton_Click">
-                <StackPanel Orientation="Horizontal">
-                    <Image Margin="0,0,10,0" MaxHeight="30"
-                           Source="pack://application:,,,/Foscamun2026;component/Resources/Settings.png"/>
-                    <TextBlock Text="{DynamicResource ConfigureButton}"
-                               Padding="10 0 0 0" VerticalAlignment="Center"/>
-                </StackPanel>
-            </Button>
-
-            <!-- Next -->
-            <Button Grid.Column="2" x:Name="NextButton"
-                    Margin="30,20,20,20" FontWeight="Normal"
-                    HorizontalContentAlignment="Right"
-                    Click="NextButton_Click">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{DynamicResource NextButton}"
-                               Padding="0 10 10 10" VerticalAlignment="Center"/>
-                    <Image Margin="0,0,10,0" MaxHeight="30"
-                           Source="pack://application:,,,/Foscamun2026;component/Resources/Next.png"/>
-                </StackPanel>
-            </Button>
         </Grid>
+
+        <!-- Pannello sinistro verticale con i pulsanti -->
+        <!-- Border completo per il pannello sinistro con gradiente orizzontale -->
+        <Border Grid.Column="0"
+        Padding="12"
+        BorderBrush="{DynamicResource FoscamunWhite}"
+        BorderThickness="0,0,0,0">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <!-- gradiente da blu più scuro a FoscamunBlue -->
+                    <GradientStop Color="{StaticResource FoscamunDarkBlueColor}" Offset="0" />
+                    <GradientStop Color="{StaticResource FoscamunBlueColor}" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+
+            <!-- ScrollViewer per gestire overflow verticale -->
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <StackPanel Orientation="Vertical" VerticalAlignment="Top" Cursor="">
+
+                    <!-- Intestazione pannello -->
+                    <!-- Header: hamburger SVG a sinistra, icona a destra -->
+                    <Grid Margin="0,0,0,12" VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Hamburger (SVG) -->
+                        <Border Grid.Column="0" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Left" Padding="6,0,0,0">
+                            <svgc:SvgViewbox Width="28" Height="20"
+                             Source="pack://application:,,,/Resources/Icons/hamburger.svg"
+                             Stretch="Uniform"
+                             VerticalAlignment="Center"
+                             HorizontalAlignment="Left"/>
+                        </Border>
+
+                        <!-- Icona Foscamun a destra -->
+                        <svgc:SvgViewbox Grid.Column="1"
+                                         Width="40" Height="40"
+                            Source="pack://application:,,,/Resources/Icons/icon.svg"
+                            Stretch="Uniform"/>
+
+                        <!--<svgc:SvgViewbox Grid.Column="1"
+                               Width="30"
+                               Height="30"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Right"
+                               Margin="0,0,6,0"
+                               Source="pack://application:,,,/Resources/Icons/icon.svg"
+                               SnapsToDevicePixels="True"
+                               UseLayoutRounding="True"
+                               AutomationProperties.Name="Foscamun logo" />-->
+
+                    </Grid>
+                    <!-- Pulsanti verticali -->
+
+                    <!-- Configure -->
+                    <Button Style="{StaticResource MenuButton}"
+                            HorizontalAlignment="Stretch"
+                            Margin="0,0,0,8"
+                            Click="ConfigureBtn_Click">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <svgc:SvgViewbox Width="18" Height="18"
+                            Source="pack://application:,,,/Resources/Icons/configure.svg"
+                            Stretch="Uniform"
+                            Margin="0,0,10,0"/>
+                            <TextBlock Text="{DynamicResource ConfigureBtn}" VerticalAlignment="Center" Foreground="{DynamicResource FoscamunWhite}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!-- Next -->
+                    <Button Style="{StaticResource MenuButton}"
+                            HorizontalAlignment="Stretch"
+                            Margin="0,0,0,8"
+                            Click="NextBtn_Click" Cursor="Hand">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <svgc:SvgViewbox Width="18" Height="18"
+                            Source="pack://application:,,,/Resources/Icons/next.svg"
+                            Stretch="Uniform"
+                            Margin="0,0,10,0"/>
+                            <TextBlock Text="{DynamicResource NextBtn}" VerticalAlignment="Center" Foreground="{DynamicResource FoscamunWhite}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!-- Exit -->
+                    <Button Style="{StaticResource MenuButton}"
+                            HorizontalAlignment="Stretch"
+                            Margin="0,0,0,8"
+                            Click="ExitBtn_Click">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <svgc:SvgViewbox Width="18" Height="18"
+                            Source="pack://application:,,,/Resources/Icons/exit.svg"
+                            Stretch="Uniform"
+                            Margin="0,0,10,0"/>
+                            <TextBlock Text="{DynamicResource ExitBtn}" VerticalAlignment="Center" Foreground="{DynamicResource FoscamunWhite}"/>
+                        </StackPanel>
+                    </Button>
+
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
     </Grid>
 </Window>
-

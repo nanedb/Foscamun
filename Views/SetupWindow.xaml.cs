@@ -1,9 +1,16 @@
-﻿using System;
-using Microsoft.Data.Sqlite;
-using System.Linq;
-using System.Windows;
+﻿using Foscamun2026.Data;
+using Foscamun2026.Models;
+using Foscamun2026.ViewModels;
+using Foscamun2026.Views;
+using System;
 using System.Collections.Generic;
-
+using System.ComponentModel;
+using System.Globalization;
+using System.Linq;
+using System.Threading;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Foscamun2026
 {
@@ -12,73 +19,80 @@ namespace Foscamun2026
         public SetupWindow()
         {
             InitializeComponent();
-            LoadCommittees();
-        }
 
-        private void LoadCommittees()
-        {
-            try
-            {
-                // Percorso al DB nella root del progetto
-                string dbPath = "Data Source=foscamun.db";
+            // MVVM: collega il ViewModel
+            DataContext = new CommitteeListViewModel(new SqliteDataAccess());
+            var VM = (CommitteeListViewModel)DataContext;
 
-                using (var conn = new SqliteConnection(dbPath))
-                {
-                    conn.Open();
+            // Carica i comitati
+            _ = VM.LoadCommitteesAsync();
 
-                    string sql = "SELECT Name FROM Committees"; // tabella Committees
-                    using (var cmd = new SqliteCommand(sql, conn))
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        var committees = new List<string>();
-                        while (reader.Read())
-                        {
-                            committees.Add(reader.GetString(0)); // seconda colonna: Name
-                        }
-                        CommitteeList.ItemsSource = committees;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Errore nel caricamento delle commissioni: " + ex.Message);
-            }
-        }
+            // Imposta la lingua salvata
+            string lang = Properties.Settings.Default.Lang;
 
-        private void LanguageSelector_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (LanguageSelector.SelectedItem is System.Windows.Controls.ComboBoxItem item)
-            {
-                string? culture = item.Tag as string;
-                if (!string.IsNullOrEmpty(culture))
-                {
-                    ChangeLanguage(culture);
-                }
-            }
-        }
-
-        private void ChangeLanguage(string culture)
-        {
-            // Trova il dizionario delle stringhe già caricato
-            var oldDict = Application.Current.Resources.MergedDictionaries
-                .FirstOrDefault(d => d.Source != null && d.Source.OriginalString.Contains("Strings"));
-
-            // Crea il nuovo dizionario
-            var newDict = new ResourceDictionary();
-            switch (culture)
+            switch (lang)
             {
                 case "fr-FR":
-                    newDict.Source = new Uri("Resources/Strings.fr.xaml", UriKind.Relative);
+                    FraLangButton.IsChecked = true;
                     break;
+
                 case "es-ES":
-                    newDict.Source = new Uri("Resources/Strings.es.xaml", UriKind.Relative);
+                    EspLangButton.IsChecked = true;
                     break;
+
                 default:
-                    newDict.Source = new Uri("Resources/Strings.en.xaml", UriKind.Relative);
+                    EngLangButton.IsChecked = true;
                     break;
             }
 
-            // Sostituisci solo il dizionario delle stringhe
+            // Ordina la lista
+            CommitteesListBox.Items.SortDescriptions.Clear();
+            CommitteesListBox.Items.SortDescriptions.Add(
+                new SortDescription("Name", ListSortDirection.Ascending));
+        }
+        private void YearBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            // Permetti solo numeri
+            e.Handled = !int.TryParse(e.Text, out _);
+        }
+
+        private void YearBox_Pasting(object sender, DataObjectPastingEventArgs e)
+        {
+            if (e.DataObject.GetDataPresent(typeof(string)))
+            {
+                string text = (string)e.DataObject.GetData(typeof(string));
+                if (!int.TryParse(text, out _))
+                    e.CancelCommand();
+            }
+        }
+
+        // ------------------------------------------------------------
+        // CAMBIO LINGUA (NON DISTRUGGE GLI STILI GLOBALI)
+        // ------------------------------------------------------------
+        private void ChangeLanguage(string culture)
+        {
+            // Imposta la cultura del thread
+            var cultureInfo = CultureInfo.GetCultureInfo(culture);
+            Thread.CurrentThread.CurrentCulture = cultureInfo;
+            Thread.CurrentThread.CurrentUICulture = cultureInfo;
+
+            // Trova il dizionario Strings attuale
+            var oldDict = Application.Current.Resources.MergedDictionaries
+                .FirstOrDefault(d => d.Source != null &&
+                                     d.Source.OriginalString.Contains("Strings"));
+
+            // Crea il nuovo dizionario
+            var newDict = new ResourceDictionary
+            {
+                Source = culture switch
+                {
+                    "fr-FR" => new Uri("Strings/Strings.fr.xaml", UriKind.Relative),
+                    "es-ES" => new Uri("Strings/Strings.es.xaml", UriKind.Relative),
+                    _ => new Uri("Strings/Strings.en.xaml", UriKind.Relative)
+                }
+            };
+
+            // Sostituisci SOLO il dizionario delle stringhe
             if (oldDict != null)
             {
                 int index = Application.Current.Resources.MergedDictionaries.IndexOf(oldDict);
@@ -94,16 +108,109 @@ namespace Foscamun2026
             Properties.Settings.Default.Save();
         }
 
-        private void ExitButton_Click(object sender, RoutedEventArgs e)
+        // Eventi RadioButton
+        private void EngLangButton_Checked(object sender, RoutedEventArgs e) => ChangeLanguage("en-US");
+        private void FraLangButton_Checked(object sender, RoutedEventArgs e) => ChangeLanguage("fr-FR");
+        private void EspLangButton_Checked(object sender, RoutedEventArgs e) => ChangeLanguage("es-ES");
+
+        // ------------------------------------------------------------
+        // SELEZIONE COMITATO
+        // ------------------------------------------------------------
+        private void CommitteesListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Chiude la finestra SetupWindow
-            this.Close();
+            if (CommitteesListBox.SelectedItem is Committee selected)
+            {
+                Properties.Settings.Default.SelCommID = selected.CommID;
+                Properties.Settings.Default.SelCommName = selected.Name;
+                Properties.Settings.Default.Save();
+            }
         }
 
-        private void Close_Click(object sender, RoutedEventArgs e)
+        // ------------------------------------------------------------
+        // AGGIUNGI COMITATO
+        // ------------------------------------------------------------
+        private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            var addWindow = new AddCommitteeWindow { Owner = this };
+
+            this.Hide();
+            bool? result = addWindow.ShowDialog();
+            this.Show();
+
+            if (result == true && DataContext is CommitteeListViewModel vm)
+                _ = vm.LoadCommitteesAsync();
         }
 
+        // ------------------------------------------------------------
+        // MODIFICA COMITATO
+        // ------------------------------------------------------------
+        private void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (CommitteesListBox.SelectedItem is not Committee selected)
+            {
+                MessageBox.Show("Select a committee first.");
+                return;
+            }
+
+            var editWindow = new EditCommitteeWindow(selected) { Owner = this };
+
+            this.Hide();
+            bool? result = editWindow.ShowDialog();
+            this.Show();
+
+            if (result == true && DataContext is CommitteeListViewModel vm)
+                _ = vm.LoadCommitteesAsync();
+        }
+
+        // ------------------------------------------------------------
+        // RIMUOVI COMITATO
+        // ------------------------------------------------------------
+        private async void RemoveButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (CommitteesListBox.SelectedItem is not Committee selected)
+            {
+                MessageBox.Show("Select a committee first.");
+                return;
+            }
+
+            if (MessageBox.Show($"Remove committee '{selected.Name}'?",
+                "Foscamun", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+                var data = new SqliteDataAccess();
+                await data.RemoveCommitteeAsync(selected);
+
+                if (DataContext is CommitteeListViewModel vm)
+                    _ = vm.LoadCommitteesAsync();
+            }
+        }
+
+        // ------------------------------------------------------------
+        // NAVIGAZIONE
+        // ------------------------------------------------------------
+        private void NextButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (CommitteesListBox.SelectedItem is not Committee selected)
+            {
+                MessageBox.Show("Select a committee first.");
+                return;
+            }
+
+            Window next = selected.Name == "ICJ"
+                ? new ICJStartWindow { Owner = this.Owner }
+                : new StartWindow { Owner = this.Owner };
+
+            Properties.Settings.Default.Save();
+
+            this.Hide();
+            next.ShowDialog();
+            this.Show();
+        }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e) => Close();
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            Owner?.Show();
+        }
     }
 }

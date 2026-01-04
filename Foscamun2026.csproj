@@ -10,16 +10,45 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="MainWindow.xaml.cs" />
+    <Compile Remove="ViewModels\ResultPageViewModel.cs" />
+    <Compile Remove="Views\ResultPage.xaml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Add_24x24.png" />
     <None Remove="Resources\Banner.png" />
-    <None Remove="Resources\Fonts\AkkoPro-Bold.ttf" />
-    <None Remove="Resources\Fonts\AkkoPro-Regular.ttf" />
+    <None Remove="Fonts\AkkoPro-Bold.ttf" />
+    <None Remove="Fonts\AkkoPro-Regular.ttf" />
+    <None Remove="Resources\Edit_24x24.png" />
     <None Remove="Resources\Foscamun.ico" />
+    <None Remove="Resources\Icons\add.svg" />
+    <None Remove="Resources\Icons\back.svg" />
+    <None Remove="Resources\Icons\configure.svg" />
+    <None Remove="Resources\Icons\edit.svg" />
+    <None Remove="Resources\Icons\exit.svg" />
+    <None Remove="Resources\Icons\Foscamun.ico" />
+    <None Remove="Resources\Icons\gear.svg" />
+    <None Remove="Resources\Icons\hamburger.svg" />
+    <None Remove="Resources\Icons\icon.svg" />
+    <None Remove="Resources\Icons\next.svg" />
+    <None Remove="Resources\Icons\remove.svg" />
     <None Remove="Resources\logout.png" />
-    <None Remove="Resources\next.png" />
     <None Remove="Resources\Pause_24x24.png" />
     <None Remove="Resources\Play_24x24.png" />
+    <None Remove="Resources\Previous_24x24.png" />
+    <None Remove="Resources\Remove_24x24.png" />
+    <None Remove="Resources\Save_24x24.png" />
     <None Remove="Resources\settings.png" />
+    <None Remove="Resources\Stop_24x24.png" />
     <None Remove="Resources\Undo_24x24.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="MainWindow.xaml" />
+    <Page Remove="Styles\Colors.xaml" />
+    <Page Remove="Styles\Icons.xaml" />
+    <Page Remove="Views\ResultPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +57,7 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.1" />
+    <PackageReference Include="SharpVectors.Wpf" Version="1.8.5" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,22 +65,56 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Add_24x24.png" />
     <Resource Include="Resources\Banner.png" />
-    <Resource Include="Resources\Fonts\AkkoPro-Bold.ttf">
+    <Resource Include="Fonts\AkkoPro-Bold.ttf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resources\Fonts\AkkoPro-Regular.ttf">
+    <Resource Include="Fonts\AkkoPro-Regular.ttf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\Edit_24x24.png" />
     <Resource Include="Resources\Foscamun.ico">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\Icons\add.svg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\back.svg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\configure.svg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\edit.svg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\exit.svg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\Foscamun.ico" />
+    <Resource Include="Resources\Icons\hamburger.svg" />
+    <Resource Include="Resources\Icons\icon.svg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\next.svg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\remove.svg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\logout.png" />
-    <Resource Include="Resources\next.png" />
+    <Resource Include="Resources\Next_24x24.png" />
     <Resource Include="Resources\Pause_24x24.png" />
     <Resource Include="Resources\Play_24x24.png" />
+    <Resource Include="Resources\Previous_24x24.png" />
+    <Resource Include="Resources\Remove_24x24.png" />
+    <Resource Include="Resources\Save_24x24.png" />
     <Resource Include="Resources\settings.png" />
+    <Resource Include="Resources\Stop_24x24.png" />
     <Resource Include="Resources\Undo_24x24.png" />
+    <Resource Include="Styles\Colors.xaml" />
+    <Resource Include="Styles\Icons.xaml" />
   </ItemGroup>
 
   <ItemGroup>

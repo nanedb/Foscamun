@@ -1,0 +1,23 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!-- Titres -->
+    <sys:String x:Key="WelcomeMessage">Bienvenue à Foscamun </sys:String>
+    <sys:String x:Key="SelectLanguageTitle">Choisir la langue :</sys:String>
+    <sys:String x:Key="ConfigurationTitle">Configuration</sys:String>
+    <sys:String x:Key="YearLbl">Année</sys:String>
+    <sys:String x:Key="LanguageLbl">Langue</sys:String>
+    <sys:String x:Key="CommitteeLbl">Comité</sys:String>
+
+    <!-- Boutons -->
+    <sys:String x:Key="AddBtn">Ajouter</sys:String>
+    <sys:String x:Key="EditBtn">Modifier</sys:String>
+    <sys:String x:Key="RemoveBtn">Supprimer</sys:String>
+    <sys:String x:Key="BackBtn">Retour</sys:String>
+    <sys:String x:Key="NextBtn">Suivant</sys:String>
+    <sys:String x:Key="ExitBtn">Quitter</sys:String>
+    <sys:String x:Key="ConfigureBtn">Configurer</sys:String>
+    <sys:String x:Key="CloseBtn">Fermer</sys:String>
+
+</ResourceDictionary>

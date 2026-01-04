@@ -20,9 +20,17 @@ namespace Foscamun2026
             // Registrazioni
             services.AddSingleton<SqliteDataAccess>();
             services.AddSingleton<CommitteeListViewModel>();
-            services.AddSingleton<ResultPageViewModel>();
 
             Services = services.BuildServiceProvider();
+
+            // Correzione: Accesso a Properties.Settings.Default.Year
+            Application.Current.Resources["YearResource"] = Foscamun2026.Properties.Settings.Default.Year;
+
+            Foscamun2026.Properties.Settings.Default.PropertyChanged += (s, ev) =>
+            {
+                if (ev.PropertyName == "Year")
+                    Application.Current.Resources["YearResource"] = Foscamun2026.Properties.Settings.Default.Year;
+            };
 
             // Mostra WelcomeWindow come prima finestra
             var welcomeWindow = new WelcomeWindow();
