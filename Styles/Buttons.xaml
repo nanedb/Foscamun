@@ -148,17 +148,17 @@
                     <Grid>
                         <!-- Sfondo base (trasparente di default dal BaseButtonStyle) -->
                         <Border x:Name="Bd"
-                  Background="{TemplateBinding Background}"
-                  CornerRadius="{DynamicResource CornerRadiusMedium}"
-                  BorderBrush="{TemplateBinding BorderBrush}"
-                  BorderThickness="{TemplateBinding BorderThickness}" />
+                                  Background="{TemplateBinding Background}"
+                                  CornerRadius="{DynamicResource CornerRadiusMedium}"
+                                  BorderBrush="{TemplateBinding BorderBrush}"
+                                  BorderThickness="{TemplateBinding BorderThickness}" />
 
                         <!-- Overlay che appare su hover/press -->
                         <Border x:Name="Overlay"
-                  Background="{DynamicResource PrimaryBrush}"
-                  CornerRadius="{DynamicResource CornerRadiusMedium}"
-                  Opacity="0"
-                  IsHitTestVisible="False" />
+                                  Background="{DynamicResource PrimaryBrush}"
+                                  CornerRadius="{DynamicResource CornerRadiusMedium}"
+                                  Opacity="0"
+                                  IsHitTestVisible="False" />
 
                         <!-- Contenuto: forziamo l'allineamento a sinistra con un StackPanel host -->
                         <Grid>
@@ -265,6 +265,8 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+
 
     <!-- Secondary e Ghost mantengono lo stesso approccio: sfondo trasparente + overlay -->
     <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
@@ -388,4 +390,5 @@
         </Setter>
     </Style>
 
+    
 </ResourceDictionary>

@@ -20,4 +20,7 @@
     <sys:String x:Key="ConfigureBtn">Configurar</sys:String>
     <sys:String x:Key="CloseBtn">Cerrar</sys:String>
 
+    <!-- ToolTips -->
+    <sys:String x:Key="HamburgerBtn">Abrir/Cerrar menú</sys:String>
+
 </ResourceDictionary>

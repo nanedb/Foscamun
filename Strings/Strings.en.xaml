@@ -3,7 +3,7 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <!-- Titoli -->
-    <sys:String x:Key="WelcomeMessage">  Welcome to Foscamun </sys:String>
+    <sys:String x:Key="WelcomeMessage">Welcome to Foscamun</sys:String>
     <sys:String x:Key="SelectLanguageTitle">Select Language:</sys:String>
     <sys:String x:Key="ConfigurationTitle">Configuration</sys:String>
     <sys:String x:Key="YearLbl">Year</sys:String>
@@ -21,4 +21,8 @@
     <sys:String x:Key="NextBtn">Next</sys:String>
     <sys:String x:Key="CloseBtn">Close</sys:String>
 
+
+    <!-- ToolTips -->
+    <sys:String x:Key="HamburgerBtn">Open/Close menu</sys:String>
+    
 </ResourceDictionary>
