@@ -4,14 +4,15 @@
 
     <!-- Titoli -->
     <sys:String x:Key="WelcomeMessage">Welcome to Foscamun</sys:String>
-    <sys:String x:Key="SelectLanguageTitle">Select Language:</sys:String>
     <sys:String x:Key="ConfigurationTitle">Configuration</sys:String>
-    <sys:String x:Key="YearLbl">Year</sys:String>
-    <sys:String x:Key="LanguageLbl">Language</sys:String>
-    <sys:String x:Key="CommitteeLbl">Committee</sys:String>
+    <sys:String x:Key="SelCommittee">Selected Committee:</sys:String>
+    <sys:String x:Key="YearLbl">Select Year:</sys:String>
+    <sys:String x:Key="LanguageLbl">Select Language:</sys:String>
+    <sys:String x:Key="CommitteeLbl">Select Committee:</sys:String>
 
 
     <!-- Pulsanti -->
+    <sys:String x:Key="HomeBtn">Home</sys:String>
     <sys:String x:Key="AddBtn">Add</sys:String>
     <sys:String x:Key="EditBtn">Edit</sys:String>
     <sys:String x:Key="RemoveBtn">Remove</sys:String>

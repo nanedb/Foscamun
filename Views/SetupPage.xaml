@@ -8,11 +8,13 @@
       mc:Ignorable="d"
       Title="{DynamicResource ConfigurationTitle}"
       Background="{DynamicResource FoscamunBlue}"
-      Foreground="{DynamicResource FoscamunWhite}">
+      Foreground="{DynamicResource FoscamunWhite}"
+      FontFamily ="{DynamicResource FontPrimary}"
+      FontSize="18"
+      Height="500" Width="800">
 
     <!-- STILI LOCALI -->
     <Page.Resources>
-
         <!-- Evidenziazione ListBox -->
         <Style TargetType="ListBoxItem">
             <Setter Property="Padding" Value="5"/>
@@ -25,49 +27,73 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="LeftAlignedLabelStyle" TargetType="Label">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,5,0,5"/>
+            <Setter Property="Foreground" Value="{DynamicResource FoscamunWhite}"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+
     </Page.Resources>
 
     <!-- LAYOUT PRINCIPALE -->
-    <Grid Margin="20">
+    <Grid Margin="40">
 
         <Grid.RowDefinitions>
+            <!-- Selected Committee -->
             <RowDefinition Height="Auto"/>
             <!-- Year -->
             <RowDefinition Height="Auto"/>
-            <!-- Language label -->
-            <RowDefinition Height="Auto"/>
-            <!-- Language buttons -->
+            <!-- Language -->
             <RowDefinition Height="Auto"/>
             <!-- Committee label -->
-            <RowDefinition Height="*"/>
+           <RowDefinition Height="Auto"/>
             <!-- Committee list + buttons -->
-            <RowDefinition Height="Auto"/>
-            <!-- Navigation -->
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        <!-- SELECTED COMMITTEE -->
+        <Label Grid.Row="0" Grid.Column="0"
+               Style="{StaticResource LeftAlignedLabelStyle}"
+               Content="{DynamicResource SelCommittee}"/>
+        <Label Grid.Row="0" Grid.Column="1"
+       Content="{Binding Path=SelCommName, Source={x:Static properties:Settings.Default}}"
+       HorizontalAlignment="Left"
+               Margin="30,0,0,0"
+       Foreground="{DynamicResource FoscamunWhite}" />
+
+
         <!-- YEAR -->
-        <TextBox x:Name="YearBox"  Grid.Row="0" Grid.Column="1"
+        <Label Grid.Row="1" Grid.Column="0"
+               Style="{StaticResource LeftAlignedLabelStyle}"
+               Content="{DynamicResource YearLbl}"/>
+        <TextBox x:Name="YearBox"  Grid.Row="1" Grid.Column="1"
+                 Background="{DynamicResource FoscamunWhite}"
                  Text="{Binding Source={x:Static properties:Settings.Default},
                                 Path=Year,
                                 Mode=TwoWay,
                                 UpdateSourceTrigger=PropertyChanged}"
-                 Width="200"/>
+                 Margin="30,0,0,0"
+                 VerticalContentAlignment="Center"
+                 VerticalAlignment="Center" Padding="4"/>
 
         <!-- LANGUAGE LABEL -->
-        <TextBlock Grid.Row="1" Grid.Column="0"
-                   Text="{DynamicResource LanguageLbl}"
-                   Margin="0 10 0 5"/>
+        <Label Grid.Row="2" Grid.Column="0"
+               Style="{StaticResource LeftAlignedLabelStyle}"
+               Content="{DynamicResource LanguageLbl}"/>
 
         <!-- LANGUAGE BUTTONS -->
-        <StackPanel Grid.Row="2" Grid.ColumnSpan="2"
+        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
                     Orientation="Horizontal"
-                    HorizontalAlignment="Center"
-                    Margin="0 0 0 10">
+                    HorizontalAlignment="Right"
+                    Margin="0 8 0 0">
 
             <RadioButton x:Name="EngLangButton"
                          Checked="EngLangButton_Checked"
@@ -75,7 +101,8 @@
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/Foscamun2026;component/Resources/24/GB.png"
                            Width="24" Height="24" Margin="0 0 5 0"/>
-                    <TextBlock Text="English" FontSize="15"/>
+                    <TextBlock Text="English" FontSize="18"
+                               Foreground="{DynamicResource FoscamunWhite}"/>
                 </StackPanel>
             </RadioButton>
 
@@ -85,7 +112,8 @@
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/Foscamun2026;component/Resources/24/FR.png"
                            Width="24" Height="24" Margin="0 0 5 0"/>
-                    <TextBlock Text="Français" FontSize="15"/>
+                    <TextBlock Text="Français" FontSize="18"
+                               Foreground="{DynamicResource FoscamunWhite}"/>
                 </StackPanel>
             </RadioButton>
 
@@ -95,16 +123,17 @@
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/Foscamun2026;component/Resources/24/ES.png"
                            Width="24" Height="24" Margin="0 0 5 0"/>
-                    <TextBlock Text="Español" FontSize="15"/>
+                    <TextBlock Text="Español" FontSize="18"
+                               Foreground="{DynamicResource FoscamunWhite}"/>
                 </StackPanel>
             </RadioButton>
 
         </StackPanel>
 
         <!-- COMMITTEE LABEL -->
-        <TextBlock Grid.Row="3" Grid.Column="0"
-                   Text="{DynamicResource CommitteeLbl}"
-                   Margin="0 10 0 5"/>
+        <Label Grid.Row="3" Grid.Column="0"
+               Style="{StaticResource LeftAlignedLabelStyle}"
+               Content="{DynamicResource CommitteeLbl}"/>
 
         <!-- COMMITTEE LIST -->
         <ListBox x:Name="CommitteesListBox"
@@ -113,8 +142,8 @@
                  DisplayMemberPath="Name"
                  SelectedItem="{Binding SelectedCommittee, Mode=TwoWay}"
                  SelectionChanged="CommitteesListBox_SelectionChanged"
-                 Margin="0 0 10 0"
-                 MinHeight="200"
+                 Margin="0 0 30 0"
+                 MinHeight="120"
                  Background="{DynamicResource FoscamunWhite}">
         </ListBox>
 
@@ -125,7 +154,7 @@
 
             <Button x:Name="AddButton"
                     Click="AddButton_Click"
-                    Margin="0 0 0 10">
+                    Margin="30 0 0 10">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/Foscamun2026;component/Resources/Add_24x24.png"
                            Width="24" Height="24" Margin="0 0 5 0"/>
@@ -135,7 +164,7 @@
 
             <Button x:Name="EditButton"
                     Click="EditButton_Click"
-                    Margin="0 0 0 10"
+                    Margin="30 0 0 10"
                     IsEnabled="{Binding IsEditCommitteeEnabled}">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/Foscamun2026;component/Resources/Edit_24x24.png"
@@ -146,6 +175,7 @@
 
             <Button x:Name="RemoveButton"
                     Click="RemoveButton_Click"
+                    Margin="30 0 0 10"
                     IsEnabled="{Binding IsEditCommitteeEnabled}">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/Foscamun2026;component/Resources/Remove_24x24.png"
@@ -157,7 +187,7 @@
         </StackPanel>
 
         <!-- NAVIGATION BUTTONS -->
-        <StackPanel Grid.Row="5" Grid.ColumnSpan="2"
+        <!--<StackPanel Grid.Row="5" Grid.ColumnSpan="2"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center"
                     Margin="0 20 0 0">
@@ -183,7 +213,7 @@
                 </StackPanel>
             </Button>
 
-        </StackPanel>
+        </StackPanel>-->
 
     </Grid>
 

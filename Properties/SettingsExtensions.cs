@@ -2,7 +2,7 @@
 
 namespace Foscamun2026.Properties
 {
-    public partial class Settings
+    internal sealed partial class Settings
     {
         protected override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {

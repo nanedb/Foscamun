@@ -4,13 +4,14 @@
 
     <!-- Titres -->
     <sys:String x:Key="WelcomeMessage">Bienvenue à Foscamun </sys:String>
-    <sys:String x:Key="SelectLanguageTitle">Choisir la langue :</sys:String>
     <sys:String x:Key="ConfigurationTitle">Configuration</sys:String>
-    <sys:String x:Key="YearLbl">Année</sys:String>
-    <sys:String x:Key="LanguageLbl">Langue</sys:String>
-    <sys:String x:Key="CommitteeLbl">Comité</sys:String>
+    <sys:String x:Key="SelCommittee">Comité sélectionné:</sys:String>
+    <sys:String x:Key="YearLbl">Sélectionner l'année:</sys:String>
+    <sys:String x:Key="LanguageLbl">Choisir la langue:</sys:String>
+    <sys:String x:Key="CommitteeLbl">Choisir le comité:</sys:String>
 
     <!-- Boutons -->
+    <sys:String x:Key="HomeBtn">Home</sys:String>
     <sys:String x:Key="AddBtn">Ajouter</sys:String>
     <sys:String x:Key="EditBtn">Modifier</sys:String>
     <sys:String x:Key="RemoveBtn">Supprimer</sys:String>
