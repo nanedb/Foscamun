@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace Foscamun2026.Views
 {
-    public partial class WelcomeWindow : Window, INotifyPropertyChanged
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         private bool _isPaneCollapsed = false;
         public bool IsPaneCollapsed
@@ -19,7 +19,7 @@ namespace Foscamun2026.Views
             }
         }
 
-        public WelcomeWindow()
+        public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
@@ -68,7 +68,7 @@ namespace Foscamun2026.Views
             var setup = new SetupWindow();
             setup.Closed += (s, args) =>
             {
-                // Quando SetupWindow viene chiusa, riapri WelcomeWindow
+                // Quando SetupWindow viene chiusa, riapri MainWindow
                 this.Show();
 
                 // Ripristina lo stato Normal su tutti i pulsanti della finestra (evita hover "bloccati")
