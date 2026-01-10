@@ -1,6 +1,7 @@
 ﻿<Page x:Class="Foscamun2026.Views.HomePage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:properties="clr-namespace:Foscamun2026.Properties"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       mc:Ignorable="d"
@@ -8,8 +9,20 @@
       d:DesignHeight="500"
       Title="Home"
       Background="White">
-    
-     <Grid ClipToBounds="True">
+
+    <Page.Resources>
+        <Style x:Key="LeftAlignedLabelStyle" TargetType="Label">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,5,0,5"/>
+            <Setter Property="Foreground" Value="{DynamicResource FoscamunWhite}"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+    </Page.Resources>
+
+
+    <Grid ClipToBounds="True">
         <Grid.RowDefinitions>
             <RowDefinition Height="1.2*" />
             <RowDefinition Height="1.3*" />
@@ -41,11 +54,22 @@
                     <Image Source="pack://application:,,,/Resources/Banner.png"
                    Stretch="UniformToFill"/>
         </Viewbox>
+        
         <!-- Area inferiore (vuota o contenuto) -->
-        <Border Grid.Row="2"
-                Background="{DynamicResource FoscamunBlue}"
-                Margin="0 -15 0 0">
-            <!-- contenuto inferiore -->
-        </Border>
+        <StackPanel Grid.Row="2"
+                    Background="{DynamicResource FoscamunBlue}"
+                    Margin="0 -15 0 0" Orientation="Horizontal">
+            <!-- HINT -->
+            <TextBlock Style="{StaticResource Caption}"
+                       Padding="5 0 0 5"
+                       TextWrapping="Wrap"
+                       TextAlignment="Left" VerticalAlignment="Bottom">
+                        <Run Text="{DynamicResource HintStr1}"/>
+                        <Run Text="{Binding Path=SelCommName, Source={x:Static properties:Settings.Default}}"/>
+                        <LineBreak/>
+                        <Run Text="{DynamicResource HintStr2}"/>
+                        <Run Text="{DynamicResource ConfigureBtn}"/>
+            </TextBlock>
+        </StackPanel>
     </Grid>
 </Page>

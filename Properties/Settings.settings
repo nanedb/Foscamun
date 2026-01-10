@@ -6,7 +6,7 @@
       <Value Profile="(Default)">en-US</Value>
     </Setting>
     <Setting Name="SelCommID" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="SelCommName" Type="System.String" Scope="User">
       <Value Profile="(Default)" />

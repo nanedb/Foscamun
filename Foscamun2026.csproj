@@ -13,6 +13,7 @@
     <Compile Remove="MainWindow.xaml.cs" />
     <Compile Remove="ViewModels\ResultPageViewModel.cs" />
     <Compile Remove="Views\ResultPage.xaml.cs" />
+    <Compile Remove="Views\SetupWindow.xaml.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -321,6 +322,7 @@
     <Page Remove="Styles\Colors.xaml" />
     <Page Remove="Styles\Icons.xaml" />
     <Page Remove="Views\ResultPage.xaml" />
+    <Page Remove="Views\SetupWindow.xaml" />
   </ItemGroup>
 
   <ItemGroup>

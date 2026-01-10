@@ -37,7 +37,6 @@ namespace Foscamun2026.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int SelCommID {
             get {
                 return ((int)(this["SelCommID"]));

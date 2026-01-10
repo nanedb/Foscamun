@@ -1,4 +1,5 @@
-﻿using Foscamun2026.Data;
+﻿#nullable enable
+using Foscamun2026.Data;
 using Foscamun2026.Models;
 using Foscamun2026.ViewModels;
 using System;
@@ -11,7 +12,7 @@ namespace Foscamun2026
 {
     public partial class SetupPage : Page
     {
-        public event Action RequestClose;
+        public event Action? RequestClose;
 
         public SetupPage()
         {
@@ -46,7 +47,46 @@ namespace Foscamun2026
             CommitteesListBox.Items.SortDescriptions.Clear();
             CommitteesListBox.Items.SortDescriptions.Add(
                 new SortDescription("Name", ListSortDirection.Ascending));
+        }
 
+        // Assumiamo che gli elementi siano oggetti Committee con proprietà CommID e Name
+        private void SelectSavedCommitteeFromExistingItems()
+        {
+            // salva l'id che hai memorizzato
+            int savedId = Properties.Settings.Default.SelCommID;
+
+            // prendi la sorgente dati corrente (se ItemsSource è IEnumerable<Committee>)
+            var items = CommitteesListBox.ItemsSource as IEnumerable<Committee>;
+            if (items == null)
+            {
+                // fallback: se ItemsSource non è impostato, prova a leggere Items (container)
+                items = CommitteesListBox.Items.Cast<Committee>();
+            }
+
+            // ordina per nome e crea lista indicizzata
+            var ordered = items.OrderBy(c => c.Name, StringComparer.CurrentCulture).ToList();
+
+            // trova l'indice dell'elemento con l'ID salvato
+            int index = ordered.FindIndex(c => c.CommID == savedId);
+
+            if (index >= 0)
+            {
+                // seleziona l'elemento corretto
+                CommitteesListBox.SelectedItem = ordered[index];
+                CommitteesListBox.ScrollIntoView(CommitteesListBox.SelectedItem);
+            }
+            else
+            {
+                CommitteesListBox.SelectedIndex = -1;
+            }
+        }
+
+        private void SetupPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                SelectSavedCommitteeFromExistingItems();
+            }), System.Windows.Threading.DispatcherPriority.Background);
         }
 
         // ------------------------------------------------------------
@@ -197,10 +237,5 @@ namespace Foscamun2026
             if (NavigationService?.CanGoBack == true)
                 NavigationService.GoBack();
         }
-
-        //private void Window_Closing(object sender, CancelEventArgs e)
-        //{
-        //    Owner?.Show();
-        //}
     }
 }

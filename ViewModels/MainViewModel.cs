@@ -14,20 +14,20 @@ namespace Foscamun2026.ViewModels
             _dataAccess = dataAccess;
         }
 
-        [ObservableProperty]
-        private string welcomeMessage = "Benvenuto in Foscamun2026!";
+        //[ObservableProperty]
+        //private string welcomeMessage = "Benvenuto in Foscamun2026!";
 
-        [RelayCommand]
-        private void ShowMessage()
-        {
-            MessageBox.Show("Hai cliccato il pulsante!");
-        }
+        //[RelayCommand]
+        //private void ShowMessage()
+        //{
+        //    MessageBox.Show("Hai cliccato il pulsante!");
+        //}
 
-        [RelayCommand]
-        private async Task LoadData()
-        {
-            var committees = await _dataAccess.GetCommitteesAsync();
-            MessageBox.Show($"Trovati {committees.Count} comitati!");
-        }
+        //[RelayCommand]
+        //private async Task LoadData()
+        //{
+        //    var committees = await _dataAccess.GetCommitteesAsync();
+        //    MessageBox.Show($"Trovati {committees.Count} comitati!");
+        //}
     }
 }

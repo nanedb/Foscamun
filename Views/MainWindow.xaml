@@ -42,8 +42,7 @@
     
     <Grid>
         <Grid.ColumnDefinitions>
-            <!-- assegna un nome alla colonna per poterla modificare dal code-behind -->
-            <ColumnDefinition x:Name="LeftColumn" Width="170"/>
+            <ColumnDefinition x:Name="LeftColumn" Width="180"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
@@ -112,18 +111,19 @@
                 <!-- Ogni Button mostra icona + testo; il testo viene nascosto quando IsPaneCollapsed == true -->
                 <StackPanel Orientation="Vertical" VerticalAlignment="Top">
 
-                    <!--Home button-->
-                    <Button Style="{StaticResource MenuButton}"
+                    <!-- Home -->
+                    <Button Style="{StaticResource IconTooltipWhenCollapsed}"
                             Margin="0,0,0,8"
-                            Click="HomeBtn_Click">
+                            Click="HomeBtn_Click"
+                            Tag="{DynamicResource HomeBtn}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <svgc:SvgViewbox Width="18" Height="18"
-                               Source="pack://application:,,,/Resources/Icons/house.svg"
-                               Stretch="Uniform"
-                               Margin="0,0,10,0"/>
+                                 Source="pack://application:,,,/Resources/Icons/house.svg"
+                                 Stretch="Uniform"
+                                 Margin="0,0,10,0"/>
                             <TextBlock Text="{DynamicResource HomeBtn}"
-                                       VerticalAlignment="Center"
-                                       Foreground="{DynamicResource FoscamunWhite}">
+                   VerticalAlignment="Center"
+                   Foreground="{DynamicResource FoscamunWhite}">
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
                                         <Style.Triggers>
@@ -136,20 +136,21 @@
                             </TextBlock>
                         </StackPanel>
                     </Button>
-                    
-                    <!--Configure button-->
-                    <Button Style="{StaticResource MenuButton}"
+
+                    <!-- Configure -->
+                    <Button Style="{StaticResource IconTooltipWhenCollapsed}"
                             Margin="0,0,0,8"
-                            Click="ConfigureBtn_Click">
+                            Click="ConfigureBtn_Click"
+                            Tag="{DynamicResource ConfigureBtn}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <svgc:SvgViewbox Width="18" Height="18"
-                               Source="pack://application:,,,/Resources/Icons/configure.svg"
-                               Stretch="Uniform"
-                               Margin="0,0,10,0"/>
+                                 Source="pack://application:,,,/Resources/Icons/configure.svg"
+                                 Stretch="Uniform"
+                                 Margin="0,0,10,0"/>
                             <TextBlock Text="{DynamicResource ConfigureBtn}"
-                                       TextWrapping="Wrap"
-                                       VerticalAlignment="Center"
-                                       Foreground="{DynamicResource FoscamunWhite}" MaxWidth="130">
+                   TextWrapping="Wrap"
+                   VerticalAlignment="Center"
+                   Foreground="{DynamicResource FoscamunWhite}" MaxWidth="130">
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
                                         <Style.Triggers>
@@ -163,18 +164,19 @@
                         </StackPanel>
                     </Button>
 
-                    <!--Next button-->
-                    <Button Style="{StaticResource MenuButton}"
+                    <!-- Next -->
+                    <Button Style="{StaticResource IconTooltipWhenCollapsed}"
                             Margin="0,0,0,8"
-                            Click="NextBtn_Click">
+                            Click="NextBtn_Click"
+                            Tag="{DynamicResource NextBtn}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <svgc:SvgViewbox Width="18" Height="18"
-                                             Source="pack://application:,,,/Resources/Icons/next.svg"
-                                             Stretch="Uniform"
-                                             Margin="0,0,10,0"/>
+                                 Source="pack://application:,,,/Resources/Icons/next.svg"
+                                 Stretch="Uniform"
+                                 Margin="0,0,10,0"/>
                             <TextBlock Text="{DynamicResource NextBtn}"
-                                       VerticalAlignment="Center"
-                                       Foreground="{DynamicResource FoscamunWhite}">
+                   VerticalAlignment="Center"
+                   Foreground="{DynamicResource FoscamunWhite}">
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
                                         <Style.Triggers>
@@ -188,23 +190,22 @@
                         </StackPanel>
                     </Button>
 
-                    <!--Exit button-->
-                    <Button Style="{StaticResource MenuButton}"
+                    <!-- Exit -->
+                    <Button Style="{StaticResource IconTooltipWhenCollapsed}"
                             Margin="0,0,0,8"
-                            Click="ExitBtn_Click">
+                            Click="ExitBtn_Click"
+                            Tag="{DynamicResource ExitBtn}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <svgc:SvgViewbox Width="18" Height="18"
-                                             Source="pack://application:,,,/Resources/Icons/exit.svg"
-                                             Stretch="Uniform"
-                                             Margin="0,0,10,0"/>
-                            <TextBlock x:Name="ExitText"
-                                       Text="{DynamicResource ExitBtn}"
-                                       VerticalAlignment="Center"
-                                       Foreground="{DynamicResource FoscamunWhite}">
+                                 Source="pack://application:,,,/Resources/Icons/exit.svg"
+                                 Stretch="Uniform"
+                                 Margin="0,0,10,0"/>
+                            <TextBlock Text="{DynamicResource ExitBtn}"
+                   VerticalAlignment="Center"
+                   Foreground="{DynamicResource FoscamunWhite}">
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
                                         <Style.Triggers>
-                                            <!-- Nascondi il testo quando IsPaneCollapsed è true -->
                                             <DataTrigger Binding="{Binding IsPaneCollapsed, ElementName=Root}" Value="True">
                                                 <Setter Property="Visibility" Value="Collapsed"/>
                                             </DataTrigger>
@@ -214,10 +215,7 @@
                             </TextBlock>
                         </StackPanel>
                     </Button>
-
-
                 </StackPanel>
-
             </StackPanel>
         </Border>
 
@@ -236,40 +234,4 @@
             </DockPanel>
         </Grid>
     </Grid>
-
-
-
-    <!-- Contenuto principale (titolo + banner) -->
-        <!--<Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="120" />
-            </Grid.RowDefinitions>
-
-            <TextBlock Style="{StaticResource H1Inverted}"
-                       Padding="20,50,0,0"
-                       Margin="-2,0,0,0"
-                       Grid.Row="0">
-                <Run Text="{DynamicResource WelcomeMessage}"/>
-                <Run Text="{DynamicResource YearResource}"/>
-            </TextBlock>
-
-            <Border Grid.Column="1" Grid.Row="1"
-                    Margin="-2,-20"
-                    ClipToBounds="True">
-                <Border.Background>
-                    <ImageBrush ImageSource="pack://application:,,,/Resources/Banner.png"
-                                Stretch="UniformToFill"
-                                AlignmentX="Center"
-                                AlignmentY="Bottom"/>
-                </Border.Background>
-            </Border> -->
-    
-            <!-- Area sottostante con sfondo FoscamunBlue --><!--
-            <Border Grid.Row="2"
-                    Margin="-2,0,0,0"
-                    Background="{DynamicResource FoscamunBlue}">
-            </Border>
-        </Grid>  -->
 </Window>

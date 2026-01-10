@@ -16,12 +16,17 @@
     <sys:String x:Key="EditBtn">Modifier</sys:String>
     <sys:String x:Key="RemoveBtn">Supprimer</sys:String>
     <sys:String x:Key="BackBtn">Retour</sys:String>
-    <sys:String x:Key="NextBtn">Suivant</sys:String>
     <sys:String x:Key="ExitBtn">Quitter</sys:String>
-    <sys:String x:Key="ConfigureBtn">Configurer</sys:String>
+    <sys:String x:Key="ConfigureBtn">Configuration</sys:String>
+    <sys:String x:Key="NextBtn">Suivant</sys:String>
     <sys:String x:Key="CloseBtn">Fermer</sys:String>
 
     <!-- ToolTips -->
     <sys:String x:Key="HamburgerBtn">Ouvrir/Fermer le menu</sys:String>
+
+
+    <!--Strings-->
+    <sys:String x:Key="HintStr1">Le comité sélectionné est</sys:String>
+    <sys:String x:Key="HintStr2">Pour le modifier, éditez‑le; pour ajouter ou supprimer un comité, cliquez sur</sys:String>
 
 </ResourceDictionary>

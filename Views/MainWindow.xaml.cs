@@ -55,7 +55,7 @@ namespace Foscamun2026.Views
 
         private void TogglePane()
         {
-            const double expandedWidth = 150;
+            const double expandedWidth = 180;
             const double collapsedWidth = 56;
 
             if (IsPaneCollapsed)

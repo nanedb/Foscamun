@@ -20,6 +20,17 @@
                 <Setter Property="FontFamily" Value="{StaticResource AkkoProRegular}"/>
             </Style>
 
+            <!-- Style che imposta il ToolTip solo quando IsPaneCollapsed == True -->
+            <Style x:Key="IconTooltipWhenCollapsed" TargetType="Button" BasedOn="{StaticResource MenuButton}">
+                <Setter Property="ToolTip" Value="{x:Null}"/>
+                <Style.Triggers>
+                    <!-- Se la proprietà IsPaneCollapsed (ElementName=Root) è true, usa il Tag come ToolTip -->
+                    <DataTrigger Binding="{Binding IsPaneCollapsed, ElementName=Root}" Value="True">
+                        <Setter Property="ToolTip" Value="{Binding Tag, RelativeSource={RelativeSource Self}}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
             <sys:String x:Key="WelcomePrefix">Welcome to Foscamun</sys:String>
             <sys:String x:Key="YearResource">2026</sys:String>
 
