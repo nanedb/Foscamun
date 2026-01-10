@@ -6,7 +6,6 @@
         <Setter Property="FontFamily" Value="{DynamicResource FontPrimary}" />
         <Setter Property="FontSize" Value="18" />
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
-        <!-- TextBrush è FoscamunWhite nel tuo Colors.xaml -->
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Padding" Value="{DynamicResource ButtonPadding}" />
         <Setter Property="Height" Value="{DynamicResource ButtonHeight}" />
@@ -155,7 +154,7 @@
 
                         <!-- Overlay che appare su hover/press -->
                         <Border x:Name="Overlay"
-                                  Background="{DynamicResource PrimaryBrush}"
+                                  Background="{DynamicResource PrimaryDarkBrush}"
                                   CornerRadius="{DynamicResource CornerRadiusMedium}"
                                   Opacity="0"
                                   IsHitTestVisible="False" />

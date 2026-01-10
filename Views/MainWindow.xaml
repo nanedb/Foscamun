@@ -43,7 +43,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <!-- assegna un nome alla colonna per poterla modificare dal code-behind -->
-            <ColumnDefinition x:Name="LeftColumn" Width="140"/>
+            <ColumnDefinition x:Name="LeftColumn" Width="170"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
@@ -118,7 +118,7 @@
                             Click="HomeBtn_Click">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <svgc:SvgViewbox Width="18" Height="18"
-                               Source="pack://application:,,,/Resources/Icons/configure.svg"
+                               Source="pack://application:,,,/Resources/Icons/house.svg"
                                Stretch="Uniform"
                                Margin="0,0,10,0"/>
                             <TextBlock Text="{DynamicResource HomeBtn}"
@@ -147,8 +147,9 @@
                                Stretch="Uniform"
                                Margin="0,0,10,0"/>
                             <TextBlock Text="{DynamicResource ConfigureBtn}"
+                                       TextWrapping="Wrap"
                                        VerticalAlignment="Center"
-                                       Foreground="{DynamicResource FoscamunWhite}">
+                                       Foreground="{DynamicResource FoscamunWhite}" MaxWidth="130">
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
                                         <Style.Triggers>

@@ -5,13 +5,15 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:vm="clr-namespace:Foscamun2026.ViewModels"
       xmlns:properties="clr-namespace:Foscamun2026.Properties"
+      xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
       mc:Ignorable="d"
+      d:DesignWidth="800"
+      d:DesignHeight="500"
       Title="{DynamicResource ConfigurationTitle}"
       Background="{DynamicResource FoscamunBlue}"
       Foreground="{DynamicResource FoscamunWhite}"
       FontFamily ="{DynamicResource FontPrimary}"
-      FontSize="18"
-      Height="500" Width="800">
+      FontSize="18">
 
     <!-- STILI LOCALI -->
     <Page.Resources>
@@ -39,19 +41,21 @@
     </Page.Resources>
 
     <!-- LAYOUT PRINCIPALE -->
-    <Grid Margin="40">
+    <Grid Margin="40 30 40 40">
 
         <Grid.RowDefinitions>
-            <!-- Selected Committee -->
-            <RowDefinition Height="Auto"/>
-            <!-- Year -->
-            <RowDefinition Height="Auto"/>
-            <!-- Language -->
-            <RowDefinition Height="Auto"/>
-            <!-- Committee label -->
-           <RowDefinition Height="Auto"/>
-            <!-- Committee list + buttons -->
+            <!-- Title -->
             <RowDefinition Height="*"/>
+            <!-- Selected Committee -->
+            <RowDefinition Height="*"/>
+            <!-- Year -->
+            <RowDefinition Height="*"/>
+            <!-- Language -->
+            <RowDefinition Height="*"/>
+            <!-- Committee label -->
+           <RowDefinition Height="*"/>
+            <!-- Committee list + buttons -->
+            <RowDefinition Height="4*"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -59,48 +63,65 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        <!-- TITLE -->
+        <Viewbox Grid.ColumnSpan="2"
+                 Stretch="Uniform"
+                 StretchDirection="Both"
+                 VerticalAlignment="Center"
+                 HorizontalAlignment="Left">
+            <TextBlock Style="{StaticResource Caption}"
+                       TextWrapping="Wrap"
+                       TextAlignment="Left">
+                <Run Text="{DynamicResource ConfigureBtn}"/>
+            </TextBlock>
+        </Viewbox>
+
+
         <!-- SELECTED COMMITTEE -->
-        <Label Grid.Row="0" Grid.Column="0"
+        <Label Grid.Row="1" Grid.Column="0"
                Style="{StaticResource LeftAlignedLabelStyle}"
                Content="{DynamicResource SelCommittee}"/>
-        <Label Grid.Row="0" Grid.Column="1"
-       Content="{Binding Path=SelCommName, Source={x:Static properties:Settings.Default}}"
-       HorizontalAlignment="Left"
-               Margin="30,0,0,0"
+        <Label Grid.Row="1" Grid.Column="1"
+               Style="{StaticResource LeftAlignedLabelStyle}"
+               Content="{Binding Path=SelCommName, Source={x:Static properties:Settings.Default}}"
+               HorizontalAlignment="Left"
+               Margin="40,0,0,0"
        Foreground="{DynamicResource FoscamunWhite}" />
 
 
         <!-- YEAR -->
-        <Label Grid.Row="1" Grid.Column="0"
+        <Label Grid.Row="2" Grid.Column="0"
                Style="{StaticResource LeftAlignedLabelStyle}"
                Content="{DynamicResource YearLbl}"/>
-        <TextBox x:Name="YearBox"  Grid.Row="1" Grid.Column="1"
+        <TextBox x:Name="YearBox"  Grid.Row="2" Grid.Column="1"
                  Background="{DynamicResource FoscamunWhite}"
                  Text="{Binding Source={x:Static properties:Settings.Default},
                                 Path=Year,
                                 Mode=TwoWay,
                                 UpdateSourceTrigger=PropertyChanged}"
-                 Margin="30,0,0,0"
+                 Margin="40,0,0,0"
                  VerticalContentAlignment="Center"
                  VerticalAlignment="Center" Padding="4"/>
 
         <!-- LANGUAGE LABEL -->
-        <Label Grid.Row="2" Grid.Column="0"
+        <Label Grid.Row="3" Grid.Column="0"
                Style="{StaticResource LeftAlignedLabelStyle}"
                Content="{DynamicResource LanguageLbl}"/>
 
         <!-- LANGUAGE BUTTONS -->
-        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+        <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
                     Orientation="Horizontal"
                     HorizontalAlignment="Right"
                     Margin="0 8 0 0">
 
             <RadioButton x:Name="EngLangButton"
                          Checked="EngLangButton_Checked"
-                         Margin="10 0">
+                         Margin="25 0">
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="/Foscamun2026;component/Resources/24/GB.png"
-                           Width="24" Height="24" Margin="0 0 5 0"/>
+                    <svgc:SvgViewbox Width="18" Height="18"
+                               Source="pack://application:,,,/Resources/flags/gb.svg"
+                               Stretch="Uniform"
+                               Margin="0,0,10,4"/>
                     <TextBlock Text="English" FontSize="18"
                                Foreground="{DynamicResource FoscamunWhite}"/>
                 </StackPanel>
@@ -108,10 +129,12 @@
 
             <RadioButton x:Name="FraLangButton"
                          Checked="FraLangButton_Checked"
-                         Margin="10 0">
+                         Margin="25 0">
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="/Foscamun2026;component/Resources/24/FR.png"
-                           Width="24" Height="24" Margin="0 0 5 0"/>
+                    <svgc:SvgViewbox Width="18" Height="18"
+                               Source="pack://application:,,,/Resources/flags/fr.svg"
+                               Stretch="Uniform"
+                               Margin="0,0,10,4"/>
                     <TextBlock Text="Français" FontSize="18"
                                Foreground="{DynamicResource FoscamunWhite}"/>
                 </StackPanel>
@@ -119,10 +142,12 @@
 
             <RadioButton x:Name="EspLangButton"
                          Checked="EspLangButton_Checked"
-                         Margin="10 0">
+                         Margin="25 0 0 0">
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="/Foscamun2026;component/Resources/24/ES.png"
-                           Width="24" Height="24" Margin="0 0 5 0"/>
+                    <svgc:SvgViewbox Width="18" Height="18"
+                               Source="pack://application:,,,/Resources/flags/es.svg"
+                               Stretch="Uniform"
+                               Margin="0,0,10,4"/>
                     <TextBlock Text="Español" FontSize="18"
                                Foreground="{DynamicResource FoscamunWhite}"/>
                 </StackPanel>
@@ -131,55 +156,66 @@
         </StackPanel>
 
         <!-- COMMITTEE LABEL -->
-        <Label Grid.Row="3" Grid.Column="0"
+        <Label Grid.Row="4" Grid.Column="0"
                Style="{StaticResource LeftAlignedLabelStyle}"
                Content="{DynamicResource CommitteeLbl}"/>
 
         <!-- COMMITTEE LIST -->
         <ListBox x:Name="CommitteesListBox"
-                 Grid.Row="4" Grid.Column="0"
+                 Grid.Row="5" Grid.Column="0"
                  ItemsSource="{Binding Committees}"
                  DisplayMemberPath="Name"
                  SelectedItem="{Binding SelectedCommittee, Mode=TwoWay}"
                  SelectionChanged="CommitteesListBox_SelectionChanged"
-                 Margin="0 0 30 0"
+                 Margin="0 0 40 0"
                  MinHeight="120"
                  Background="{DynamicResource FoscamunWhite}">
         </ListBox>
 
         <!-- ACTION BUTTONS -->
-        <StackPanel Grid.Row="4" Grid.Column="1"
-                    Orientation="Vertical"
-                    VerticalAlignment="Top">
+        <StackPanel Grid.Row="5" Grid.Column="1"
+                    Orientation="Vertical" VerticalAlignment="Center">
 
-            <Button x:Name="AddButton"
+            <!--ADD BUTTON-->
+            <Button Style="{StaticResource MenuButton}" x:Name="AddButton"
                     Click="AddButton_Click"
-                    Margin="30 0 0 10">
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="/Foscamun2026;component/Resources/Add_24x24.png"
-                           Width="24" Height="24" Margin="0 0 5 0"/>
+                    Margin="40 0 0 10">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
+                            HorizontalAlignment="Left">
+                    <svgc:SvgViewbox Width="18" Height="18"
+                               Source="pack://application:,,,/Resources/Icons/add.svg"
+                               Stretch="Uniform"
+                               Margin="0,0,10,0"/>
                     <TextBlock Text="{DynamicResource AddBtn}" Padding="10 5"/>
                 </StackPanel>
             </Button>
 
-            <Button x:Name="EditButton"
+            <!--EDIT BUTTON-->
+            <Button Style="{StaticResource MenuButton}" x:Name="EditButton"
                     Click="EditButton_Click"
-                    Margin="30 0 0 10"
+                    Margin="40 0 0 10"
                     IsEnabled="{Binding IsEditCommitteeEnabled}">
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="/Foscamun2026;component/Resources/Edit_24x24.png"
-                           Width="24" Height="24" Margin="0 0 5 0"/>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
+                            HorizontalAlignment="Left">
+                    <svgc:SvgViewbox Width="18" Height="18"
+                               Source="pack://application:,,,/Resources/Icons/edit.svg"
+                               Stretch="Uniform"
+                               Margin="0,0,10,0"/>
                     <TextBlock Text="{DynamicResource EditBtn}" Padding="10 5"/>
                 </StackPanel>
             </Button>
 
-            <Button x:Name="RemoveButton"
+            <!--REMOVE BUTTON-->
+            <Button Style="{StaticResource MenuButton}" x:Name="RemoveButton"
                     Click="RemoveButton_Click"
-                    Margin="30 0 0 10"
+                    Margin="40 0 0 10"
                     IsEnabled="{Binding IsEditCommitteeEnabled}">
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="/Foscamun2026;component/Resources/Remove_24x24.png"
-                           Width="24" Height="24" Margin="0 0 5 0"/>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
+                            HorizontalAlignment="Left">
+                    <svgc:SvgViewbox Width="18" Height="18"
+                               Source="pack://application:,,,/Resources/Icons/remove.svg"
+                               Stretch="Uniform"
+                               Margin="0,0,10,0"/>
                     <TextBlock Text="{DynamicResource RemoveBtn}" Padding="10 5"/>
                 </StackPanel>
             </Button>

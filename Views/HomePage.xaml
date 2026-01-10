@@ -1,42 +1,51 @@
 ﻿<Page x:Class="Foscamun2026.Views.HomePage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      mc:Ignorable="d"
+      d:DesignWidth="780"
+      d:DesignHeight="500"
       Title="Home"
-      Background="{DynamicResource FoscamunBlue}"
-      Foreground="{DynamicResource FoscamunWhite}"
-      Height="500" Width="850">
-
-    <Grid>
+      Background="White">
+    
+     <Grid ClipToBounds="True">
         <Grid.RowDefinitions>
+            <RowDefinition Height="1.2*" />
+            <RowDefinition Height="1.3*" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="120" />
         </Grid.RowDefinitions>
 
         <!-- Titolo / welcome -->
-        <TextBlock Style="{StaticResource H1Inverted}"
-               Padding="20,50,0,0"
-               Margin="-2,-20,-20,-2"
-               Grid.Row="0">
-      <Run Text="{DynamicResource WelcomeMessage}"/>
-      <Run Text="{DynamicResource YearResource}"/>
-        </TextBlock>
+        <Viewbox Grid.Row="0"
+                 Grid.Column="0"
+                 Stretch="Uniform"
+                 StretchDirection="Both"
+                 VerticalAlignment="Center"
+                 HorizontalAlignment="Center">
+            <TextBlock Style="{StaticResource H1Inverted}"
+                       Padding="10 0 40 0"
+                       TextWrapping="Wrap"
+                       TextAlignment="Center">
+                <Run Text="{DynamicResource WelcomeMessage}"/>
+                <Run Text="{DynamicResource YearResource}"/>
+            </TextBlock>
+        </Viewbox>
 
         <!-- Banner immagine -->
-        <Border Grid.Row="1"
-            Margin="-2,-2,-20,0">
-            <!--ClipToBounds="True">-->
-            <Border.Background>
-                <ImageBrush ImageSource="pack://application:,,,/Resources/Banner.png"
-                    Stretch="UniformToFill"
-                    AlignmentY="Bottom"/>
-            </Border.Background>
-        </Border>
-
-        <!-- Area inferiore con sfondo FoscamunBlue -->
+        <!-- Banner: riempie la riga e non supera la larghezza della Page -->
+        <Viewbox Grid.Row="1"
+                 HorizontalAlignment="Stretch"
+                 VerticalAlignment="Stretch"
+                 MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Page}}">
+                    <Image Source="pack://application:,,,/Resources/Banner.png"
+                   Stretch="UniformToFill"/>
+        </Viewbox>
+        <!-- Area inferiore (vuota o contenuto) -->
         <Border Grid.Row="2"
-            Background="{DynamicResource FoscamunBlue}"
-            Margin="-2,0,-20,0">
+                Background="{DynamicResource FoscamunBlue}"
+                Margin="0 -15 0 0">
+            <!-- contenuto inferiore -->
         </Border>
     </Grid>
 </Page>
