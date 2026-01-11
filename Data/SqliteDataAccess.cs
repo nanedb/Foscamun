@@ -10,7 +10,59 @@ namespace Foscamun2026.Data
         private readonly string _connectionString =
             $"Data Source={Properties.Settings.Default.DbPath};Cache=Shared";
 
+        // ---------------------------------------------------------
+        // LOAD ALL COUNTRIES
+        // ---------------------------------------------------------
+        public static List<Country> LoadAllCountries()
+        {
+            var countries = new List<Country>();
 
+            using var connection = new SqliteConnection(
+                $"Data Source={Properties.Settings.Default.DbPath};Cache=Shared");
+
+            connection.Open();
+
+            string sql = @"
+        SELECT IsoCode, EnglishName, FrenchName, SpanishName
+        FROM Countries
+        ORDER BY EnglishName";
+
+            using var command = new SqliteCommand(sql, connection);
+            using var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                countries.Add(new Country
+                {
+                    IsoCode = reader.GetString(0),
+                    EnglishName = reader.GetString(1),
+                    FrenchName = reader.GetString(2),
+                    SpanishName = reader.GetString(3),
+                });
+            }
+
+            return countries;
+        }
+        // ---------------------------------------------------------
+        // INSERT SELECTED COUNTRY INTO CommitteeCountries
+        // ---------------------------------------------------------
+        public static void InsertSelectedCountry(int commId, string isoCode)
+        {
+            using var connection = new SqliteConnection(
+                $"Data Source={Properties.Settings.Default.DbPath};Cache=Shared");
+
+            connection.Open();
+
+            string sql = @"INSERT INTO CommitteeCountries (CommID, IsoCode)
+                   VALUES (@CommID, @IsoCode)";
+
+            using var command = new SqliteCommand(sql, connection);
+
+            command.Parameters.AddWithValue("@CommID", commId);
+            command.Parameters.AddWithValue("@IsoCode", isoCode);
+
+            command.ExecuteNonQuery();
+        }
         // ---------------------------------------------------------
         // GET ALL COMMITTEES
         // ---------------------------------------------------------
@@ -44,16 +96,21 @@ namespace Foscamun2026.Data
         }
 
         // ---------------------------------------------------------
-        // ADD COMMITTEE
+        // ADD COMMITTEE (sync, returns Committee with CommID)
         // ---------------------------------------------------------
-        public async Task AddCommitteeAsync(Committee committee)
+        public static Committee AddCommittee(Committee committee)
         {
-            using var connection = new SqliteConnection(_connectionString);
-            await connection.OpenAsync();
+            using var connection = new SqliteConnection(
+                $"Data Source={Properties.Settings.Default.DbPath};Cache=Shared");
+
+            connection.Open();
 
             string sql = @"
-                INSERT INTO Committees (Name, TopicA, TopicB, President, VicePresident, Moderator)
-                VALUES (@Name, @TopicA, @TopicB, @President, @VicePresident, @Moderator)";
+        INSERT INTO Committees (Name, TopicA, TopicB, President, VicePresident, Moderator)
+        VALUES (@Name, @TopicA, @TopicB, @President, @VicePresident, @Moderator);
+
+        SELECT last_insert_rowid();
+    ";
 
             using var command = new SqliteCommand(sql, connection);
 
@@ -64,7 +121,11 @@ namespace Foscamun2026.Data
             command.Parameters.AddWithValue("@VicePresident", committee.VicePresident);
             command.Parameters.AddWithValue("@Moderator", committee.Moderator);
 
-            await command.ExecuteNonQueryAsync();
+            long id = (long)command.ExecuteScalar()!;
+
+            committee.CommID = (int)id;
+
+            return committee;
         }
 
         // ---------------------------------------------------------
@@ -145,7 +206,6 @@ namespace Foscamun2026.Data
                     Moderator = reader.GetString(6)
                 };
             }
-
             return null;
         }
     }

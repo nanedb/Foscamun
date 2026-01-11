@@ -39,7 +39,7 @@ namespace Foscamun2026.ViewModels
                 Moderator = "Moderatore"
             };
 
-            await _dataAccess.AddCommitteeAsync(newCommittee);
+            SqliteDataAccess.AddCommittee(newCommittee);
             await LoadCommitteesAsync();
         }
     }

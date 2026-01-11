@@ -5,7 +5,7 @@
 
     <!-- Titoli -->
     <sys:String x:Key="WelcomeMessage">Welcome to Foscamun</sys:String>
-    <sys:String x:Key="ConfigurationTitle">Configure</sys:String>
+    <sys:String x:Key="ConfigurationTitle">Setup</sys:String>
     <sys:String x:Key="SelCommittee">Selected Committee:</sys:String>
     <sys:String x:Key="YearLbl">Select Year:</sys:String>
     <sys:String x:Key="LanguageLbl">Select Language:</sys:String>
