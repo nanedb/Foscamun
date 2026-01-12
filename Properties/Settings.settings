@@ -12,7 +12,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="DbPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Foscamun.db</Value>
+      <Value Profile="(Default)">|DataDirectory|\Foscamun.db</Value>
     </Setting>
     <Setting Name="Year" Type="System.String" Scope="User">
       <Value Profile="(Default)">2026</Value>

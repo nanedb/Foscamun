@@ -5,10 +5,22 @@ using Foscamun2026.Models;
 
 namespace Foscamun2026.Data
 {
+
     public class SqliteDataAccess
     {
-        private readonly string _connectionString =
-            $"Data Source={Properties.Settings.Default.DbPath};Cache=Shared";
+        private readonly string _connectionString;
+        public SqliteDataAccess()
+        {
+            string dbPath = Properties.Settings.Default.DbPath;
+
+            if (dbPath.Contains("|DataDirectory|"))
+            {
+                string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+                dbPath = dbPath.Replace("|DataDirectory|", baseDir);
+            }
+
+            _connectionString = $"Data Source={dbPath};Cache=Shared";
+        }
 
         // ---------------------------------------------------------
         // LOAD ALL COUNTRIES
@@ -23,9 +35,9 @@ namespace Foscamun2026.Data
             connection.Open();
 
             string sql = @"
-        SELECT IsoCode, EnglishName, FrenchName, SpanishName
-        FROM Countries
-        ORDER BY EnglishName";
+                         SELECT IsoCode, EnglishName, FrenchName, SpanishName
+                         FROM Countries
+                         ORDER BY EnglishName";
 
             using var command = new SqliteCommand(sql, connection);
             using var reader = command.ExecuteReader();
@@ -106,11 +118,9 @@ namespace Foscamun2026.Data
             connection.Open();
 
             string sql = @"
-        INSERT INTO Committees (Name, TopicA, TopicB, President, VicePresident, Moderator)
-        VALUES (@Name, @TopicA, @TopicB, @President, @VicePresident, @Moderator);
-
-        SELECT last_insert_rowid();
-    ";
+                         INSERT INTO Committees (Name, TopicA, TopicB, President, VicePresident, Moderator)
+                         VALUES (@Name, @TopicA, @TopicB, @President, @VicePresident, @Moderator);
+                         SELECT last_insert_rowid();";
 
             using var command = new SqliteCommand(sql, connection);
 
@@ -137,14 +147,14 @@ namespace Foscamun2026.Data
             await connection.OpenAsync();
 
             string sql = @"
-                UPDATE Committees
-                SET Name = @Name,
-                    TopicA = @TopicA,
-                    TopicB = @TopicB,
-                    President = @President,
-                    VicePresident = @VicePresident,
-                    Moderator = @Moderator
-                WHERE CommID = @CommID";
+                         UPDATE Committees
+                         SET Name = @Name,
+                            TopicA = @TopicA,
+                            TopicB = @TopicB,
+                            President = @President,
+                            VicePresident = @VicePresident,
+                            Moderator = @Moderator
+                         WHERE CommID = @CommID";
 
             using var command = new SqliteCommand(sql, connection);
 
@@ -184,9 +194,9 @@ namespace Foscamun2026.Data
             await connection.OpenAsync();
 
             string sql = @"
-                SELECT CommID, Name, TopicA, TopicB, President, VicePresident, Moderator
-                FROM Committees
-                WHERE CommID = @CommID";
+                         SELECT CommID, Name, TopicA, TopicB, President, VicePresident, Moderator
+                         FROM Committees
+                         WHERE CommID = @CommID";
 
             using var command = new SqliteCommand(sql, connection);
             command.Parameters.AddWithValue("@CommID", id);

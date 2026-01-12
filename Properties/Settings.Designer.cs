@@ -60,7 +60,7 @@ namespace Foscamun2026.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Foscamun.db")]
+        [global::System.Configuration.DefaultSettingValueAttribute("|DataDirectory|\\Foscamun.db")]
         public string DbPath {
             get {
                 return ((string)(this["DbPath"]));

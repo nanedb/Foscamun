@@ -1,9 +1,10 @@
-﻿using System.ComponentModel;
+﻿using Foscamun2026.ViewModels;
+using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Threading.Tasks;
 
 namespace Foscamun2026.Views
 {
@@ -84,35 +85,20 @@ namespace Foscamun2026.Views
             if (_isNavigating) return;
             _isNavigating = true;
 
-            // Forza lo stato Normal sul pulsante che è stato cliccato
             if (sender is Control clickedCtrl)
                 VisualStateManager.GoToState(clickedCtrl, "Normal", true);
 
-            // crea l'istanza la prima volta e riusala
             if (_setupInstance == null)
-            {
                 _setupInstance = new SetupPage();
 
-                // rimuovi prima per evitare doppie sottoscrizioni
-                _setupInstance.RequestClose -= OnSetupRequestClose;
-                _setupInstance.RequestClose += OnSetupRequestClose;
-            }
-
-            // Naviga effettivamente alla SetupPage
             RightFrame.Navigate(_setupInstance);
+            _setupInstance.DataContext = new SetupPageViewModel();
 
-            // Avvia l'animazione di ingresso se la usi
             BeginRightFrameSlideIn();
 
             _isNavigating = false;
         }
 
-        // handler separato per RequestClose
-        private async void OnSetupRequestClose()
-        {
-            await PlaySlideOutAsync();
-            NavigateToHome();
-        }
         private void NextBtn_Click(object sender, RoutedEventArgs e)
         {
             //var app = Application.Current as App;
