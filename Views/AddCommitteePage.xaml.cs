@@ -1,6 +1,9 @@
-﻿using System.ComponentModel;
-using System.Windows.Controls;
+﻿using Foscamun2026.Data;
 using Foscamun2026.ViewModels;
+using System.ComponentModel;
+using System.Windows.Controls;
+using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Foscamun2026.Views
 {
@@ -10,11 +13,8 @@ namespace Foscamun2026.Views
         {
             InitializeComponent();
 
-            // Evita crash del designer
-            if (!DesignerProperties.GetIsInDesignMode(this))
-            {
-                DataContext = new AddCommitteeViewModel();
-            }
+            var db = ((App)Application.Current).Services!.GetRequiredService<SqliteDataAccess>();
+            DataContext = new AddCommitteeViewModel(db);
         }
     }
 }

@@ -8,19 +8,26 @@ namespace Foscamun2026.ViewModels
 {
     public class AddCommitteeViewModel
     {
+        private readonly SqliteDataAccess _db;
+
         public List<Country> AllCountries { get; private set; }
-
         public List<Country> SelectedCountries { get; private set; }
-
         public Committee Committee { get; set; }
 
-        public AddCommitteeViewModel()
+        public AddCommitteeViewModel(SqliteDataAccess db)
         {
-            AllCountries = SqliteDataAccess.LoadAllCountries();
+            _db = db;
 
+            AllCountries = new List<Country>();
             SelectedCountries = new List<Country>();
-
             Committee = new Committee();
+
+            _ = LoadCountriesAsync();
+        }
+
+        private async Task LoadCountriesAsync()
+        {
+            AllCountries = await _db.LoadAllCountriesAsync();
         }
 
         public void AllCountriesClicked(Country country)
@@ -41,19 +48,17 @@ namespace Foscamun2026.ViewModels
             AllCountries.Sort((x, y) => x.Name.CompareTo(y.Name));
         }
 
-        public void AddRow()
-        {
-            Committee NewComm = SqliteDataAccess.AddCommittee(Committee);
-            if (SelectedCountries.Count > 0)
-            {
-                foreach (var item in SelectedCountries)
-                {
-                    SqliteDataAccess.InsertSelectedCountry(NewComm.CommID, item.IsoCode);
-                }
-            }
-            Properties.Settings.Default.SelCommID = NewComm.CommID;
-            Properties.Settings.Default.Save();
-        }
+        //public async Task AddRowAsync()
+        //{
+        //    Committee newComm = await _db.AddCommitteeAsync(Committee);
 
+        //    foreach (var item in SelectedCountries)
+        //    {
+        //        await _db.InsertSelectedCountryAsync(newComm.CommID, item.IsoCode);
+        //    }
+
+        //    Properties.Settings.Default.SelCommID = newComm.CommID;
+        //    Properties.Settings.Default.Save();
+        //}
     }
 }

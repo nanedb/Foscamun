@@ -17,6 +17,7 @@ namespace Foscamun2026.ViewModels
         public CommitteeListViewModel(SqliteDataAccess dataAccess)
         {
             _dataAccess = dataAccess;
+            _ = LoadCommitteesAsync();
         }
 
         [RelayCommand]
@@ -39,7 +40,7 @@ namespace Foscamun2026.ViewModels
                 Moderator = "Moderatore"
             };
 
-            SqliteDataAccess.AddCommittee(newCommittee);
+            await _dataAccess.AddCommitteeAsync(newCommittee);
             await LoadCommitteesAsync();
         }
     }

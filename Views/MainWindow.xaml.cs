@@ -1,10 +1,13 @@
-﻿using Foscamun2026.ViewModels;
+﻿using Foscamun2026.Data;
+using Foscamun2026.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Navigation;
 
 namespace Foscamun2026.Views
 {
@@ -22,17 +25,30 @@ namespace Foscamun2026.Views
             }
         }
 
-        private HomePage _homeInstance;
-        private SetupPage _setupInstance;
-
+        //private HomePage _homeInstance;
+        //private SetupPage _setupInstance;
 
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
-            _homeInstance = new HomePage();
-            _setupInstance = new SetupPage();
-            RightFrame.Navigate(_homeInstance);
+
+            RightFrame.Navigating += RightFrame_Navigating;
+            RightFrame.Navigated += RightFrame_Navigated;
+
+            RightFrame.Navigate(new HomePage());
+        }
+
+        private void RightFrame_Navigating(object sender, NavigatingCancelEventArgs e)
+        {
+            var slideOut = (Storyboard)Resources["RightFrameSlideOut"];
+            slideOut.Begin();
+        }
+
+        private void RightFrame_Navigated(object sender, NavigationEventArgs e)
+        {
+            var slideIn = (Storyboard)Resources["RightFrameSlideIn"];
+            slideIn.Begin();
         }
 
         // Handler chiamato dal Click dell'hamburger (definito in XAML)
@@ -73,9 +89,7 @@ namespace Foscamun2026.Views
 
         private void HomeBtn_Click(object sender, RoutedEventArgs e)
         {
-            // Torna alla Home (puoi riusare la stessa istanza se vuoi preservare stato)
-            if (_homeInstance == null) _homeInstance = new HomePage();
-            RightFrame.Navigate(_homeInstance);
+            RightFrame.Navigate(new HomePage());
         }
 
         private bool _isNavigating;
@@ -88,11 +102,8 @@ namespace Foscamun2026.Views
             if (sender is Control clickedCtrl)
                 VisualStateManager.GoToState(clickedCtrl, "Normal", true);
 
-            if (_setupInstance == null)
-                _setupInstance = new SetupPage();
-
-            RightFrame.Navigate(_setupInstance);
-            _setupInstance.DataContext = new SetupPageViewModel();
+            // CREA SEMPRE UNA NUOVA PAGINA
+            RightFrame.Navigate(new SetupPage());
 
             BeginRightFrameSlideIn();
 
@@ -119,35 +130,52 @@ namespace Foscamun2026.Views
             }
         }
 
-        private Task PlaySlideOutAsync()
+        public void NavigateRightFrame(Page page)
         {
-            var tcs = new TaskCompletionSource<bool>();
+            // Slide out della pagina corrente
+            var slideOut = (Storyboard)Resources["RightFrameSlideOut"];
+            slideOut.Begin();
 
-            if (TryFindResource("RightFrameSlideOut") is System.Windows.Media.Animation.Storyboard sb)
+            slideOut.Completed += (s, e) =>
             {
-                void OnCompleted(object? sender, EventArgs e)
-                {
-                    sb.Completed -= OnCompleted;
-                    tcs.SetResult(true);
-                }
+                // Navigazione vera e propria
+                RightFrame.Navigate(page);
 
-                sb.Completed += OnCompleted;
-                sb.Begin(this, true);
-            }
-            else
-            {
-                tcs.SetResult(true);
-            }
-
-            return tcs.Task;
+                // Slide in della nuova pagina
+                var slideIn = (Storyboard)Resources["RightFrameSlideIn"];
+                slideIn.Begin();
+            };
         }
 
-        private void NavigateToHome()
-        {
-            if (_homeInstance == null) _homeInstance = new Foscamun2026.Views.HomePage();
-            RightFrame.Navigate(_homeInstance);
-            BeginStoryboardByKey("RightFrameSlideIn");
-        }
+        //private Task PlaySlideOutAsync()
+        //{
+        //    var tcs = new TaskCompletionSource<bool>();
+
+        //    if (TryFindResource("RightFrameSlideOut") is System.Windows.Media.Animation.Storyboard sb)
+        //    {
+        //        void OnCompleted(object? sender, EventArgs e)
+        //        {
+        //            sb.Completed -= OnCompleted;
+        //            tcs.SetResult(true);
+        //        }
+
+        //        sb.Completed += OnCompleted;
+        //        sb.Begin(this, true);
+        //    }
+        //    else
+        //    {
+        //        tcs.SetResult(true);
+        //    }
+
+        //    return tcs.Task;
+        //}
+
+        //private void NavigateToHome()
+        //{
+        //    if (_homeInstance == null) _homeInstance = new Foscamun2026.Views.HomePage();
+        //    RightFrame.Navigate(_homeInstance);
+        //    BeginStoryboardByKey("RightFrameSlideIn");
+        //}
 
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged(string name) =>

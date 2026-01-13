@@ -1,4 +1,6 @@
-﻿using Foscamun2026.ViewModels;
+﻿using Foscamun2026.Data;
+using Foscamun2026.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -7,16 +9,15 @@ namespace Foscamun2026.Views
 {
     public partial class SetupPage : Page
     {
+        private SetupPageViewModel _vm;
+
         public SetupPage()
         {
             InitializeComponent();
 
-            // Se il DataContext non è già stato impostato da fuori, lo creo qui
-            if (DataContext is not SetupPageViewModel vm)
-            {
-                vm = new SetupPageViewModel();
-                DataContext = vm;
-            }
+            var db = ((App)Application.Current).Services!.GetRequiredService<SqliteDataAccess>();
+            _vm = new SetupPageViewModel(db);
+            DataContext = _vm;
 
             // Focus automatico sulla ListBox quando la pagina è caricata
             Loaded += SetupPage_Loaded;
@@ -33,16 +34,18 @@ namespace Foscamun2026.Views
 
         private void SetupPage_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
+            // 🔥 ASSEGNA IL NAVIGATION SERVICE QUI
+            _vm.NavigationService = NavigationService;
+
             CommitteesListBox.Focus();
 
             // Scroll dopo che la UI ha finito di disegnare
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                var vm = DataContext as SetupPageViewModel;
-                if (vm?.SelectedCommittee != null)
+                if (_vm.SelectedCommittee != null)
                 {
                     CommitteesListBox.UpdateLayout();
-                    CommitteesListBox.ScrollIntoView(vm.SelectedCommittee);
+                    CommitteesListBox.ScrollIntoView(_vm.SelectedCommittee);
                 }
             }), DispatcherPriority.Background);
         }

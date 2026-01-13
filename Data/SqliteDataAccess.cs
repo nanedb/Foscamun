@@ -1,177 +1,166 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Foscamun2026.Models;
 using Microsoft.Data.Sqlite;
-using Foscamun2026.Models;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Foscamun2026.Data
 {
-
     public class SqliteDataAccess
     {
         private readonly string _connectionString;
+
         public SqliteDataAccess()
         {
-            string dbPath = Properties.Settings.Default.DbPath;
+            // Percorso sicuro e universale
+            string folder = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "Foscamun2026"
+            );
 
-            if (dbPath.Contains("|DataDirectory|"))
-            {
-                string baseDir = AppDomain.CurrentDomain.BaseDirectory;
-                dbPath = dbPath.Replace("|DataDirectory|", baseDir);
-            }
+            Directory.CreateDirectory(folder);
 
-            _connectionString = $"Data Source={dbPath};Cache=Shared";
+            string dbPath = Path.Combine(folder, "Foscamun.db");
+
+            _connectionString = $"Data Source={dbPath}";
         }
 
-        // ---------------------------------------------------------
-        // LOAD ALL COUNTRIES
-        // ---------------------------------------------------------
-        public static List<Country> LoadAllCountries()
+        public async Task<List<Country>> LoadAllCountriesAsync()
         {
-            var countries = new List<Country>();
-
-            using var connection = new SqliteConnection(
-                $"Data Source={Properties.Settings.Default.DbPath};Cache=Shared");
-
-            connection.Open();
-
-            string sql = @"
-                         SELECT IsoCode, EnglishName, FrenchName, SpanishName
-                         FROM Countries
-                         ORDER BY EnglishName";
-
-            using var command = new SqliteCommand(sql, connection);
-            using var reader = command.ExecuteReader();
-
-            while (reader.Read())
-            {
-                countries.Add(new Country
-                {
-                    IsoCode = reader.GetString(0),
-                    EnglishName = reader.GetString(1),
-                    FrenchName = reader.GetString(2),
-                    SpanishName = reader.GetString(3),
-                });
-            }
-
-            return countries;
-        }
-        // ---------------------------------------------------------
-        // INSERT SELECTED COUNTRY INTO CommitteeCountries
-        // ---------------------------------------------------------
-        public static void InsertSelectedCountry(int commId, string isoCode)
-        {
-            using var connection = new SqliteConnection(
-                $"Data Source={Properties.Settings.Default.DbPath};Cache=Shared");
-
-            connection.Open();
-
-            string sql = @"INSERT INTO CommitteeCountries (CommID, IsoCode)
-                   VALUES (@CommID, @IsoCode)";
-
-            using var command = new SqliteCommand(sql, connection);
-
-            command.Parameters.AddWithValue("@CommID", commId);
-            command.Parameters.AddWithValue("@IsoCode", isoCode);
-
-            command.ExecuteNonQuery();
-        }
-        // ---------------------------------------------------------
-        // GET ALL COMMITTEES
-        // ---------------------------------------------------------
-        public async Task<List<Committee>> GetCommitteesAsync()
-        {
-            var committees = new List<Committee>();
+            var list = new List<Country>();
 
             using var connection = new SqliteConnection(_connectionString);
             await connection.OpenAsync();
 
-            string sql = "SELECT CommID, Name, TopicA, TopicB, President, VicePresident, Moderator FROM Committees";
+            string sql = "SELECT IsoCode, Name FROM Countries ORDER BY Name";
 
-            using var command = new SqliteCommand(sql, connection);
-            using var reader = await command.ExecuteReaderAsync();
+            using var cmd = new SqliteCommand(sql, connection);
+            using var reader = await cmd.ExecuteReaderAsync();
 
             while (await reader.ReadAsync())
             {
-                committees.Add(new Committee
+                list.Add(new Country
                 {
-                    CommID = reader.GetInt32(0),
-                    Name = reader.GetString(1),
-                    TopicA = reader.GetString(2),
-                    TopicB = reader.GetString(3),
-                    President = reader.GetString(4),
-                    VicePresident = reader.GetString(5),
-                    Moderator = reader.GetString(6)
+                    IsoCode = reader.GetString(0),
+                    EnglishName = reader.GetString(1)
                 });
             }
 
-            return committees;
+            return list;
         }
 
-        // ---------------------------------------------------------
-        // ADD COMMITTEE (sync, returns Committee with CommID)
-        // ---------------------------------------------------------
-        public static Committee AddCommittee(Committee committee)
+        // GET
+        public async Task<List<Committee>> GetCommitteesAsync()
         {
-            using var connection = new SqliteConnection(
-                $"Data Source={Properties.Settings.Default.DbPath};Cache=Shared");
+            var list = new List<Committee>();
 
-            connection.Open();
+            using var connection = new SqliteConnection(_connectionString);
+            await connection.OpenAsync();
+
+            string sql = "SELECT * FROM Committees ORDER BY Name";
+
+            using var cmd = new SqliteCommand(sql, connection);
+            using var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                list.Add(new Committee
+                {
+                    CommID = reader.GetInt32(0),
+                    Name = reader.GetString(1),
+                    TopicA = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                    TopicB = reader.IsDBNull(3) ? "" : reader.GetString(3),
+                    President = reader.IsDBNull(4) ? "" : reader.GetString(4),
+                    VicePresident = reader.IsDBNull(5) ? "" : reader.GetString(5),
+                    Moderator = reader.IsDBNull(6) ? "" : reader.GetString(6)
+                });
+            }
+
+            return list;
+        }
+
+        // ADD
+        public async Task<Committee> AddCommitteeAsync(Committee committee)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            await connection.OpenAsync();
 
             string sql = @"
-                         INSERT INTO Committees (Name, TopicA, TopicB, President, VicePresident, Moderator)
-                         VALUES (@Name, @TopicA, @TopicB, @President, @VicePresident, @Moderator);
-                         SELECT last_insert_rowid();";
+                        INSERT INTO Committees (Name, TopicA, TopicB, President, VicePresident, Moderator)
+                        VALUES (@Name, @TopicA, @TopicB, @President, @VicePresident, @Moderator);
+                        SELECT last_insert_rowid();
+                    ";
 
-            using var command = new SqliteCommand(sql, connection);
+            using var cmd = new SqliteCommand(sql, connection);
+            cmd.Parameters.AddWithValue("@Name", committee.Name);
+            cmd.Parameters.AddWithValue("@TopicA", committee.TopicA);
+            cmd.Parameters.AddWithValue("@TopicB", committee.TopicB);
+            cmd.Parameters.AddWithValue("@President", committee.President);
+            cmd.Parameters.AddWithValue("@VicePresident", committee.VicePresident);
+            cmd.Parameters.AddWithValue("@Moderator", committee.Moderator);
 
-            command.Parameters.AddWithValue("@Name", committee.Name);
-            command.Parameters.AddWithValue("@TopicA", committee.TopicA);
-            command.Parameters.AddWithValue("@TopicB", committee.TopicB);
-            command.Parameters.AddWithValue("@President", committee.President);
-            command.Parameters.AddWithValue("@VicePresident", committee.VicePresident);
-            command.Parameters.AddWithValue("@Moderator", committee.Moderator);
+            var result = await cmd.ExecuteScalarAsync();
 
-            long id = (long)command.ExecuteScalar()!;
-
-            committee.CommID = (int)id;
+            if (result is long newId)
+            {
+                committee.CommID = (int)newId;
+            }
+            else
+            {
+                throw new Exception("Errore: impossibile ottenere l'ID del nuovo comitato.");
+            }
+            committee.CommID = (int)newId;
 
             return committee;
         }
 
-        // ---------------------------------------------------------
-        // UPDATE COMMITTEE
-        // ---------------------------------------------------------
+        public async Task InsertSelectedCountryAsync(int committeeId, string isoCode)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            await connection.OpenAsync();
+
+            string sql = @"INSERT INTO CommitteeCountries (CommitteeId, CountryIso)
+                            VALUES (@CommitteeId, @IsoCode);";
+
+            using var cmd = new SqliteCommand(sql, connection);
+            cmd.Parameters.AddWithValue("@CommitteeId", committeeId);
+            cmd.Parameters.AddWithValue("@IsoCode", isoCode);
+
+            await cmd.ExecuteNonQueryAsync();
+        }
+
+        // UPDATE
         public async Task UpdateCommitteeAsync(Committee committee)
         {
             using var connection = new SqliteConnection(_connectionString);
             await connection.OpenAsync();
 
             string sql = @"
-                         UPDATE Committees
-                         SET Name = @Name,
-                            TopicA = @TopicA,
-                            TopicB = @TopicB,
-                            President = @President,
-                            VicePresident = @VicePresident,
-                            Moderator = @Moderator
-                         WHERE CommID = @CommID";
+                UPDATE Committees
+                SET Name = @Name,
+                    TopicA = @TopicA,
+                    TopicB = @TopicB,
+                    President = @President,
+                    VicePresident = @VicePresident,
+                    Moderator = @Moderator
+                WHERE CommID = @CommID;
+            ";
 
-            using var command = new SqliteCommand(sql, connection);
+            using var cmd = new SqliteCommand(sql, connection);
+            cmd.Parameters.AddWithValue("@CommID", committee.CommID);
+            cmd.Parameters.AddWithValue("@Name", committee.Name);
+            cmd.Parameters.AddWithValue("@TopicA", committee.TopicA);
+            cmd.Parameters.AddWithValue("@TopicB", committee.TopicB);
+            cmd.Parameters.AddWithValue("@President", committee.President);
+            cmd.Parameters.AddWithValue("@VicePresident", committee.VicePresident);
+            cmd.Parameters.AddWithValue("@Moderator", committee.Moderator);
 
-            command.Parameters.AddWithValue("@Name", committee.Name);
-            command.Parameters.AddWithValue("@TopicA", committee.TopicA);
-            command.Parameters.AddWithValue("@TopicB", committee.TopicB);
-            command.Parameters.AddWithValue("@President", committee.President);
-            command.Parameters.AddWithValue("@VicePresident", committee.VicePresident);
-            command.Parameters.AddWithValue("@Moderator", committee.Moderator);
-            command.Parameters.AddWithValue("@CommID", committee.CommID);
-
-            await command.ExecuteNonQueryAsync();
+            await cmd.ExecuteNonQueryAsync();
         }
 
-        // ---------------------------------------------------------
-        // REMOVE COMMITTEE
-        // ---------------------------------------------------------
+        // REMOVE
         public async Task RemoveCommitteeAsync(Committee committee)
         {
             using var connection = new SqliteConnection(_connectionString);
@@ -179,44 +168,10 @@ namespace Foscamun2026.Data
 
             string sql = "DELETE FROM Committees WHERE CommID = @CommID";
 
-            using var command = new SqliteCommand(sql, connection);
-            command.Parameters.AddWithValue("@CommID", committee.CommID);
+            using var cmd = new SqliteCommand(sql, connection);
+            cmd.Parameters.AddWithValue("@CommID", committee.CommID);
 
-            await command.ExecuteNonQueryAsync();
-        }
-
-        // ---------------------------------------------------------
-        // GET COMMITTEE BY ID
-        // ---------------------------------------------------------
-        public async Task<Committee?> GetCommitteeByIdAsync(int id)
-        {
-            using var connection = new SqliteConnection(_connectionString);
-            await connection.OpenAsync();
-
-            string sql = @"
-                         SELECT CommID, Name, TopicA, TopicB, President, VicePresident, Moderator
-                         FROM Committees
-                         WHERE CommID = @CommID";
-
-            using var command = new SqliteCommand(sql, connection);
-            command.Parameters.AddWithValue("@CommID", id);
-
-            using var reader = await command.ExecuteReaderAsync();
-
-            if (await reader.ReadAsync())
-            {
-                return new Committee
-                {
-                    CommID = reader.GetInt32(0),
-                    Name = reader.GetString(1),
-                    TopicA = reader.GetString(2),
-                    TopicB = reader.GetString(3),
-                    President = reader.GetString(4),
-                    VicePresident = reader.GetString(5),
-                    Moderator = reader.GetString(6)
-                };
-            }
-            return null;
+            await cmd.ExecuteNonQueryAsync();
         }
     }
 }

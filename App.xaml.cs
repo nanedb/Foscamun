@@ -33,6 +33,12 @@ namespace Foscamun2026
                     Application.Current.Resources["YearResource"] = Foscamun2026.Properties.Settings.Default.Year;
             };
 
+            Foscamun2026.Properties.Settings.Default.PropertyChanged += (s, ev) =>
+            {
+                if (ev.PropertyName == "Year")
+                    Application.Current.Resources["YearResource"] = Foscamun2026.Properties.Settings.Default.Year;
+            };
+
             // Mostra MainWindow come prima finestra
             var welcomeWindow = new MainWindow();
             welcomeWindow.Show();
