@@ -5,31 +5,32 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:models="clr-namespace:Foscamun2026.Models"
       xmlns:vm="clr-namespace:Foscamun2026.ViewModels"
+      xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
       mc:Ignorable="d"
       d:DesignHeight="500"
       d:DesignWidth="800"
-      d:DataContext="{d:DesignInstance Type=vm:AddCommitteeViewModel, IsDesignTimeCreatable=False}"
       Title="AddCommitteePage"
       Background="{DynamicResource FoscamunBlue}"
       Foreground="{DynamicResource FoscamunWhite}"
       FontFamily ="{DynamicResource FontPrimary}"
       FontSize="18"
 >
-
     <Page.Resources>
-
         <!-- Template corretto: Country è nel namespace Models -->
         <DataTemplate x:Key="CountryTemplate" DataType="models:Country">
-            <StackPanel Orientation="Horizontal">
-                <Image Source="{Binding SmallFlagPath}"
+            <StackPanel Orientation="Horizontal" Margin="4">
+                <svgc:SvgViewbox Width="24" Height="24"
+                                 Source="{Binding FlagPath}"
+                                 VerticalAlignment="Center" />
+                <!--<Image Source="{Binding SmallFlagPath}"
                        Margin="0,0,5,0"
-                       VerticalAlignment="Center" />
-                <TextBlock Text="{Binding EnglishName}"
-                           Margin="5,0,0,0"
-                           VerticalAlignment="Center" />
+                       VerticalAlignment="Center" />-->
+                <TextBlock Text="{Binding Name}"
+                           Margin="10,0,0,0"
+                           VerticalAlignment="Center"
+                           FontSize="14" />
             </StackPanel>
         </DataTemplate>
-
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Page.Resources>
 
@@ -71,13 +72,13 @@
             <!-- Titoli -->
             <TextBlock Grid.Column="2" Grid.Row="0" Margin="5"
                        Text="Click to add Country to Committee"
-                       FontSize="14" TextWrapping="Wrap"
+                       FontSize="12" TextWrapping="Wrap"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center" />
 
             <TextBlock Grid.Column="3" Grid.Row="0" Margin="5"
                        Text="Click to remove Country from Committee"
-                       FontSize="14" TextWrapping="Wrap"
+                       FontSize="12" TextWrapping="Wrap"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center" />
 
@@ -139,7 +140,9 @@
                       MinWidth="200"
                       MaxWidth="200"
                       ItemTemplate="{StaticResource CountryTemplate}"
-                      Background="{DynamicResource FoscamunWhite}" />
+                      Background="{DynamicResource FoscamunWhite}"
+                      SelectedItem="{Binding SelectedCountry, Mode=TwoWay}"
+                      MouseLeftButtonUp="AllCountries_Click" />
 
             <ListView ItemsSource="{Binding SelectedCountries}"
                       Grid.Column="3" Grid.Row="1" Grid.RowSpan="6"
@@ -147,7 +150,9 @@
                       MinWidth="200"
                       MaxWidth="200"
                       ItemTemplate="{StaticResource CountryTemplate}"
-                      Background="{DynamicResource FoscamunWhite}" />
+                      Background="{DynamicResource FoscamunWhite}"
+                      SelectedItem="{Binding SelectedCountry, Mode=TwoWay}"
+                      MouseLeftButtonUp="SelectedCountries_Click" />
 
         </Grid>
 

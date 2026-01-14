@@ -34,7 +34,7 @@ namespace Foscamun2026.Data
             using var connection = new SqliteConnection(_connectionString);
             await connection.OpenAsync();
 
-            string sql = "SELECT IsoCode, Name FROM Countries ORDER BY Name";
+            string sql = "SELECT IsoCode, EnglishName, FrenchName, SpanishName FROM Countries";
 
             using var cmd = new SqliteCommand(sql, connection);
             using var reader = await cmd.ExecuteReaderAsync();
@@ -44,10 +44,11 @@ namespace Foscamun2026.Data
                 list.Add(new Country
                 {
                     IsoCode = reader.GetString(0),
-                    EnglishName = reader.GetString(1)
+                    EnglishName = reader.GetString(1),
+                    FrenchName = reader.GetString(2),
+                    SpanishName = reader.GetString(3)
                 });
             }
-
             return list;
         }
 

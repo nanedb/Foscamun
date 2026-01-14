@@ -1,8 +1,9 @@
-﻿using Foscamun2026.Data;
+﻿using System.Windows.Data;
+using System.ComponentModel;
+using Foscamun2026.Data;
 using Foscamun2026.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace Foscamun2026.ViewModels
 {
@@ -10,55 +11,68 @@ namespace Foscamun2026.ViewModels
     {
         private readonly SqliteDataAccess _db;
 
-        public List<Country> AllCountries { get; private set; }
-        public List<Country> SelectedCountries { get; private set; }
+        public Country? SelectedCountry { get; set; }
+
+        public ObservableCollection<Country> AllCountries { get; } = new();
+
+        public ObservableCollection<Country> SelectedCountries { get; } = new();
         public Committee Committee { get; set; }
 
         public AddCommitteeViewModel(SqliteDataAccess db)
         {
             _db = db;
-
-            AllCountries = new List<Country>();
-            SelectedCountries = new List<Country>();
             Committee = new Committee();
+
+            var viewAll = CollectionViewSource.GetDefaultView(AllCountries);
+            viewAll.SortDescriptions.Add(
+                new SortDescription(nameof(Country.Name), ListSortDirection.Ascending));
+
+            var viewSel = CollectionViewSource.GetDefaultView(SelectedCountries);
+            viewSel.SortDescriptions.Add(
+                new SortDescription(nameof(Country.Name), ListSortDirection.Ascending));
+
+            // ascolta il cambio lingua
+            App.LanguageChanged += OnLanguageChanged;
 
             _ = LoadCountriesAsync();
         }
 
+        private void OnLanguageChanged()
+        {
+            CollectionViewSource.GetDefaultView(AllCountries).Refresh();
+            CollectionViewSource.GetDefaultView(SelectedCountries).Refresh();
+        }
         private async Task LoadCountriesAsync()
         {
-            AllCountries = await _db.LoadAllCountriesAsync();
+            Debug.WriteLine("LOAD START");
+
+            try
+            {
+                var countries = await _db.LoadAllCountriesAsync();
+                Debug.WriteLine("DB RETURNED: " + countries.Count);
+
+                AllCountries.Clear();
+                foreach (var c in countries)
+                    AllCountries.Add(c);
+
+                Debug.WriteLine("COUNTRIES LOADED: " + AllCountries.Count);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("ERROR: " + ex.Message);
+            }
         }
 
         public void AllCountriesClicked(Country country)
         {
-            SelectedCountries.Add(country);
             AllCountries.Remove(country);
-
-            AllCountries.Sort((x, y) => x.Name.CompareTo(y.Name));
-            SelectedCountries.Sort((x, y) => x.Name.CompareTo(y.Name));
+            SelectedCountries.Add(country);
         }
 
         public void SelectedCountriesClicked(Country country)
         {
-            AllCountries.Add(country);
             SelectedCountries.Remove(country);
-
-            SelectedCountries.Sort((x, y) => x.Name.CompareTo(y.Name));
-            AllCountries.Sort((x, y) => x.Name.CompareTo(y.Name));
+            AllCountries.Add(country);
         }
-
-        //public async Task AddRowAsync()
-        //{
-        //    Committee newComm = await _db.AddCommitteeAsync(Committee);
-
-        //    foreach (var item in SelectedCountries)
-        //    {
-        //        await _db.InsertSelectedCountryAsync(newComm.CommID, item.IsoCode);
-        //    }
-
-        //    Properties.Settings.Default.SelCommID = newComm.CommID;
-        //    Properties.Settings.Default.Save();
-        //}
     }
 }

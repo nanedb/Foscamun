@@ -12,9 +12,17 @@ namespace Foscamun2026
     {
         public IServiceProvider? Services { get; private set; }
 
+        public static event Action? LanguageChanged;
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            var lang = Settings.Default.Lang;
+            if (string.IsNullOrEmpty(lang))
+                lang = "en"; // default
+
+            ChangeLanguage(lang);
 
             var services = new ServiceCollection();
 
@@ -65,6 +73,9 @@ namespace Foscamun2026
             // Salva nei Settings
             Settings.Default.Lang = langCode;
             Settings.Default.Save();
+
+            // 🔥 Notifica globale
+            LanguageChanged?.Invoke();
         }
     }
 }
