@@ -58,7 +58,7 @@
                  StretchDirection="Both"
                  VerticalAlignment="Center"
                  HorizontalAlignment="Left">
-            <TextBlock Style="{StaticResource Caption}"
+            <TextBlock Style="{StaticResource H3}"
                        TextWrapping="Wrap"
                        TextAlignment="Left">
                 <Run Text="{DynamicResource ConfigureBtn}"/>

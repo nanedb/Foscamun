@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 
 namespace Foscamun2026.Converters
 {
-    public class BoolToResourceKeyConverter : IValueConverter
+    public class EditAddTitleConverter : IValueConverter
     {
-        public string TrueKey { get; set; }
-        public string FalseKey { get; set; }
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            bool flag = value is bool b && b;
-            return flag ? TrueKey : FalseKey;
+            bool isEdit = value is bool b && b;
+
+            string key = isEdit ? "EditCommittee" : "AddCommittee";
+
+            return Application.Current.TryFindResource(key) ?? key;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return Binding.DoNothing;
-        }
+            => Binding.DoNothing;
     }
 }

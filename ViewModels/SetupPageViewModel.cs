@@ -84,8 +84,9 @@ namespace Foscamun2026.ViewModels
         [RelayCommand]
         private void AddCommittee()
         {
-            var vm = new AddCommitteeViewModel(_db);
-            var page = new AddCommitteePage { DataContext = vm };
+            //var vm = new AddCommitteeViewModel(_db);
+            //var page = new AddCommitteePage { DataContext = vm };
+            var page = new AddCommitteePage(_db);
 
             MainWindow.Instance.NavigateRightFrame(page);
         }
@@ -103,8 +104,9 @@ namespace Foscamun2026.ViewModels
                 return;
             }
 
-            var vm = new AddCommitteeViewModel(_db, SelectedCommittee);
-            var page = new AddCommitteePage { DataContext = vm };
+            //var vm = new AddCommitteeViewModel(_db, SelectedCommittee);
+            //var page = new AddCommitteePage { DataContext = vm };
+            var page = new AddCommitteePage(_db, SelectedCommittee);
 
             MainWindow.Instance.NavigateRightFrame(page);
         }

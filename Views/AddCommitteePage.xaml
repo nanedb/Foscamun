@@ -33,7 +33,6 @@
     </Page.Triggers>
 
     <Page.Resources>
-
         <!-- Template per la lista dei paesi -->
         <DataTemplate x:Key="CountryTemplate" DataType="models:Country">
             <StackPanel Orientation="Horizontal" Margin="4">
@@ -47,14 +46,7 @@
             </StackPanel>
         </DataTemplate>
 
-        <!--<local:BoolToTextConverter x:Key="BoolToTextConverter"/>
-
-        <local:BoolToResourceKeyConverter x:Key="EditAddTitleConverter"
-                                          TrueKey="EditCommitteeTitle"
-                                          FalseKey="AddCommitteeTitle"/>
-
-        --><!-- ⭐ Converter che risolve la risorsa --><!--
-        <local:ResourceResolver x:Key="ResourceResolver"/>-->
+        <local:EditAddTitleConverter x:Key="EditAddTitleConverter"/>
     </Page.Resources>
 
     <Grid>
@@ -92,12 +84,11 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <!--<TextBlock Grid.Column="1" Grid.Row="0" Margin="5"
-                       Style="{StaticResource Caption}">
-                <Run Text="{Binding IsEditMode,
-                            Converter={StaticResource BoolToTextConverter},
-                            ConverterParameter='EditCommittee|AddCommittee'}"/>
-            </TextBlock>-->
+            <!-- Titolo -->
+            <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Margin="5"
+                       Style="{StaticResource H3}"
+                       Text="{Binding IsEditMode,
+                                      Converter={StaticResource EditAddTitleConverter}}"/>
 
             <!-- Titoli liste -->
             <TextBlock Grid.Column="2" Grid.Row="0" Margin="5"
@@ -172,7 +163,7 @@
                       MaxWidth="200"
                       ItemTemplate="{StaticResource CountryTemplate}"
                       Background="{DynamicResource FoscamunWhite}"
-                      SelectedItem="{Binding SelectedCountry, Mode=TwoWay}"
+                      SelectedItem="{Binding SelectedCountry, Mode=OneWayToSource}"
                       MouseLeftButtonUp="AllCountries_Click" />
 
             <!-- ⭐ LISTA PAESI SELEZIONATI -->
@@ -183,7 +174,7 @@
                       MaxWidth="200"
                       ItemTemplate="{StaticResource CountryTemplate}"
                       Background="{DynamicResource FoscamunWhite}"
-                      SelectedItem="{Binding SelectedCountry, Mode=TwoWay}"
+                      SelectedItem="{Binding SelectedCountry, Mode=OneWayToSource}"
                       MouseLeftButtonUp="SelectedCountries_Click" />
 
         </Grid>
