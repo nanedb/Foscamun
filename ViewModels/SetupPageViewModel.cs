@@ -4,64 +4,65 @@ using Foscamun2026.Data;
 using Foscamun2026.Models;
 using Foscamun2026.Views;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Navigation;
+using System.Windows;
 
 namespace Foscamun2026.ViewModels
 {
     public partial class SetupPageViewModel : ObservableObject
     {
         private readonly SqliteDataAccess _db;
-        public NavigationService? NavigationService { get; set; }
 
-        // LISTA COMITATI
+        // -------------------------
+        //  PROPRIETÀ
+        // -------------------------
+
         [ObservableProperty]
         private ObservableCollection<Committee> committees = new();
 
-        // COMITATO SELEZIONATO
         [ObservableProperty]
         private Committee? selectedCommittee;
 
-        // ABILITAZIONE PULSANTI EDIT/REMOVE
         public bool IsEditCommitteeEnabled => SelectedCommittee != null;
 
-        // COSTRUTTORE CORRETTO (DB INIETTATO)
         public SetupPageViewModel(SqliteDataAccess db)
         {
             _db = db;
 
-            System.Diagnostics.Debug.WriteLine("VM: ctor chiamato");
+            //Debug.WriteLine("VM: ctor chiamato");
 
-            // Carica i comitati (la selezione avverrà dentro LoadCommitteesAsync)
             _ = LoadCommitteesAsync();
         }
 
+        // -------------------------
+        //  CARICAMENTO COMITATI
+        // -------------------------
+
         private async Task LoadCommitteesAsync()
         {
-            System.Diagnostics.Debug.WriteLine("VM: LoadCommitteesAsync chiamato");
+            Debug.WriteLine("VM: LoadCommitteesAsync chiamato");
 
             try
             {
                 var list = await _db.GetCommitteesAsync();
-                System.Diagnostics.Debug.WriteLine($"VM: GetCommitteesAsync ha restituito {list.Count} comitati");
+                //Debug.WriteLine($"VM: GetCommitteesAsync ha restituito {list.Count} comitati");
 
                 Committees = new ObservableCollection<Committee>(list);
 
-                // Se esiste un comitato salvato, selezionalo ORA (quando la lista è piena)
                 var savedName = Properties.Settings.Default.SelCommName;
-                System.Diagnostics.Debug.WriteLine($"VM: SelCommName = '{savedName}'");
+                //Debug.WriteLine($"VM: SelCommName = '{savedName}'");
 
                 if (!string.IsNullOrWhiteSpace(savedName))
                 {
                     SelectedCommittee = Committees.FirstOrDefault(c => c.Name == savedName);
-                    System.Diagnostics.Debug.WriteLine($"VM: SelectedCommittee = '{SelectedCommittee?.Name}'");
-
+                    //Debug.WriteLine($"VM: SelectedCommittee = '{SelectedCommittee?.Name}'");
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("ERRORE in LoadCommitteesAsync: " + ex.Message);
+                Debug.WriteLine("ERRORE in LoadCommitteesAsync: " + ex.Message);
             }
         }
 
@@ -76,33 +77,64 @@ namespace Foscamun2026.ViewModels
             }
         }
 
-        // AGGIUNTA
+        // -------------------------
+        //  ADD
+        // -------------------------
+
         [RelayCommand]
         private void AddCommittee()
         {
-            NavigationService?.Navigate(new AddCommitteePage());
+            var vm = new AddCommitteeViewModel(_db);
+            var page = new AddCommitteePage { DataContext = vm };
+
+            MainWindow.Instance.NavigateRightFrame(page);
         }
-        
-        // MODIFICA
+
+        // -------------------------
+        //  EDIT
+        // -------------------------
+
         [RelayCommand]
-        private async Task EditCommitteeAsync()
+        private void EditCommittee()
         {
             if (SelectedCommittee == null)
+            {
+                MessageBox.Show("Please select a committee to edit.");
                 return;
+            }
 
-            await _db.UpdateCommitteeAsync(SelectedCommittee);
-            await LoadCommitteesAsync();
+            var vm = new AddCommitteeViewModel(_db, SelectedCommittee);
+            var page = new AddCommitteePage { DataContext = vm };
+
+            MainWindow.Instance.NavigateRightFrame(page);
         }
 
-        // RIMOZIONE
+        // -------------------------
+        //  REMOVE
+        // -------------------------
+
         [RelayCommand]
         private async Task RemoveCommitteeAsync()
         {
             if (SelectedCommittee == null)
+            {
+                MessageBox.Show("Please select a committee to delete.");
+                return;
+            }
+
+            var result = MessageBox.Show(
+                $"Are you sure you want to delete '{SelectedCommittee.Name}'?",
+                "Confirm delete",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (result != MessageBoxResult.Yes)
                 return;
 
             await _db.RemoveCommitteeAsync(SelectedCommittee);
-            await LoadCommitteesAsync();
+
+            Committees.Remove(SelectedCommittee);
+            SelectedCommittee = null;
         }
     }
 }

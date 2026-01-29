@@ -9,6 +9,8 @@
     <sys:String x:Key="YearLbl">Sélectionner l'année:</sys:String>
     <sys:String x:Key="LanguageLbl">Choisir la langue:</sys:String>
     <sys:String x:Key="CommitteeLbl">Choisir le comité:</sys:String>
+    <sys:String x:Key="AddCommittee">Ajouter un comité</sys:String>
+    <sys:String x:Key="EditCommittee">Modifier le comité</sys:String>
 
     <!-- Boutons -->
     <sys:String x:Key="HomeBtn">Home</sys:String>
@@ -20,7 +22,9 @@
     <sys:String x:Key="ConfigureBtn">Configuration</sys:String>
     <sys:String x:Key="NextBtn">Suivant</sys:String>
     <sys:String x:Key="CloseBtn">Fermer</sys:String>
-
+    <sys:String x:Key="OkBtn">Valider</sys:String>
+    <sys:String x:Key="CancelBtn">Annuler</sys:String>
+    
     <!-- ToolTips -->
     <sys:String x:Key="HamburgerBtn">Ouvrir/Fermer le menu</sys:String>
 

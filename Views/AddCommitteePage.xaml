@@ -4,34 +4,57 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:models="clr-namespace:Foscamun2026.Models"
-      xmlns:vm="clr-namespace:Foscamun2026.ViewModels"
       xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+      xmlns:local="clr-namespace:Foscamun2026.Converters"
       mc:Ignorable="d"
       d:DesignHeight="500"
       d:DesignWidth="800"
-      Title="AddCommitteePage"
       Background="{DynamicResource FoscamunBlue}"
       Foreground="{DynamicResource FoscamunWhite}"
-      FontFamily ="{DynamicResource FontPrimary}"
-      FontSize="18"
->
+      FontFamily="{DynamicResource FontPrimary}"
+      FontSize="18">
+
+    <!-- ⭐ ANIMAZIONE DI INGRESSO -->
+    <Page.Triggers>
+        <EventTrigger RoutedEvent="Page.Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <ThicknessAnimation Storyboard.TargetProperty="Margin"
+                                        From="50,0,-50,0"
+                                        To="0"
+                                        Duration="0:0:0.25">
+                        <ThicknessAnimation.EasingFunction>
+                            <QuadraticEase EasingMode="EaseOut"/>
+                        </ThicknessAnimation.EasingFunction>
+                    </ThicknessAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </Page.Triggers>
+
     <Page.Resources>
-        <!-- Template corretto: Country è nel namespace Models -->
+
+        <!-- Template per la lista dei paesi -->
         <DataTemplate x:Key="CountryTemplate" DataType="models:Country">
             <StackPanel Orientation="Horizontal" Margin="4">
                 <svgc:SvgViewbox Width="24" Height="24"
                                  Source="{Binding FlagPath}"
                                  VerticalAlignment="Center" />
-                <!--<Image Source="{Binding SmallFlagPath}"
-                       Margin="0,0,5,0"
-                       VerticalAlignment="Center" />-->
                 <TextBlock Text="{Binding Name}"
                            Margin="10,0,0,0"
                            VerticalAlignment="Center"
                            FontSize="14" />
             </StackPanel>
         </DataTemplate>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
+        <!--<local:BoolToTextConverter x:Key="BoolToTextConverter"/>
+
+        <local:BoolToResourceKeyConverter x:Key="EditAddTitleConverter"
+                                          TrueKey="EditCommitteeTitle"
+                                          FalseKey="AddCommitteeTitle"/>
+
+        --><!-- ⭐ Converter che risolve la risorsa --><!--
+        <local:ResourceResolver x:Key="ResourceResolver"/>-->
     </Page.Resources>
 
     <Grid>
@@ -39,18 +62,18 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="15" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="15" />
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
             <RowDefinition Height="15" />
             <RowDefinition Height="12*" />
-            <RowDefinition Height="auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="15" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1">
+        <!-- ⭐ CONTENUTO PRINCIPALE -->
+        <Grid Grid.Column="1" Grid.Row="1">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -61,15 +84,22 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
-                <RowDefinition Height="auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="3*" />
                 <RowDefinition Height="3*" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <!-- Titoli -->
+            <!--<TextBlock Grid.Column="1" Grid.Row="0" Margin="5"
+                       Style="{StaticResource Caption}">
+                <Run Text="{Binding IsEditMode,
+                            Converter={StaticResource BoolToTextConverter},
+                            ConverterParameter='EditCommittee|AddCommittee'}"/>
+            </TextBlock>-->
+
+            <!-- Titoli liste -->
             <TextBlock Grid.Column="2" Grid.Row="0" Margin="5"
                        Text="Click to add Country to Committee"
                        FontSize="12" TextWrapping="Wrap"
@@ -82,13 +112,14 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center" />
 
-            <!-- Campi testo -->
+            <!-- ⭐ CAMPI TESTO (binding corretto) -->
+
             <TextBlock Grid.Column="0" Grid.Row="1" Margin="5"
                        Text="Committee" HorizontalAlignment="Right"
                        VerticalAlignment="Center" />
 
             <TextBox Grid.Column="1" Grid.Row="1" Margin="5"
-                     Text="{Binding Committee.Name, Mode=OneWayToSource}"
+                     Text="{Binding Committee.Name, UpdateSourceTrigger=PropertyChanged}"
                      Background="{DynamicResource FoscamunWhite}" />
 
             <TextBlock Grid.Column="0" Grid.Row="2" Margin="5"
@@ -96,7 +127,7 @@
                        VerticalAlignment="Center" />
 
             <TextBox Grid.Column="1" Grid.Row="2" Margin="5"
-                     Text="{Binding Committee.TopicA, Mode=OneWayToSource}"
+                     Text="{Binding Committee.TopicA, UpdateSourceTrigger=PropertyChanged}"
                      TextWrapping="Wrap"
                      Background="{DynamicResource FoscamunWhite}" />
 
@@ -105,7 +136,7 @@
                        VerticalAlignment="Center" />
 
             <TextBox Grid.Column="1" Grid.Row="3" Margin="5"
-                     Text="{Binding Committee.TopicB, Mode=OneWayToSource}"
+                     Text="{Binding Committee.TopicB, UpdateSourceTrigger=PropertyChanged}"
                      TextWrapping="Wrap"
                      Background="{DynamicResource FoscamunWhite}" />
 
@@ -114,7 +145,7 @@
                        VerticalAlignment="Center" />
 
             <TextBox Grid.Column="1" Grid.Row="4" Margin="5"
-                     Text="{Binding Committee.President, Mode=OneWayToSource}"
+                     Text="{Binding Committee.President, UpdateSourceTrigger=PropertyChanged}"
                      Background="{DynamicResource FoscamunWhite}" />
 
             <TextBlock Grid.Column="0" Grid.Row="5" Margin="5"
@@ -122,7 +153,7 @@
                        VerticalAlignment="Center" />
 
             <TextBox Grid.Column="1" Grid.Row="5" Margin="5"
-                     Text="{Binding Committee.VicePresident, Mode=OneWayToSource}"
+                     Text="{Binding Committee.VicePresident, UpdateSourceTrigger=PropertyChanged}"
                      Background="{DynamicResource FoscamunWhite}" />
 
             <TextBlock Grid.Column="0" Grid.Row="6" Margin="5"
@@ -130,10 +161,10 @@
                        VerticalAlignment="Center" />
 
             <TextBox Grid.Column="1" Grid.Row="6" Margin="5"
-                     Text="{Binding Committee.Moderator, Mode=OneWayToSource}"
+                     Text="{Binding Committee.Moderator, UpdateSourceTrigger=PropertyChanged}"
                      Background="{DynamicResource FoscamunWhite}" />
 
-            <!-- Liste -->
+            <!-- ⭐ LISTA PAESI DISPONIBILI -->
             <ListView ItemsSource="{Binding AllCountries}"
                       Grid.Column="2" Grid.Row="1" Grid.RowSpan="6"
                       Margin="5"
@@ -144,6 +175,7 @@
                       SelectedItem="{Binding SelectedCountry, Mode=TwoWay}"
                       MouseLeftButtonUp="AllCountries_Click" />
 
+            <!-- ⭐ LISTA PAESI SELEZIONATI -->
             <ListView ItemsSource="{Binding SelectedCountries}"
                       Grid.Column="3" Grid.Row="1" Grid.RowSpan="6"
                       Margin="5"
@@ -155,6 +187,43 @@
                       MouseLeftButtonUp="SelectedCountries_Click" />
 
         </Grid>
+
+        <!-- ⭐ PULSANTI OK / CANCEL -->
+        <StackPanel Grid.Row="2"
+                    Grid.Column="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0 10 10 0">
+
+            <!-- CANCEL -->
+            <Button Style="{StaticResource MenuButton}"
+                    Width="150"
+                    Margin="0 0 10 0"
+                    Command="{Binding CancelCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <svgc:SvgViewbox Width="18" Height="18"
+                                     Source="pack://application:,,,/Resources/Icons/close.svg"
+                                     Stretch="Uniform"
+                                     Margin="0,0,10,0"/>
+                    <TextBlock Text="{DynamicResource CancelBtn}" Padding="10 5"/>
+                </StackPanel>
+            </Button>
+
+            <!-- OK -->
+            <Button Style="{StaticResource MenuButton}"
+                    Width="150"
+                    Command="{Binding SaveCommand}"
+                    IsEnabled="{Binding CanSave}">
+                <StackPanel Orientation="Horizontal">
+                    <svgc:SvgViewbox Width="18" Height="18"
+                                     Source="pack://application:,,,/Resources/Icons/check.svg"
+                                     Stretch="Uniform"
+                                     Margin="0,0,10,0"/>
+                    <TextBlock Text="{DynamicResource OkBtn}" Padding="10 5"/>
+                </StackPanel>
+            </Button>
+
+        </StackPanel>
 
     </Grid>
 </Page>

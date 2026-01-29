@@ -10,6 +10,8 @@
     <sys:String x:Key="YearLbl">Select Year:</sys:String>
     <sys:String x:Key="LanguageLbl">Select Language:</sys:String>
     <sys:String x:Key="CommitteeLbl">Select Committee:</sys:String>
+    <sys:String x:Key="AddCommittee">Add Committee</sys:String>
+    <sys:String x:Key="EditCommittee">Edit Committee</sys:String>
 
     <!-- Pulsanti -->
     <sys:String x:Key="HomeBtn">Home</sys:String>
@@ -21,7 +23,8 @@
     <sys:String x:Key="ConfigureBtn">Setup</sys:String>
     <sys:String x:Key="NextBtn">Next</sys:String>
     <sys:String x:Key="CloseBtn">Close</sys:String>
-
+    <sys:String x:Key="OkBtn">OK</sys:String>
+    <sys:String x:Key="CancelBtn">Cancel</sys:String>
 
     <!-- ToolTips -->
     <sys:String x:Key="HamburgerBtn">Open/Close menu</sys:String>

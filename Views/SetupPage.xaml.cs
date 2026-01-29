@@ -1,6 +1,8 @@
 ﻿using Foscamun2026.Data;
+using Foscamun2026.Models;
 using Foscamun2026.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -9,17 +11,17 @@ namespace Foscamun2026.Views
 {
     public partial class SetupPage : Page
     {
-        private SetupPageViewModel _vm;
+        private readonly SetupPageViewModel _vm;
+        private readonly SqliteDataAccess _db;
 
         public SetupPage()
         {
             InitializeComponent();
 
-            var db = ((App)Application.Current).Services!.GetRequiredService<SqliteDataAccess>();
-            _vm = new SetupPageViewModel(db);
+            _db = ((App)Application.Current).Services!.GetRequiredService<SqliteDataAccess>();
+            _vm = new SetupPageViewModel(_db);
             DataContext = _vm;
 
-            // Focus automatico sulla ListBox quando la pagina è caricata
             Loaded += SetupPage_Loaded;
 
             var lang = Properties.Settings.Default.Lang;
@@ -32,14 +34,10 @@ namespace Foscamun2026.Views
             }
         }
 
-        private void SetupPage_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        private void SetupPage_Loaded(object sender, RoutedEventArgs e)
         {
-            // 🔥 ASSEGNA IL NAVIGATION SERVICE QUI
-            _vm.NavigationService = NavigationService;
-
             CommitteesListBox.Focus();
 
-            // Scroll dopo che la UI ha finito di disegnare
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 if (_vm.SelectedCommittee != null)
@@ -50,12 +48,70 @@ namespace Foscamun2026.Views
             }), DispatcherPriority.Background);
         }
 
+        // -------------------------
+        //  ADD
+        // -------------------------
+        private void AddBtn_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = new AddCommitteeViewModel(_db);
+            var page = new AddCommitteePage { DataContext = vm };
+
+            MainWindow.Instance.NavigateRightFrame(page);
+        }
+
+        // -------------------------
+        //  EDIT
+        // -------------------------
+        private void EditBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (_vm.SelectedCommittee == null)
+            {
+                MessageBox.Show("Please select a committee to edit.");
+                return;
+            }
+
+            var vm = new AddCommitteeViewModel(_db, _vm.SelectedCommittee);
+            var page = new AddCommitteePage { DataContext = vm };
+
+            MainWindow.Instance.NavigateRightFrame(page);
+        }
+
+        // -------------------------
+        //  DELETE
+        // -------------------------
+        private async void DeleteBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (_vm.SelectedCommittee == null)
+            {
+                MessageBox.Show("Please select a committee to delete.");
+                return;
+            }
+
+            var result = MessageBox.Show(
+                $"Are you sure you want to delete '{_vm.SelectedCommittee.Name}'?",
+                "Confirm delete",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (result != MessageBoxResult.Yes)
+                return;
+
+            await _db.RemoveCommitteeAsync(_vm.SelectedCommittee);
+
+            _vm.Committees.Remove(_vm.SelectedCommittee);
+            _vm.SelectedCommittee = null;
+        }
+
+        // -------------------------
+        //  LANGUAGE SWITCH
+        // -------------------------
         private void EngLangButton_Checked(object sender, RoutedEventArgs e)
         {
             Properties.Settings.Default.Lang = "en";
             Properties.Settings.Default.Save();
             App.ChangeLanguage("en");
         }
+
         private void FraLangButton_Checked(object sender, RoutedEventArgs e)
         {
             Properties.Settings.Default.Lang = "fr";
