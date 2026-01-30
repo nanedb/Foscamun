@@ -13,7 +13,7 @@
     <sys:String x:Key="AddCommittee">Add Committee</sys:String>
     <sys:String x:Key="EditCommittee">Edit Committee</sys:String>
 
-    <!-- Pulsanti -->
+    <!-- Buttons -->
     <sys:String x:Key="HomeBtn">Home</sys:String>
     <sys:String x:Key="AddBtn">Add</sys:String>
     <sys:String x:Key="EditBtn">Edit</sys:String>
@@ -25,6 +25,7 @@
     <sys:String x:Key="CloseBtn">Close</sys:String>
     <sys:String x:Key="OkBtn">OK</sys:String>
     <sys:String x:Key="CancelBtn">Cancel</sys:String>
+    <sys:String x:Key="EditICJBtn">Edit ICJ</sys:String>
 
     <!-- ToolTips -->
     <sys:String x:Key="HamburgerBtn">Open/Close menu</sys:String>

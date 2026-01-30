@@ -84,7 +84,7 @@
                Style="{StaticResource LeftAlignedLabelStyle}"
                Content="{DynamicResource YearLbl}"/>
         <TextBox x:Name="YearBox"  Grid.Row="2" Grid.Column="1"
-                 Background="{DynamicResource FoscamunWhite}"
+                 Style="{StaticResource InputBoxStyle}"
                  Text="{Binding Source={x:Static properties:Settings.Default},
                                 Path=Year,
                                 Mode=TwoWay,
@@ -156,7 +156,7 @@
                  SelectedItem="{Binding SelectedCommittee, Mode=TwoWay}"
                  Margin="0 0 40 0"
                  MinHeight="120"
-                 Background="{DynamicResource FoscamunWhite}"
+                 Style="{StaticResource ListBoxStyle}"
                  SelectionMode="Single" Focusable="True">
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
@@ -180,7 +180,7 @@
 
             <!--ADD BUTTON-->
             <Button Style="{StaticResource MenuButton}" x:Name="AddButton"
-                    Margin="40 0 0 10"
+                    Margin="40 0 0 4"
                     Command="{Binding AddCommitteeCommand}">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
                             HorizontalAlignment="Left">
@@ -188,13 +188,13 @@
                                Source="pack://application:,,,/Resources/Icons/add.svg"
                                Stretch="Uniform"
                                Margin="0,0,10,0"/>
-                    <TextBlock Text="{DynamicResource AddBtn}" Padding="10 5"/>
+                    <TextBlock Text="{DynamicResource AddBtn}" Padding="10 3"/>
                 </StackPanel>
             </Button>
 
             <!--EDIT BUTTON-->
             <Button Style="{StaticResource MenuButton}" x:Name="EditButton"
-                    Margin="40 0 0 10"
+                    Margin="40 0 0 4"
                     IsEnabled="{Binding IsEditCommitteeEnabled}"
                     Command="{Binding EditCommitteeCommand}">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
@@ -203,13 +203,27 @@
                                Source="pack://application:,,,/Resources/Icons/edit.svg"
                                Stretch="Uniform"
                                Margin="0,0,10,0"/>
-                    <TextBlock Text="{DynamicResource EditBtn}" Padding="10 5"/>
+                    <TextBlock Text="{DynamicResource EditBtn}" Padding="10 3"/>
+                </StackPanel>
+            </Button>
+
+            <!--EDIT ICJ BUTTON-->
+            <Button Style="{StaticResource MenuButton}" x:Name="EditICJButton"
+                            Margin="40 0 0 4"
+                            Command="{Binding EditICJCommand}">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
+                            HorizontalAlignment="Left">
+                    <svgc:SvgViewbox Width="18" Height="18"
+                                     Source="pack://application:,,,/Resources/Icons/icj.svg"
+                                     Stretch="Uniform"
+                                     Margin="0,0,10,0"/>
+                   <TextBlock Text="{DynamicResource EditICJBtn}" Padding="10 3"/>
                 </StackPanel>
             </Button>
 
             <!--REMOVE BUTTON-->
             <Button Style="{StaticResource MenuButton}" x:Name="RemoveButton"
-                    Margin="40 0 0 10"
+                    Margin="40 0 0 4"
                     IsEnabled="{Binding IsEditCommitteeEnabled}"
                     Command="{Binding RemoveCommitteeCommand}">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
@@ -218,7 +232,7 @@
                                Source="pack://application:,,,/Resources/Icons/remove.svg"
                                Stretch="Uniform"
                                Margin="0,0,10,0"/>
-                    <TextBlock Text="{DynamicResource RemoveBtn}" Padding="10 5"/>
+                    <TextBlock Text="{DynamicResource RemoveBtn}" Padding="10 3"/>
                 </StackPanel>
             </Button>
         </StackPanel>

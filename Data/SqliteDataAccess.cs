@@ -11,9 +11,12 @@ namespace Foscamun2026.Data
     {
         private readonly string _connectionString;
 
+        /// <summary>
+        /// Initializes the SQLite database connection.
+        /// Ensures the application data folder and DB file exist.
+        /// </summary>
         public SqliteDataAccess()
         {
-            // Percorso sicuro e universale
             string folder = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 "Foscamun2026"
@@ -22,13 +25,17 @@ namespace Foscamun2026.Data
             Directory.CreateDirectory(folder);
 
             string dbPath = Path.Combine(folder, "Foscamun.db");
-
             _connectionString = $"Data Source={dbPath}";
         }
 
-        // ---------------------------------------------------------
-        //  LOAD ALL COUNTRIES
-        // ---------------------------------------------------------
+        // ============================================================
+        //  COUNTRIES (ALL)
+        // ============================================================
+
+        /// <summary>
+        /// Loads all countries from the Countries table.
+        /// Returns English, French and Spanish names for each ISO code.
+        /// </summary>
         public async Task<List<Country>> LoadAllCountriesAsync()
         {
             var list = new List<Country>();
@@ -51,12 +58,17 @@ namespace Foscamun2026.Data
                     SpanishName = reader.GetString(3)
                 });
             }
+
             return list;
         }
 
-        // ---------------------------------------------------------
-        //  LOAD COUNTRIES FOR A SPECIFIC COMMITTEE
-        // ---------------------------------------------------------
+        // ============================================================
+        //  COUNTRIES FOR NORMAL COMMITTEES
+        // ============================================================
+
+        /// <summary>
+        /// Loads all countries assigned to a specific committee (by CommID).
+        /// </summary>
         public async Task<List<Country>> LoadCountriesForCommitteeAsync(int commID)
         {
             var list = new List<Country>();
@@ -65,12 +77,12 @@ namespace Foscamun2026.Data
             await connection.OpenAsync();
 
             string sql = @"
-                         SELECT c.IsoCode, c.EnglishName, c.FrenchName, c.SpanishName
-                         FROM CountryLists cl
-                         JOIN Countries c ON cl.IsoCode = c.IsoCode
-                         WHERE cl.CommID = @CommID
-                         ORDER BY c.EnglishName;
-                         ";
+                SELECT c.IsoCode, c.EnglishName, c.FrenchName, c.SpanishName
+                FROM CountryLists cl
+                JOIN Countries c ON cl.IsoCode = c.IsoCode
+                WHERE cl.CommID = @CommID
+                ORDER BY c.EnglishName;
+            ";
 
             using var cmd = new SqliteCommand(sql, connection);
             cmd.Parameters.AddWithValue("@CommID", commID);
@@ -90,9 +102,9 @@ namespace Foscamun2026.Data
             return list;
         }
 
-        // ---------------------------------------------------------
-        //  DELETE ALL COUNTRIES FOR A COMMITTEE
-        // ---------------------------------------------------------
+        /// <summary>
+        /// Deletes all countries assigned to a specific committee.
+        /// </summary>
         public async Task DeleteCountriesForCommitteeAsync(int commID)
         {
             using var connection = new SqliteConnection(_connectionString);
@@ -106,9 +118,33 @@ namespace Foscamun2026.Data
             await cmd.ExecuteNonQueryAsync();
         }
 
-        // ---------------------------------------------------------
-        //  GET COMMITTEES
-        // ---------------------------------------------------------
+        /// <summary>
+        /// Inserts a country into CountryLists for a specific committee.
+        /// </summary>
+        public async Task InsertSelectedCountryAsync(int committeeId, string isoCode)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            await connection.OpenAsync();
+
+            string sql = @"
+                INSERT INTO CountryLists (CommID, IsoCode, Warnings)
+                VALUES (@CommID, @IsoCode, 0);
+            ";
+
+            using var cmd = new SqliteCommand(sql, connection);
+            cmd.Parameters.AddWithValue("@CommID", committeeId);
+            cmd.Parameters.AddWithValue("@IsoCode", isoCode);
+
+            await cmd.ExecuteNonQueryAsync();
+        }
+
+        // ============================================================
+        //  COMMITTEES (NORMAL)
+        // ============================================================
+
+        /// <summary>
+        /// Loads all committees from the Committees table.
+        /// </summary>
         public async Task<List<Committee>> GetCommitteesAsync()
         {
             var list = new List<Committee>();
@@ -138,9 +174,9 @@ namespace Foscamun2026.Data
             return list;
         }
 
-        // ---------------------------------------------------------
-        //  ADD COMMITTEE
-        // ---------------------------------------------------------
+        /// <summary>
+        /// Inserts a new committee and returns it with the generated CommID.
+        /// </summary>
         public async Task<Committee> AddCommitteeAsync(Committee committee)
         {
             using var connection = new SqliteConnection(_connectionString);
@@ -163,40 +199,16 @@ namespace Foscamun2026.Data
             var result = await cmd.ExecuteScalarAsync();
 
             if (result is long newId)
-            {
                 committee.CommID = (int)newId;
-            }
             else
-            {
-                throw new Exception("Errore: impossibile ottenere l'ID del nuovo comitato.");
-            }
+                throw new Exception("Unable to retrieve new committee ID.");
 
             return committee;
         }
 
-        // ---------------------------------------------------------
-        //  INSERT SELECTED COUNTRY (CountryLists)
-        // ---------------------------------------------------------
-        public async Task InsertSelectedCountryAsync(int committeeId, string isoCode)
-        {
-            using var connection = new SqliteConnection(_connectionString);
-            await connection.OpenAsync();
-
-            string sql = @"
-                INSERT INTO CountryLists (CommID, IsoCode, Warnings)
-                VALUES (@CommID, @IsoCode, 0);
-            ";
-
-            using var cmd = new SqliteCommand(sql, connection);
-            cmd.Parameters.AddWithValue("@CommID", committeeId);
-            cmd.Parameters.AddWithValue("@IsoCode", isoCode);
-
-            await cmd.ExecuteNonQueryAsync();
-        }
-
-        // ---------------------------------------------------------
-        //  UPDATE COMMITTEE
-        // ---------------------------------------------------------
+        /// <summary>
+        /// Updates an existing committee.
+        /// </summary>
         public async Task UpdateCommitteeAsync(Committee committee)
         {
             using var connection = new SqliteConnection(_connectionString);
@@ -225,29 +237,216 @@ namespace Foscamun2026.Data
             await cmd.ExecuteNonQueryAsync();
         }
 
-        // ---------------------------------------------------------
-        //  REMOVE COMMITTEE
-        // ---------------------------------------------------------
+        /// <summary>
+        /// Removes a committee and all its assigned countries.
+        /// </summary>
         public async Task RemoveCommitteeAsync(Committee committee)
         {
             using var connection = new SqliteConnection(_connectionString);
             await connection.OpenAsync();
 
-            // 1️⃣ Elimina i paesi associati
             string sqlCountries = "DELETE FROM CountryLists WHERE CommID = @CommID";
-
             using (var cmd = new SqliteCommand(sqlCountries, connection))
             {
                 cmd.Parameters.AddWithValue("@CommID", committee.CommID);
                 await cmd.ExecuteNonQueryAsync();
             }
 
-            // 2️⃣ Elimina il comitato
             string sqlCommittee = "DELETE FROM Committees WHERE CommID = @CommID";
-
             using (var cmd = new SqliteCommand(sqlCommittee, connection))
             {
                 cmd.Parameters.AddWithValue("@CommID", committee.CommID);
+                await cmd.ExecuteNonQueryAsync();
+            }
+        }
+
+        // ============================================================
+        //  ICJ — MAIN INFO (Topic, President, Moderator)
+        // ============================================================
+
+        /// <summary>
+        /// Loads the single ICJ record (Topic, President, Moderator).
+        /// </summary>
+        public async Task<(string Topic, string President, string Moderator)> LoadICJAsync()
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            await connection.OpenAsync();
+
+            string sql = "SELECT Topic, President, Moderator FROM ICJ LIMIT 1";
+
+            using var cmd = new SqliteCommand(sql, connection);
+            using var reader = await cmd.ExecuteReaderAsync();
+
+            if (await reader.ReadAsync())
+            {
+                return (
+                    reader.IsDBNull(0) ? "" : reader.GetString(0),
+                    reader.IsDBNull(1) ? "" : reader.GetString(1),
+                    reader.IsDBNull(2) ? "" : reader.GetString(2)
+                );
+            }
+
+            return ("", "", "");
+        }
+
+        /// <summary>
+        /// Saves ICJ main info (Topic, President, Moderator).
+        /// Replaces the single row in the ICJ table.
+        /// </summary>
+        public async Task SaveICJAsync(string topic, string president, string moderator)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            await connection.OpenAsync();
+
+            string sqlDelete = "DELETE FROM ICJ";
+            using (var cmd = new SqliteCommand(sqlDelete, connection))
+                await cmd.ExecuteNonQueryAsync();
+
+            string sqlInsert = @"
+                INSERT INTO ICJ (Topic, President, Moderator)
+                VALUES (@Topic, @President, @Moderator);
+            ";
+
+            using var cmd2 = new SqliteCommand(sqlInsert, connection);
+            cmd2.Parameters.AddWithValue("@Topic", topic);
+            cmd2.Parameters.AddWithValue("@President", president);
+            cmd2.Parameters.AddWithValue("@Moderator", moderator);
+
+            await cmd2.ExecuteNonQueryAsync();
+        }
+
+        // ============================================================
+        //  ICJ — MEMBERS
+        // ============================================================
+
+        /// <summary>
+        /// Loads all ICJ members (Jurors and Lawyers).
+        /// </summary>
+        public async Task<List<ICJMember>> LoadICJMembersAsync()
+        {
+            var list = new List<ICJMember>();
+
+            using var connection = new SqliteConnection(_connectionString);
+            await connection.OpenAsync();
+
+            string sql = "SELECT MemberID, Name, IsoCode, Kind, Warnings FROM ICJMembers ORDER BY Name";
+
+            using var cmd = new SqliteCommand(sql, connection);
+            using var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                list.Add(new ICJMember
+                {
+                    MemberID = reader.GetInt32(0),
+                    Name = reader.GetString(1),
+                    IsoCode = reader.GetString(2),
+                    Kind = reader.GetString(3),
+                    Warnings = reader.GetInt32(4)
+                });
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// Inserts a new ICJ member (Juror or Lawyer).
+        /// </summary>
+        public async Task InsertICJMemberAsync(string name, string kind, string isoCode = "IC")
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            await connection.OpenAsync();
+
+            string sql = @"
+                INSERT INTO ICJMembers (Name, IsoCode, Kind, Warnings)
+                VALUES (@Name, @IsoCode, @Kind, 0);
+            ";
+
+            using var cmd = new SqliteCommand(sql, connection);
+            cmd.Parameters.AddWithValue("@Name", name);
+            cmd.Parameters.AddWithValue("@IsoCode", isoCode);
+            cmd.Parameters.AddWithValue("@Kind", kind);
+
+            await cmd.ExecuteNonQueryAsync();
+        }
+
+        /// <summary>
+        /// Deletes an ICJ member by MemberID.
+        /// </summary>
+        public async Task DeleteICJMemberAsync(int memberId)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            await connection.OpenAsync();
+
+            string sql = "DELETE FROM ICJMembers WHERE MemberID = @ID";
+
+            using var cmd = new SqliteCommand(sql, connection);
+            cmd.Parameters.AddWithValue("@ID", memberId);
+
+            await cmd.ExecuteNonQueryAsync();
+        }
+
+        // ============================================================
+        //  ICJ — COUNTRIES (CommID = -1)
+        // ============================================================
+
+        /// <summary>
+        /// Loads all countries assigned to ICJ (stored with CommID = -1).
+        /// </summary>
+        public async Task<List<Country>> LoadICJCountriesAsync()
+        {
+            var list = new List<Country>();
+
+            using var connection = new SqliteConnection(_connectionString);
+            await connection.OpenAsync();
+
+            string sql = @"
+                SELECT c.IsoCode, c.EnglishName, c.FrenchName, c.SpanishName
+                FROM CountryLists cl
+                JOIN Countries c ON cl.IsoCode = c.IsoCode
+                WHERE cl.CommID = -1
+                ORDER BY c.EnglishName;
+            ";
+
+            using var cmd = new SqliteCommand(sql, connection);
+            using var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                list.Add(new Country
+                {
+                    IsoCode = reader.GetString(0),
+                    EnglishName = reader.GetString(1),
+                    FrenchName = reader.GetString(2),
+                    SpanishName = reader.GetString(3)
+                });
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// Saves the list of countries assigned to ICJ.
+        /// Replaces all entries with CommID = -1.
+        /// </summary>
+        public async Task SaveICJCountriesAsync(IEnumerable<Country> countries)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            await connection.OpenAsync();
+
+            string sqlDelete = "DELETE FROM CountryLists WHERE CommID = -1";
+            using (var cmd = new SqliteCommand(sqlDelete, connection))
+                await cmd.ExecuteNonQueryAsync();
+
+            foreach (var c in countries)
+            {
+                string sqlInsert = @"
+                    INSERT INTO CountryLists (CommID, IsoCode, Warnings)
+                    VALUES (-1, @IsoCode, 0);
+                ";
+
+                using var cmd = new SqliteCommand(sqlInsert, connection);
+                cmd.Parameters.AddWithValue("@IsoCode", c.IsoCode);
                 await cmd.ExecuteNonQueryAsync();
             }
         }

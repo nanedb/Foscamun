@@ -24,6 +24,7 @@
     <sys:String x:Key="CloseBtn">Fermer</sys:String>
     <sys:String x:Key="OkBtn">Valider</sys:String>
     <sys:String x:Key="CancelBtn">Annuler</sys:String>
+    <sys:String x:Key="EditICJBtn">Modifier ICJ</sys:String>
     
     <!-- ToolTips -->
     <sys:String x:Key="HamburgerBtn">Ouvrir/Fermer le menu</sys:String>

@@ -1,0 +1,115 @@
+﻿<Page x:Class="Foscamun2026.Views.AddICJPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d"
+      d:DesignWidth="800"
+      d:DesignHeight="500"
+      Background="{DynamicResource FoscamunBlue}"
+      Foreground="{DynamicResource FoscamunWhite}"
+      Title="AddICJPage">
+
+    <Grid Margin="30">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- TITOLO -->
+        <TextBlock Text="International Court of Justice"
+                   Style="{StaticResource H3}"
+                   Margin="0 0 0 25"/>
+
+        <!-- CONTENUTO -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,*,*">
+
+            <!-- COLONNA 1: Topic, President, Moderator -->
+            <Grid Grid.Column="0" Margin="0 0 25 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="3*"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+
+                <TextBlock Grid.Row="0" Text="Topic"
+                           Style="{StaticResource Caption}"/>
+                <TextBox Grid.Row="1" Text="{Binding Topic}"
+                         Style="{StaticResource InputBoxStyle}"
+                         Margin="0 5 0 15"/>
+
+                <TextBlock Grid.Row="2" Text="President"
+                           Style="{StaticResource Caption}"/>
+                <TextBox Grid.Row="3" Text="{Binding President}"
+                         Style="{StaticResource InputBoxStyle}"
+                         Margin="0 5 0 15"/>
+
+                <TextBlock Grid.Row="4" Text="Moderator"
+                           Style="{StaticResource Caption}"/>
+                <TextBox Grid.Row="5" Text="{Binding Moderator}"
+                         Style="{StaticResource InputBoxStyle}"
+                         Margin="0 5 0 15"/>
+
+            </Grid>
+
+            <!-- COLONNA 2: Available Countries -->
+            <Grid Grid.Column="1" Margin="0 0 25 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Available Countries"
+                           Style="{StaticResource Caption}"/>
+
+                <ListBox Grid.Row="1" ItemsSource="{Binding AvailableCountries}"
+                         SelectedItem="{Binding SelectedCountry}"
+                         Style="{StaticResource ListBoxStyle}"
+                         MouseDoubleClick="AvailableCountries_DoubleClick"
+                         Margin="0 5 0 15"/>
+            </Grid>
+
+            <!-- COLONNA 3: Assigned Countries -->
+            <Grid Grid.Column="2" Margin="0 0 25 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Assigned Countries"
+                           Style="{StaticResource Caption}"/>
+
+                <ListBox Grid.Row="1" ItemsSource="{Binding SelectedCountries}"
+                         SelectedItem="{Binding SelectedCountry}"
+                         Style="{StaticResource ListBoxStyle}"
+                         MouseDoubleClick="SelectedCountries_DoubleClick"
+                         Margin="0 5 0 15"/>
+            </Grid>
+
+        </Grid>
+
+        <!-- FOOTER -->
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+
+            <Button Content="Add Member"
+                    Command="{Binding AddMemberCommand}"
+                    Style="{StaticResource MenuButton}"
+                    Margin="0 0 10 0"/>
+
+            <Button Content="Save"
+                    Command="{Binding SaveCommand}"
+                    Style="{StaticResource MenuButton}"
+                    Margin="0 0 10 0"/>
+
+            <Button Content="Cancel"
+                    Command="{Binding CancelCommand}"
+                    Style="{StaticResource MenuButton}"/>
+        </StackPanel>
+
+    </Grid>
+</Page>

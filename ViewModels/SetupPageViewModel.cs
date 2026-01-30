@@ -30,9 +30,6 @@ namespace Foscamun2026.ViewModels
         public SetupPageViewModel(SqliteDataAccess db)
         {
             _db = db;
-
-            //Debug.WriteLine("VM: ctor chiamato");
-
             _ = LoadCommitteesAsync();
         }
 
@@ -47,17 +44,25 @@ namespace Foscamun2026.ViewModels
             try
             {
                 var list = await _db.GetCommitteesAsync();
-                //Debug.WriteLine($"VM: GetCommitteesAsync ha restituito {list.Count} comitati");
-
                 Committees = new ObservableCollection<Committee>(list);
 
+                // ⭐ AGGIUNGIAMO ICJ MANUALMENTE
+                Committees.Add(new Committee
+                {
+                    CommID = -1,          // valore speciale per ICJ
+                    Name = "ICJ",
+                    TopicA = "",
+                    TopicB = "",
+                    President = "",
+                    VicePresident = "",
+                    Moderator = ""
+                });
+
                 var savedName = Properties.Settings.Default.SelCommName;
-                //Debug.WriteLine($"VM: SelCommName = '{savedName}'");
 
                 if (!string.IsNullOrWhiteSpace(savedName))
                 {
                     SelectedCommittee = Committees.FirstOrDefault(c => c.Name == savedName);
-                    //Debug.WriteLine($"VM: SelectedCommittee = '{SelectedCommittee?.Name}'");
                 }
             }
             catch (Exception ex)
@@ -84,10 +89,7 @@ namespace Foscamun2026.ViewModels
         [RelayCommand]
         private void AddCommittee()
         {
-            //var vm = new AddCommitteeViewModel(_db);
-            //var page = new AddCommitteePage { DataContext = vm };
             var page = new AddCommitteePage(_db);
-
             MainWindow.Instance.NavigateRightFrame(page);
         }
 
@@ -104,10 +106,30 @@ namespace Foscamun2026.ViewModels
                 return;
             }
 
-            //var vm = new AddCommitteeViewModel(_db, SelectedCommittee);
-            //var page = new AddCommitteePage { DataContext = vm };
-            var page = new AddCommitteePage(_db, SelectedCommittee);
+            // ⭐ BLOCCA ICJ
+            if (SelectedCommittee.CommID == -1)
+            {
+                MessageBox.Show("Use the 'Edit ICJ' button to modify the ICJ.");
+                return;
+            }
 
+            var page = new AddCommitteePage(_db, SelectedCommittee);
+            MainWindow.Instance.NavigateRightFrame(page);
+        }
+
+        // -------------------------
+        //  EDIT ICJ  ⭐ NUOVO
+        // -------------------------
+
+        [RelayCommand]
+        private void EditICJ()
+        {
+            OpenICJSetup();
+        }
+
+        private void OpenICJSetup()
+        {
+            var page = new AddICJPage(_db);
             MainWindow.Instance.NavigateRightFrame(page);
         }
 
