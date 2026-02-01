@@ -10,7 +10,6 @@
       d:DesignWidth="800"
       d:DesignHeight="500"
       d:DataContext="{x:Null}"
-      Title="{DynamicResource ConfigurationTitle}"
       Background="{DynamicResource FoscamunBlue}"
       Foreground="{DynamicResource FoscamunWhite}"
       FontFamily ="{DynamicResource FontPrimary}"
@@ -208,7 +207,7 @@
             </Button>
 
             <!--EDIT ICJ BUTTON-->
-            <Button Style="{StaticResource MenuButton}" x:Name="EditICJButton"
+            <!--<Button Style="{StaticResource MenuButton}" x:Name="EditICJButton"
                             Margin="40 0 0 4"
                             Command="{Binding EditICJCommand}">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
@@ -219,7 +218,7 @@
                                      Margin="0,0,10,0"/>
                    <TextBlock Text="{DynamicResource EditICJBtn}" Padding="10 3"/>
                 </StackPanel>
-            </Button>
+            </Button>-->
 
             <!--REMOVE BUTTON-->
             <Button Style="{StaticResource MenuButton}" x:Name="RemoveButton"

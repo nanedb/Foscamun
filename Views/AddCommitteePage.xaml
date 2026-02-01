@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:models="clr-namespace:Foscamun2026.Models"
       xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
-      xmlns:local="clr-namespace:Foscamun2026.Converters"
+      xmlns:conv="clr-namespace:Foscamun2026.Converters"
       mc:Ignorable="d"
       d:DesignHeight="500"
       d:DesignWidth="800"
@@ -33,20 +33,7 @@
     </Page.Triggers>
 
     <Page.Resources>
-        <!-- Template per la lista dei paesi -->
-        <DataTemplate x:Key="CountryTemplate" DataType="models:Country">
-            <StackPanel Orientation="Horizontal" Margin="4">
-                <svgc:SvgViewbox Width="24" Height="24"
-                                 Source="{Binding FlagPath}"
-                                 VerticalAlignment="Center" />
-                <TextBlock Text="{Binding Name}"
-                           Margin="5,0,0,0"
-                           VerticalAlignment="Center"
-                           FontSize="14" />
-            </StackPanel>
-        </DataTemplate>
-
-        <local:EditAddTitleConverter x:Key="EditAddTitleConverter"/>
+        <conv:EditAddTitleConverter x:Key="EditAddTitleConverter"/>
     </Page.Resources>
 
     <Grid>
@@ -119,7 +106,6 @@
 
             <TextBox Grid.Column="1" Grid.Row="2" Margin="5"
                      Text="{Binding Committee.TopicA, UpdateSourceTrigger=PropertyChanged}"
-                     TextWrapping="Wrap"
                      Style="{StaticResource InputBoxStyle}"/>
 
             <TextBlock Grid.Column="0" Grid.Row="3" Margin="5"
@@ -128,7 +114,6 @@
 
             <TextBox Grid.Column="1" Grid.Row="3" Margin="5"
                      Text="{Binding Committee.TopicB, UpdateSourceTrigger=PropertyChanged}"
-                     TextWrapping="Wrap"
                      Style="{StaticResource InputBoxStyle}"/>
 
             <TextBlock Grid.Column="0" Grid.Row="4" Margin="5"
@@ -187,32 +172,16 @@
                     Margin="0 10 10 0">
 
             <!-- CANCEL -->
-            <Button Style="{StaticResource MenuButton}"
-                    Width="150"
-                    Margin="0 0 10 0"
-                    Command="{Binding CancelCommand}">
-                <StackPanel Orientation="Horizontal">
-                    <svgc:SvgViewbox Width="18" Height="18"
-                                     Source="pack://application:,,,/Resources/Icons/close.svg"
-                                     Stretch="Uniform"
-                                     Margin="0,0,10,0"/>
-                    <TextBlock Text="{DynamicResource CancelBtn}" Padding="10 5"/>
-                </StackPanel>
-            </Button>
+            <Button Style="{StaticResource IconButton}"
+                    Tag="pack://application:,,,/Resources/Icons/close.svg"
+                    Content="Cancel"
+                    Command="{Binding CancelCommand}" Width="150"/>
 
             <!-- OK -->
-            <Button Style="{StaticResource MenuButton}"
-                    Width="150"
-                    Command="{Binding SaveCommand}"
-                    IsEnabled="{Binding CanSave}">
-                <StackPanel Orientation="Horizontal">
-                    <svgc:SvgViewbox Width="18" Height="18"
-                                     Source="pack://application:,,,/Resources/Icons/check.svg"
-                                     Stretch="Uniform"
-                                     Margin="0,0,10,0"/>
-                    <TextBlock Text="{DynamicResource OkBtn}" Padding="10 5"/>
-                </StackPanel>
-            </Button>
+            <Button Style="{StaticResource IconButton}"
+                    Tag="pack://application:,,,/Resources/Icons/check.svg"
+                    Content="OK"
+                    Command="{Binding SaveCommand}" Width="150"/>
 
         </StackPanel>
 

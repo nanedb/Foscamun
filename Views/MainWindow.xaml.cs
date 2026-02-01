@@ -2,6 +2,7 @@
 using Foscamun2026.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
@@ -23,17 +24,19 @@ namespace Foscamun2026.Views
             }
         }
 
+        public SqliteDataAccess Db { get; }
+
         public static MainWindow Instance { get; private set; } = null!;
 
         public MainWindow()
         {
             InitializeComponent();
+
             DataContext = this;
 
             Instance = this;
 
-            // Animazioni automatiche
-            RightFrame.Navigated += RightFrame_Navigated;
+            Db = new SqliteDataAccess();
 
             // Prima pagina
             RightFrame.Navigate(new HomePage());
@@ -67,7 +70,7 @@ namespace Foscamun2026.Views
         // -------------------------
         private void HomeBtn_Click(object sender, RoutedEventArgs e)
         {
-            NavigateRightFrame(new HomePage());
+            RightFrame.Navigate(new HomePage());
         }
 
         private bool _isNavigating;
@@ -81,7 +84,7 @@ namespace Foscamun2026.Views
                 VisualStateManager.GoToState(clickedCtrl, "Normal", true);
 
             // 🔵 NAVIGAZIONE CORRETTA
-            NavigateRightFrame(new SetupPage());
+            RightFrame.Navigate(new SetupPage());
 
             _isNavigating = false;
         }
@@ -117,8 +120,10 @@ namespace Foscamun2026.Views
             {
                 slideOut.Completed -= SlideOutCompleted; // evita duplicazioni
 
+                // Imposta la nuova pagina nel ContentControl
                 RightFrame.Navigate(page);
 
+                // Avvia lo slide-in corretto
                 var slideIn = (Storyboard)Resources["RightFrameSlideIn"];
                 slideIn.Begin();
             }

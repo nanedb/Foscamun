@@ -267,54 +267,66 @@ namespace Foscamun2026.Data
         /// <summary>
         /// Loads the single ICJ record (Topic, President, Moderator).
         /// </summary>
-        public async Task<(string Topic, string President, string Moderator)> LoadICJAsync()
+        public async Task<Committee?> LoadICJAsync()
         {
             using var connection = new SqliteConnection(_connectionString);
             await connection.OpenAsync();
 
-            string sql = "SELECT Topic, President, Moderator FROM ICJ LIMIT 1";
+            string sql = @"
+                    SELECT CommID, Name, TopicA, TopicB, President, VicePresident, Moderator
+                    FROM Committees
+                    WHERE Name = 'ICJ';
+                ";
 
             using var cmd = new SqliteCommand(sql, connection);
             using var reader = await cmd.ExecuteReaderAsync();
 
             if (await reader.ReadAsync())
             {
-                return (
-                    reader.IsDBNull(0) ? "" : reader.GetString(0),
-                    reader.IsDBNull(1) ? "" : reader.GetString(1),
-                    reader.IsDBNull(2) ? "" : reader.GetString(2)
-                );
+                return new Committee
+                {
+                    CommID = reader.GetInt32(0),
+                    Name = reader.GetString(1),
+                    TopicA = reader.GetString(2),
+                    TopicB = reader.GetString(3),
+                    President = reader.GetString(4),
+                    VicePresident = reader.GetString(5),
+                    Moderator = reader.GetString(6)
+                };
             }
 
-            return ("", "", "");
+            return null;
         }
 
         /// <summary>
         /// Saves ICJ main info (Topic, President, Moderator).
         /// Replaces the single row in the ICJ table.
         /// </summary>
-        public async Task SaveICJAsync(string topic, string president, string moderator)
+        public async Task SaveICJAsync(Committee icj)
         {
             using var connection = new SqliteConnection(_connectionString);
             await connection.OpenAsync();
 
-            string sqlDelete = "DELETE FROM ICJ";
-            using (var cmd = new SqliteCommand(sqlDelete, connection))
-                await cmd.ExecuteNonQueryAsync();
+            string sql = @"
+                    UPDATE Committees
+                    SET TopicA = @TopicA,
+                        TopicB = @TopicB,
+                        President = @President,
+                        VicePresident = @VicePresident,
+                        Moderator = @Moderator
+                    WHERE Name = 'ICJ';
+                ";
 
-            string sqlInsert = @"
-                INSERT INTO ICJ (Topic, President, Moderator)
-                VALUES (@Topic, @President, @Moderator);
-            ";
+            using var cmd = new SqliteCommand(sql, connection);
 
-            using var cmd2 = new SqliteCommand(sqlInsert, connection);
-            cmd2.Parameters.AddWithValue("@Topic", topic);
-            cmd2.Parameters.AddWithValue("@President", president);
-            cmd2.Parameters.AddWithValue("@Moderator", moderator);
+            cmd.Parameters.AddWithValue("@TopicA", icj.TopicA);
+            cmd.Parameters.AddWithValue("@TopicB", icj.TopicB);
+            cmd.Parameters.AddWithValue("@President", icj.President);
+            cmd.Parameters.AddWithValue("@VicePresident", icj.VicePresident);
+            cmd.Parameters.AddWithValue("@Moderator", icj.Moderator);
 
-            await cmd2.ExecuteNonQueryAsync();
+            await cmd.ExecuteNonQueryAsync();
         }
-
         // ============================================================
         //  ICJ — MEMBERS
         // ============================================================
@@ -401,12 +413,12 @@ namespace Foscamun2026.Data
             await connection.OpenAsync();
 
             string sql = @"
-                SELECT c.IsoCode, c.EnglishName, c.FrenchName, c.SpanishName
-                FROM CountryLists cl
-                JOIN Countries c ON cl.IsoCode = c.IsoCode
-                WHERE cl.CommID = -1
-                ORDER BY c.EnglishName;
-            ";
+                    SELECT c.IsoCode, c.EnglishName, c.FrenchName, c.SpanishName
+                    FROM CountryLists cl
+                    JOIN Countries c ON cl.IsoCode = c.IsoCode
+                    WHERE cl.CommID = (SELECT CommID FROM Committees WHERE Name = 'ICJ')
+                    ORDER BY c.EnglishName;
+                ";
 
             using var cmd = new SqliteCommand(sql, connection);
             using var reader = await cmd.ExecuteReaderAsync();
@@ -424,7 +436,6 @@ namespace Foscamun2026.Data
 
             return list;
         }
-
         /// <summary>
         /// Saves the list of countries assigned to ICJ.
         /// Replaces all entries with CommID = -1.
@@ -434,16 +445,22 @@ namespace Foscamun2026.Data
             using var connection = new SqliteConnection(_connectionString);
             await connection.OpenAsync();
 
-            string sqlDelete = "DELETE FROM CountryLists WHERE CommID = -1";
+            // ⭐ Cancella tutte le righe associate all'ICJ
+            string sqlDelete = @"
+                    DELETE FROM CountryLists
+                    WHERE CommID = (SELECT CommID FROM Committees WHERE Name = 'ICJ');
+                ";
+
             using (var cmd = new SqliteCommand(sqlDelete, connection))
                 await cmd.ExecuteNonQueryAsync();
 
+            // ⭐ Inserisci le nuove righe
             foreach (var c in countries)
             {
                 string sqlInsert = @"
-                    INSERT INTO CountryLists (CommID, IsoCode, Warnings)
-                    VALUES (-1, @IsoCode, 0);
-                ";
+                        INSERT INTO CountryLists (CommID, IsoCode, Warnings)
+                        VALUES ((SELECT CommID FROM Committees WHERE Name = 'ICJ'), @IsoCode, 0);
+                    ";
 
                 using var cmd = new SqliteCommand(sqlInsert, connection);
                 cmd.Parameters.AddWithValue("@IsoCode", c.IsoCode);

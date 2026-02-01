@@ -1,9 +1,12 @@
 ﻿<Application x:Class="Foscamun2026.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:sys="clr-namespace:System;assembly=mscorlib">
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:models="clr-namespace:Foscamun2026.Models"
+             xmlns:svgc="http://sharpvectors.codeplex.com/svgc/">
 
     <Application.Resources>
+        
         <ResourceDictionary>
             
              <!-- 🌍 Stili impliciti globali -->
@@ -20,19 +23,20 @@
                 <Setter Property="FontFamily" Value="{StaticResource AkkoProRegular}"/>
             </Style>
 
-            <!-- Style che imposta il ToolTip solo quando IsPaneCollapsed == True -->
-            <Style x:Key="IconTooltipWhenCollapsed" TargetType="Button" BasedOn="{StaticResource MenuButton}">
-                <Setter Property="ToolTip" Value="{x:Null}"/>
-                <Style.Triggers>
-                    <!-- Se la proprietà IsPaneCollapsed (ElementName=Root) è true, usa il Tag come ToolTip -->
-                    <DataTrigger Binding="{Binding IsPaneCollapsed, ElementName=Root}" Value="True">
-                        <Setter Property="ToolTip" Value="{Binding Tag, RelativeSource={RelativeSource Self}}"/>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-
             <sys:String x:Key="WelcomePrefix">Welcome to Foscamun</sys:String>
             <sys:String x:Key="YearResource">2026</sys:String>
+
+            <DataTemplate x:Key="CountryTemplate" DataType="models:Country">
+                <StackPanel Orientation="Horizontal" Margin="4">
+                    <svgc:SvgViewbox Width="24" Height="24"
+                                 Source="{Binding FlagPath}"
+                                 VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding Name}"
+                           Margin="5,0,0,0"
+                           VerticalAlignment="Center"
+                           FontSize="14" />
+                </StackPanel>
+            </DataTemplate>
 
             <ResourceDictionary.MergedDictionaries>
 
@@ -42,14 +46,14 @@
                 <!-- Fonts -->
                 <ResourceDictionary Source="Fonts/Fonts.xaml"/>
 
+                <!-- Buttons -->
+                <ResourceDictionary Source="Styles/Buttons.xaml"/>
+
                 <!-- Icons -->
                 <ResourceDictionary Source="Styles/Icons.xaml"/>
 
                 <!-- Theme -->
                 <ResourceDictionary Source="Styles/Theme.xaml"/>
-
-                <!-- Buttons -->
-                <ResourceDictionary Source="Styles/Buttons.xaml"/>
 
                 <!-- Strings -->
                 <ResourceDictionary Source="Strings/Strings.en.xaml"/>
@@ -57,5 +61,8 @@
             </ResourceDictionary.MergedDictionaries>
             
         </ResourceDictionary>
+
+
     </Application.Resources>
+    
 </Application>

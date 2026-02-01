@@ -46,18 +46,6 @@ namespace Foscamun2026.ViewModels
                 var list = await _db.GetCommitteesAsync();
                 Committees = new ObservableCollection<Committee>(list);
 
-                // ⭐ AGGIUNGIAMO ICJ MANUALMENTE
-                Committees.Add(new Committee
-                {
-                    CommID = -1,          // valore speciale per ICJ
-                    Name = "ICJ",
-                    TopicA = "",
-                    TopicB = "",
-                    President = "",
-                    VicePresident = "",
-                    Moderator = ""
-                });
-
                 var savedName = Properties.Settings.Default.SelCommName;
 
                 if (!string.IsNullOrWhiteSpace(savedName))
@@ -106,32 +94,34 @@ namespace Foscamun2026.ViewModels
                 return;
             }
 
-            // ⭐ BLOCCA ICJ
-            if (SelectedCommittee.CommID == -1)
+            // ⭐ RICONOSCI ICJ DAL NOME, NON DAL CommID
+            if (SelectedCommittee.Name == "ICJ")
             {
-                MessageBox.Show("Use the 'Edit ICJ' button to modify the ICJ.");
+                var page = new AddICJPage(_db);
+                MainWindow.Instance.NavigateRightFrame(page);
                 return;
             }
 
-            var page = new AddCommitteePage(_db, SelectedCommittee);
-            MainWindow.Instance.NavigateRightFrame(page);
+            // ⭐ Tutti gli altri comitati
+            var normalPage = new AddCommitteePage(_db, SelectedCommittee);
+            MainWindow.Instance.NavigateRightFrame(normalPage);
         }
 
         // -------------------------
         //  EDIT ICJ  ⭐ NUOVO
         // -------------------------
 
-        [RelayCommand]
-        private void EditICJ()
-        {
-            OpenICJSetup();
-        }
+        //[RelayCommand]
+        //private void EditICJ()
+        //{
+        //    OpenICJSetup();
+        //}
 
-        private void OpenICJSetup()
-        {
-            var page = new AddICJPage(_db);
-            MainWindow.Instance.NavigateRightFrame(page);
-        }
+        //private void OpenICJSetup()
+        //{
+        //    var page = new AddICJPage(_db);
+        //    MainWindow.Instance.NavigateRightFrame(page);
+        //}
 
         // -------------------------
         //  REMOVE

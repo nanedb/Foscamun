@@ -18,18 +18,23 @@ namespace Foscamun2026.ViewModels
         // -------------------------
 
         [ObservableProperty]
-        private string topic = "";
+        private string _topicA = string.Empty;
 
         [ObservableProperty]
-        private string president = "";
+        private string _topicB = string.Empty;
 
         [ObservableProperty]
-        private string moderator = "";
+        private string _president = string.Empty;
+
+        [ObservableProperty]
+        private string _vicePresident = string.Empty;
+
+        [ObservableProperty]
+        private string _moderator = string.Empty;
 
         // -------------------------
         //  PAESI
         // -------------------------
-
         public ObservableCollection<Country> AvailableCountries { get; } = new();
         public ObservableCollection<Country> SelectedCountries { get; } = new();
 
@@ -39,7 +44,6 @@ namespace Foscamun2026.ViewModels
         // -------------------------
         //  MEMBRI ICJ
         // -------------------------
-
         public ObservableCollection<ICJMember> Members { get; } = new();
 
         [ObservableProperty]
@@ -66,8 +70,13 @@ namespace Foscamun2026.ViewModels
         {
             var data = await _db.LoadICJAsync();
 
-            Topic = data.Topic;
+            if (data == null)
+                return; // oppure mostra un messaggio di errore
+
+            TopicA = data.TopicA;
+            TopicB = data.TopicB;
             President = data.President;
+            VicePresident = data.VicePresident;
             Moderator = data.Moderator;
         }
 
@@ -83,7 +92,7 @@ namespace Foscamun2026.ViewModels
             AvailableCountries.Clear();
             SelectedCountries.Clear();
 
-            foreach (var c in all)
+            foreach (var c in all.OrderBy(c => c.Name))
             {
                 if (assigned.Any(a => a.IsoCode == c.IsoCode))
                     SelectedCountries.Add(c);
@@ -106,19 +115,37 @@ namespace Foscamun2026.ViewModels
         }
 
         // -------------------------
-        //  GESTIONE PAESI
+        //  GESTIONE PAESI (CLICK SINGOLO)
         // -------------------------
 
         public void AddCountry(Country c)
         {
             AvailableCountries.Remove(c);
             SelectedCountries.Add(c);
+            SortSelectedCountries();
         }
 
         public void RemoveCountry(Country c)
         {
             SelectedCountries.Remove(c);
             AvailableCountries.Add(c);
+            SortAvailableCountries();
+        }
+
+        private void SortSelectedCountries()
+        {
+            var sorted = SelectedCountries.OrderBy(c => c.Name).ToList();
+            SelectedCountries.Clear();
+            foreach (var c in sorted)
+                SelectedCountries.Add(c);
+        }
+
+        private void SortAvailableCountries()
+        {
+            var sorted = AvailableCountries.OrderBy(c => c.Name).ToList();
+            AvailableCountries.Clear();
+            foreach (var c in sorted)
+                AvailableCountries.Add(c);
         }
 
         // -------------------------
@@ -128,14 +155,22 @@ namespace Foscamun2026.ViewModels
         [RelayCommand]
         private void AddMember()
         {
-            //MainWindow.Instance.NavigateRightFrame(new AddICJMemberPage(_db));
+            // 🔥 Devi passare il DB, altrimenti AddICJMemberPage non funziona
+            MainWindow.Instance.NavigateRightFrame(new AddICJMemberPage(_db));
         }
 
         [RelayCommand]
         private async Task SaveAsync()
         {
-            await _db.SaveICJAsync(Topic, President, Moderator);
-            await _db.SaveICJCountriesAsync(SelectedCountries);
+            await _db.SaveICJAsync(new Committee
+            {
+                Name = "ICJ",
+                TopicA = TopicA,
+                TopicB = TopicB,
+                President = President,
+                VicePresident = VicePresident,
+                Moderator = Moderator
+            }); await _db.SaveICJCountriesAsync(SelectedCountries);
 
             MainWindow.Instance.NavigateRightFrame(new SetupPage());
         }

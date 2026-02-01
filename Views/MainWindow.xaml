@@ -39,15 +39,15 @@
                      From="1" To="0" Duration="0:0:0.22"/>
         </Storyboard>
     </Window.Resources>
-    
-    <Grid>
+
+    <Grid x:Name="MainGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="LeftColumn" Width="180"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <!-- Pannello sinistro con gradiente e header hamburger -->
-        <Border Grid.Column="0"
+        <Border Grid.Column="0" x:Name="Sidebar"
                 Padding="5"
                 BorderBrush="{DynamicResource FoscamunWhite}"
                 BorderThickness="0,0,1,0"
@@ -122,8 +122,8 @@
                                  Stretch="Uniform"
                                  Margin="0,0,10,0"/>
                             <TextBlock Text="{DynamicResource HomeBtn}"
-                   VerticalAlignment="Center"
-                   Foreground="{DynamicResource FoscamunWhite}">
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource FoscamunWhite}">
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
                                         <Style.Triggers>
@@ -224,9 +224,9 @@
             <DockPanel LastChildFill="True">
 
                 <Frame x:Name="RightFrame"
-                         NavigationUIVisibility="Hidden"
-                         Opacity="1"
-                         RenderTransformOrigin="0,0">
+                       NavigationUIVisibility="Hidden"
+                       Opacity="1"
+                       RenderTransformOrigin="0,0">
                     <Frame.RenderTransform>
                         <TranslateTransform X="0"/>
                     </Frame.RenderTransform>

@@ -20,15 +20,7 @@ namespace Foscamun2026.Models
 
         public int Warnings { get; set; }
 
-        //public string Name
-        //{
-        //    get
-        //    {
-        //        if (Properties.Settings.Default.Lang == "fr-FR") return FrenchName;
-        //        else if (Properties.Settings.Default.Lang == "es-ES") return SpanishName;
-        //        else return EnglishName;
-        //    }
-        //}
+        public string NameAndKind => $"{Name} ({Kind})";
 
         public string SmallFlagPath
         {
