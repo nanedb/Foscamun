@@ -75,8 +75,6 @@
                HorizontalAlignment="Left"
                Margin="40,0,0,0"
                Foreground="{DynamicResource FoscamunWhite}" />
-               <!--Content="{Binding Path=SelCommName, Source={x:Static properties:Settings.Default}}"-->
-
 
         <!-- YEAR -->
         <Label Grid.Row="2" Grid.Column="0"
@@ -176,7 +174,6 @@
         <StackPanel Grid.Row="5" Grid.Column="1"
                     Orientation="Vertical" VerticalAlignment="Center"
 >
-
             <!--ADD BUTTON-->
             <Button Style="{StaticResource MenuButton}" x:Name="AddButton"
                     Margin="40 0 0 4"
@@ -205,20 +202,6 @@
                     <TextBlock Text="{DynamicResource EditBtn}" Padding="10 3"/>
                 </StackPanel>
             </Button>
-
-            <!--EDIT ICJ BUTTON-->
-            <!--<Button Style="{StaticResource MenuButton}" x:Name="EditICJButton"
-                            Margin="40 0 0 4"
-                            Command="{Binding EditICJCommand}">
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
-                            HorizontalAlignment="Left">
-                    <svgc:SvgViewbox Width="18" Height="18"
-                                     Source="pack://application:,,,/Resources/Icons/icj.svg"
-                                     Stretch="Uniform"
-                                     Margin="0,0,10,0"/>
-                   <TextBlock Text="{DynamicResource EditICJBtn}" Padding="10 3"/>
-                </StackPanel>
-            </Button>-->
 
             <!--REMOVE BUTTON-->
             <Button Style="{StaticResource MenuButton}" x:Name="RemoveButton"

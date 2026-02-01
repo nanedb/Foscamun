@@ -51,7 +51,9 @@
                 Padding="5"
                 BorderBrush="{DynamicResource FoscamunWhite}"
                 BorderThickness="0,0,1,0"
-                Margin="0 0 -2 0">
+                Margin="0 0 -2 0"
+                DataContext="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+            
             <Border.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
                     <GradientStop Color="{StaticResource FoscamunDarkBlueColor}" Offset="0" />
@@ -112,7 +114,7 @@
                 <StackPanel Orientation="Vertical" VerticalAlignment="Top">
 
                     <!-- Home -->
-                    <Button Style="{StaticResource IconTooltipWhenCollapsed}"
+                    <Button x:Name="HomeBtn" Style="{StaticResource IconTooltipWhenCollapsed}"
                             Margin="0,0,0,8"
                             Click="HomeBtn_Click"
                             Tag="{DynamicResource HomeBtn}">
@@ -138,7 +140,7 @@
                     </Button>
 
                     <!-- Configure -->
-                    <Button Style="{StaticResource IconTooltipWhenCollapsed}"
+                    <Button x:Name="ConfigureBtn" Style="{StaticResource IconTooltipWhenCollapsed}"
                             Margin="0,0,0,8"
                             Click="ConfigureBtn_Click"
                             Tag="{DynamicResource ConfigureBtn}">
@@ -165,7 +167,7 @@
                     </Button>
 
                     <!-- Next -->
-                    <Button Style="{StaticResource IconTooltipWhenCollapsed}"
+                    <Button x:Name="NextBtn" Style="{StaticResource IconTooltipWhenCollapsed}"
                             Margin="0,0,0,8"
                             Click="NextBtn_Click"
                             Tag="{DynamicResource NextBtn}">
@@ -191,7 +193,7 @@
                     </Button>
 
                     <!-- Exit -->
-                    <Button Style="{StaticResource IconTooltipWhenCollapsed}"
+                    <Button x:Name="ExitBtn" Style="{StaticResource IconTooltipWhenCollapsed}"
                             Margin="0,0,0,8"
                             Click="ExitBtn_Click"
                             Tag="{DynamicResource ExitBtn}">
@@ -220,9 +222,10 @@
         </Border>
 
         <!-- Area destra con header e Frame -->
-        <Grid Grid.Column="1" Background="{DynamicResource FoscamunBlue}">
+        <Grid Grid.Column="1"
+              Background="{DynamicResource FoscamunBlue}"
+              ClipToBounds="True">
             <DockPanel LastChildFill="True">
-
                 <Frame x:Name="RightFrame"
                        NavigationUIVisibility="Hidden"
                        Opacity="1"

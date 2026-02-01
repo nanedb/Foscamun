@@ -10,59 +10,43 @@
       Title="Home"
       Background="White">
 
-    <Page.Resources>
-        <Style x:Key="LeftAlignedLabelStyle" TargetType="Label">
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Margin" Value="0,5,0,5"/>
-            <Setter Property="Foreground" Value="{DynamicResource FoscamunWhite}"/>
-            <Setter Property="FontSize" Value="18"/>
-        </Style>
-    </Page.Resources>
-
-
-    <Grid ClipToBounds="True">
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1.2*" />
             <RowDefinition Height="1.3*" />
+            <RowDefinition Height="1.2*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <!-- Titolo / welcome -->
-        <Viewbox Grid.Row="0"
-                 Grid.Column="0"
-                 Stretch="Uniform"
-                 StretchDirection="Both"
-                 VerticalAlignment="Center"
-                 HorizontalAlignment="Center">
-            <TextBlock Style="{StaticResource H1Inverted}"
+        <Border Grid.Row="0" Background="White" SnapsToDevicePixels="True">
+            <Viewbox StretchDirection="Both"
+                 HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Style="{StaticResource H1Inverted}"
                        Padding="10 0 40 0"
                        TextWrapping="Wrap"
                        TextAlignment="Center">
                 <Run Text="{DynamicResource WelcomeMessage}"/>
                 <Run Text="{DynamicResource YearResource}"/>
-            </TextBlock>
-        </Viewbox>
+                </TextBlock>
+            </Viewbox>
+        </Border>
 
-        <!-- Banner immagine -->
-        <!-- Banner: riempie la riga e non supera la larghezza della Page -->
-        <Viewbox Grid.Row="1"
-                 HorizontalAlignment="Stretch"
-                 VerticalAlignment="Stretch"
-                 MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Page}}">
-                    <Image Source="pack://application:,,,/Resources/Banner.png"
-                   Stretch="UniformToFill"/>
-        </Viewbox>
-        
-        <!-- Area inferiore (vuota o contenuto) -->
-        <StackPanel Grid.Row="2"
-                    Background="{DynamicResource FoscamunBlue}"
-                    Margin="0 -15 0 0" Orientation="Horizontal">
-            <!-- HINT -->
+        <!-- Banner -->
+        <Border Grid.Row="1" Background="White" SnapsToDevicePixels="True">
+            <Viewbox Grid.Row="1"
+                     Stretch="Fill"
+                     HorizontalAlignment="Stretch"
+                     VerticalAlignment="Stretch"
+                     SnapsToDevicePixels="True">
+                <Image Source="pack://application:,,,/Resources/Banner.png"
+                   Stretch="Uniform"/>
+            </Viewbox>
+        </Border>
+
+        <!-- Area inferiore -->
+        <Border Grid.Row="2" Background="{DynamicResource FoscamunBlue}" SnapsToDevicePixels="True">
             <TextBlock Style="{StaticResource Caption}"
                        Padding="5 0 0 5"
-                       TextWrapping="Wrap"
                        TextAlignment="Left" VerticalAlignment="Bottom">
                         <Run Text="{DynamicResource HintStr1}"/>
                         <Run Text="{Binding Path=SelCommName, Source={x:Static properties:Settings.Default}}"/>
@@ -70,6 +54,7 @@
                         <Run Text="{DynamicResource HintStr2}"/>
                         <Run Text="{DynamicResource ConfigureBtn}"/>
             </TextBlock>
-        </StackPanel>
+        </Border>
+        
     </Grid>
 </Page>

@@ -16,6 +16,9 @@
         <Setter Property="SnapsToDevicePixels" Value="True" />
     </Style>
 
+    <!-- ========================= -->
+    <!--      MENUBUTTON           -->
+    <!-- ========================= -->
     <Style x:Key="MenuButton" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
         <Setter Property="Template">
@@ -35,8 +38,7 @@
                             Background="{DynamicResource PrimaryDarkBrush}"
                             CornerRadius="{DynamicResource CornerRadiusMedium}"
                             Opacity="0"
-                            IsHitTestVisible="False"
-                            Panel.ZIndex="-1" />
+                            IsHitTestVisible="False"/>
 
                         <!-- Contenuto -->
                         <Grid>
@@ -63,20 +65,17 @@
                                         <DoubleAnimation Storyboard.TargetName="Overlay"
                                                      Storyboard.TargetProperty="Opacity"
                                                      To="0.12"
-                                                     Duration="0:0:0.18"
-                                                     FillBehavior="Stop"/>
+                                                     Duration="0:0:0.18"/>
 
                                         <DoubleAnimation Storyboard.TargetName="contentPresenter"
                                                      Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
                                                      To="1.002"
-                                                     Duration="0:0:0.18"
-                                                     FillBehavior="Stop"/>
+                                                     Duration="0:0:0.18"/>
 
                                         <DoubleAnimation Storyboard.TargetName="contentPresenter"
                                                      Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
                                                      To="1.002"
-                                                     Duration="0:0:0.18"
-                                                     FillBehavior="Stop"/>
+                                                     Duration="0:0:0.18"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.EnterActions>
@@ -87,20 +86,17 @@
                                         <DoubleAnimation Storyboard.TargetName="Overlay"
                                                      Storyboard.TargetProperty="Opacity"
                                                      To="0"
-                                                     Duration="0:0:0.18"
-                                                     FillBehavior="Stop"/>
+                                                     Duration="0:0:0.18"/>
 
                                         <DoubleAnimation Storyboard.TargetName="contentPresenter"
                                                      Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
                                                      To="1"
-                                                     Duration="0:0:0.18"
-                                                     FillBehavior="Stop"/>
+                                                     Duration="0:0:0.18"/>
 
                                         <DoubleAnimation Storyboard.TargetName="contentPresenter"
                                                      Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
                                                      To="1"
-                                                     Duration="0:0:0.18"
-                                                     FillBehavior="Stop"/>
+                                                     Duration="0:0:0.18"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
@@ -114,20 +110,17 @@
                                         <DoubleAnimation Storyboard.TargetName="Overlay"
                                                      Storyboard.TargetProperty="Opacity"
                                                      To="0.22"
-                                                     Duration="0:0:0.08"
-                                                     FillBehavior="Stop"/>
+                                                     Duration="0:0:0.08"/>
 
                                         <DoubleAnimation Storyboard.TargetName="contentPresenter"
                                                      Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
                                                      To="0.995"
-                                                     Duration="0:0:0.08"
-                                                     FillBehavior="Stop"/>
+                                                     Duration="0:0:0.08"/>
 
                                         <DoubleAnimation Storyboard.TargetName="contentPresenter"
                                                      Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
                                                      To="0.995"
-                                                     Duration="0:0:0.08"
-                                                     FillBehavior="Stop"/>
+                                                     Duration="0:0:0.08"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.EnterActions>
@@ -138,20 +131,17 @@
                                         <DoubleAnimation Storyboard.TargetName="Overlay"
                                                      Storyboard.TargetProperty="Opacity"
                                                      To="0"
-                                                     Duration="0:0:0.12"
-                                                     FillBehavior="Stop"/>
+                                                     Duration="0:0:0.12"/>
 
                                         <DoubleAnimation Storyboard.TargetName="contentPresenter"
                                                      Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
                                                      To="1"
-                                                     Duration="0:0:0.12"
-                                                     FillBehavior="Stop"/>
+                                                     Duration="0:0:0.12"/>
 
                                         <DoubleAnimation Storyboard.TargetName="contentPresenter"
                                                      Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
                                                      To="1"
-                                                     Duration="0:0:0.12"
-                                                     FillBehavior="Stop"/>
+                                                     Duration="0:0:0.12"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
@@ -168,7 +158,10 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+    <!-- ================================== -->
+    <!--      IconTooltipWhenCollapsed      -->
+    <!-- ================================== -->
     <!-- Style che imposta il ToolTip solo quando IsPaneCollapsed == True -->
     <Style x:Key="IconTooltipWhenCollapsed" TargetType="Button" BasedOn="{StaticResource MenuButton}">
         <Setter Property="ToolTip" Value="{x:Null}"/>

@@ -53,8 +53,6 @@ namespace Foscamun2026.Views
         // -------------------------
         private void AddBtn_Click(object sender, RoutedEventArgs e)
         {
-            //var vm = new AddCommitteeViewModel(_db);
-            //var page = new AddCommitteePage { DataContext = vm };
             var page = new AddCommitteePage(_db);
 
             MainWindow.Instance.NavigateRightFrame(page);
@@ -71,8 +69,6 @@ namespace Foscamun2026.Views
                 return;
             }
 
-            //var vm = new AddCommitteeViewModel(_db, _vm.SelectedCommittee);
-            //var page = new AddCommitteePage { DataContext = vm };
             var page = new AddCommitteePage(_db, _vm.SelectedCommittee);
 
             MainWindow.Instance.NavigateRightFrame(page);

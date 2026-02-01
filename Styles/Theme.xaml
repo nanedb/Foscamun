@@ -5,7 +5,6 @@
     <!-- ========================= -->
     <!--        COLORI BASE        -->
     <!-- ========================= -->
-
     <Color x:Key="FoscamunBlueColor">#FF5598D3</Color>
     <Color x:Key="FoscamunDarkBlueColor">#FF0A2A44</Color>
     <Color x:Key="FoscamunWhiteColor">#FFF2F2EA</Color>
@@ -15,7 +14,6 @@
     <!-- ========================= -->
     <!--          BRUSHES          -->
     <!-- ========================= -->
-
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource FoscamunBlueColor}"/>
     <SolidColorBrush x:Key="PrimaryDarkBrush" Color="{StaticResource FoscamunDarkBlueColor}"/>
     <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource FoscamunGrayColor}"/>
@@ -28,13 +26,11 @@
     <!-- ========================= -->
     <!--           FONT            -->
     <!-- ========================= -->
-
     <FontFamily x:Key="FontPrimary">pack://application:,,,/Resources/Fonts/#Akko Pro</FontFamily>
 
     <!-- ========================= -->
     <!--      DIMENSIONI UI        -->
     <!-- ========================= -->
-
     <CornerRadius x:Key="CornerRadiusSmall">6</CornerRadius>
     <CornerRadius x:Key="CornerRadiusMedium">10</CornerRadius>
     <CornerRadius x:Key="CornerRadiusLarge">16</CornerRadius>
@@ -191,9 +187,9 @@
                         <Setter.Value>
                             <ControlTemplate TargetType="ListBoxItem">
                                 <Border x:Name="ItemBorder"
-                                Background="{TemplateBinding Background}"
-                                CornerRadius="4"
-                                Padding="{TemplateBinding Padding}">
+                                        Background="{TemplateBinding Background}"
+                                        CornerRadius="4"
+                                        Padding="{TemplateBinding Padding}">
                                     <ContentPresenter/>
                                 </Border>
 

@@ -70,6 +70,7 @@ namespace Foscamun2026.Views
         // -------------------------
         private void HomeBtn_Click(object sender, RoutedEventArgs e)
         {
+            Debug.WriteLine(((Button)sender).IsPressed);
             RightFrame.Navigate(new HomePage());
         }
 
@@ -80,10 +81,6 @@ namespace Foscamun2026.Views
             if (_isNavigating) return;
             _isNavigating = true;
 
-            if (sender is Control clickedCtrl)
-                VisualStateManager.GoToState(clickedCtrl, "Normal", true);
-
-            // 🔵 NAVIGAZIONE CORRETTA
             RightFrame.Navigate(new SetupPage());
 
             _isNavigating = false;
