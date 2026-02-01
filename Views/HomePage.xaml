@@ -10,6 +10,19 @@
       Title="Home"
       Background="White">
 
+    <Page.Resources>
+        <Storyboard x:Key="BannerParallaxIn">
+            <DoubleAnimation Storyboard.TargetName="BannerTransform"
+                             Storyboard.TargetProperty="X"
+                             From="80" To="0"
+                             Duration="0:0:0.38">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+    </Page.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1.3*" />
@@ -39,7 +52,11 @@
                      VerticalAlignment="Stretch"
                      SnapsToDevicePixels="True">
                 <Image Source="pack://application:,,,/Resources/Banner.png"
-                   Stretch="Uniform"/>
+                       Stretch="Uniform">
+                    <Image.RenderTransform>
+                        <TranslateTransform x:Name="BannerTransform" X="0"/>
+                    </Image.RenderTransform>
+                </Image>
             </Viewbox>
         </Border>
 

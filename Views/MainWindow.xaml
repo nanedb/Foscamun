@@ -14,29 +14,51 @@
 
     <Window.Resources>
         <Storyboard x:Key="RightFrameSlideIn">
+            <!-- Movimento con overshoot -->
             <DoubleAnimation Storyboard.TargetName="RightFrame"
                      Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                     From="300" To="0" Duration="0:0:0.32">
+                     From="300" To="0"
+                     Duration="0:0:0.38">
                 <DoubleAnimation.EasingFunction>
-                    <CubicEase EasingMode="EaseOut"/>
+                    <BackEase Amplitude="0.35" EasingMode="EaseOut"/>
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
+
+            <!-- Fade -->
             <DoubleAnimation Storyboard.TargetName="RightFrame"
                      Storyboard.TargetProperty="Opacity"
-                     From="0" To="1" Duration="0:0:0.22"/>
+                     From="0" To="1"
+                     Duration="0:0:0.38"/>
+
+            <!-- Blur dinamico -->
+            <DoubleAnimation Storyboard.TargetName="RightFrame"
+                     Storyboard.TargetProperty="(UIElement.Effect).(BlurEffect.Radius)"
+                     From="12" To="0"
+                     Duration="0:0:0.38"/>
         </Storyboard>
 
         <Storyboard x:Key="RightFrameSlideOut">
+            <!-- Movimento con overshoot inverso -->
             <DoubleAnimation Storyboard.TargetName="RightFrame"
                      Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                     From="0" To="300" Duration="0:0:0.28">
+                     From="0" To="300"
+                     Duration="0:0:0.32">
                 <DoubleAnimation.EasingFunction>
-                    <CubicEase EasingMode="EaseIn"/>
+                    <BackEase Amplitude="0.25" EasingMode="EaseIn"/>
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
+
+            <!-- Fade -->
             <DoubleAnimation Storyboard.TargetName="RightFrame"
                      Storyboard.TargetProperty="Opacity"
-                     From="1" To="0" Duration="0:0:0.22"/>
+                     From="1" To="0"
+                     Duration="0:0:0.28"/>
+
+            <!-- Blur dinamico -->
+            <DoubleAnimation Storyboard.TargetName="RightFrame"
+                     Storyboard.TargetProperty="(UIElement.Effect).(BlurEffect.Radius)"
+                     From="0" To="10"
+                     Duration="0:0:0.28"/>
         </Storyboard>
     </Window.Resources>
 
@@ -233,6 +255,9 @@
                     <Frame.RenderTransform>
                         <TranslateTransform X="0"/>
                     </Frame.RenderTransform>
+                    <Frame.Effect>
+                        <BlurEffect Radius="0"/>
+                    </Frame.Effect>
                 </Frame>
             </DockPanel>
         </Grid>

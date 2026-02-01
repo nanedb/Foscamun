@@ -1,6 +1,7 @@
-﻿using System.Windows.Controls;
-using System.Windows;
+﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 
 namespace Foscamun2026.Views
 {
@@ -14,8 +15,12 @@ namespace Foscamun2026.Views
 
         private void Home_Loaded(object sender, RoutedEventArgs e)
         {
-            // Sposta il focus sul primo elemento utile per accessibilità
+            // Accessibilità
             MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+
+            // Avvia il parallax del banner
+            var sb = (Storyboard)FindResource("BannerParallaxIn");
+            sb.Begin();
         }
 
         public void Refresh()

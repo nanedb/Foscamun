@@ -71,7 +71,7 @@ namespace Foscamun2026.Views
         private void HomeBtn_Click(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine(((Button)sender).IsPressed);
-            RightFrame.Navigate(new HomePage());
+            NavigateRightFrame(new HomePage());
         }
 
         private bool _isNavigating;
@@ -81,7 +81,7 @@ namespace Foscamun2026.Views
             if (_isNavigating) return;
             _isNavigating = true;
 
-            RightFrame.Navigate(new SetupPage());
+            NavigateRightFrame(new SetupPage());
 
             _isNavigating = false;
         }
