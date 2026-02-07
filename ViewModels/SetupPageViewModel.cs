@@ -94,10 +94,24 @@ namespace Foscamun2026.ViewModels
                 return;
             }
 
-            // ⭐ RICONOSCI ICJ DAL NOME, NON DAL CommID
+            // ⭐ Caso speciale: ICJ
             if (SelectedCommittee.Name == "ICJ")
             {
-                var page = new AddICJPage(_db);
+                // Carica il modello ICJ dal database
+                var icj = _db.ICJRepository.Load();
+
+                // Carica tutti i paesi
+                var countries = _db.CountryRepository.GetAll();
+
+                // Crea il ViewModel
+                var vm = new EditICJViewModel(icj, countries, _db.ICJRepository, MainWindow.Instance);
+
+                // Crea la pagina e assegna il DataContext
+                var page = new EditICJPage
+                {
+                    DataContext = vm
+                };
+
                 MainWindow.Instance.NavigateRightFrame(page);
                 return;
             }
@@ -106,7 +120,6 @@ namespace Foscamun2026.ViewModels
             var normalPage = new AddCommitteePage(_db, SelectedCommittee);
             MainWindow.Instance.NavigateRightFrame(normalPage);
         }
-
         // -------------------------
         //  EDIT ICJ  ⭐ NUOVO
         // -------------------------

@@ -98,7 +98,7 @@
     <Style x:Key="InputBoxStyle" TargetType="TextBox">
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="Padding" Value="5"/>
-        <Setter Property="Margin" Value="0 5 0 15"/>
+        <Setter Property="Margin" Value="0 5 0 5"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
         <Setter Property="VerticalContentAlignment" Value="Top"/>
         <Setter Property="BorderThickness" Value="1"/>
@@ -217,6 +217,72 @@
                 </Style>
             </Setter.Value>
         </Setter>
+    </Style>
+
+
+    <!-- ========================= -->
+    <!--     COMBOBOX              -->
+    <!-- ========================= -->
+
+    <!-- ComboBoxBaseStyle -->
+    <Style x:Key="ComboBoxBaseStyle" TargetType="ComboBox">
+        <Setter Property="Foreground" Value="{DynamicResource FoscamunWhite}"/>
+        <Setter Property="Background" Value="#22FFFFFF"/>
+        <Setter Property="BorderBrush" Value="#55FFFFFF"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="6"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+    </Style>
+    
+    <!-- 1️ Stile degli item -->
+    <Style x:Key="CountryComboItemStyle" TargetType="ComboBoxItem">
+        <Setter Property="Padding" Value="1"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="Background" Value="Transparent"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBoxItem">
+                    <Border x:Name="ItemBorder"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="4"
+                        Padding="{TemplateBinding Padding}">
+                        <ContentPresenter/>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+
+                        <!-- Hover -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="ItemBorder"
+                                Property="Background"
+                                Value="#FFF0F0F0"/>
+                        </Trigger>
+
+                        <!-- Selected -->
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="ItemBorder"
+                                Property="Background"
+                                Value="#FF0078D7"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- 2️ Stile del ComboBox -->
+    <Style x:Key="CountryComboBoxStyle"
+           TargetType="ComboBox"
+           BasedOn="{StaticResource ComboBoxBaseStyle}">
+
+        <Setter Property="ItemContainerStyle"
+                Value="{StaticResource CountryComboItemStyle}"/>
+
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
     </Style>
 
 </ResourceDictionary>

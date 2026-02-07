@@ -1,4 +1,5 @@
 ﻿using Foscamun2026.Models;
+using Foscamun2026.Repositories;
 using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,10 @@ namespace Foscamun2026.Data
     public class SqliteDataAccess
     {
         private readonly string _connectionString;
+
+        public CommitteeRepository CommitteeRepository { get; init; }
+        public CountryRepository CountryRepository { get; init; }
+        public ICJRepository ICJRepository { get; init; }
 
         /// <summary>
         /// Initializes the SQLite database connection.
@@ -26,6 +31,9 @@ namespace Foscamun2026.Data
 
             string dbPath = Path.Combine(folder, "Foscamun.db");
             _connectionString = $"Data Source={dbPath}";
+            CommitteeRepository = new CommitteeRepository(_connectionString);
+            CountryRepository = new CountryRepository(_connectionString);
+            ICJRepository = new ICJRepository(_connectionString);
         }
 
         // ============================================================

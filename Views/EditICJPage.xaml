@@ -1,0 +1,164 @@
+﻿<Page x:Class="Foscamun2026.Views.EditICJPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+      xmlns:conv="clr-namespace:Foscamun2026.Converters"
+      mc:Ignorable="d"
+      d:DesignWidth="900"
+      d:DesignHeight="600"
+      Background="{DynamicResource FoscamunBlue}"
+      Foreground="{DynamicResource FoscamunWhite}"
+      Title="EditICJPage">
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!--Titolo-->
+            <RowDefinition Height="*"/>
+            <!--Contenuto-->
+            <RowDefinition Height="Auto"/>
+            <!--Pulsanti-->
+        </Grid.RowDefinitions>
+
+        <!-- TITOLO -->
+        <TextBlock Text="International Court of Justice"
+                Style="{StaticResource H3}" Margin="0"/>
+
+        <!-- CONTENUTO -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <!--Colonna 1: Judge, Vice Judge, Topic-->
+                <ColumnDefinition Width="*"/>
+                <!--Colonna 2: Advocates-->
+                <ColumnDefinition Width="*"/>
+                <!--Colonna 3: Jurors-->
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Grid.Column="0" Header="Board"
+                      Padding="4" BorderBrush="#FFCCCCCC"
+                      BorderThickness="0.6" Margin="0 0 20 10">
+                <Grid>
+                    <!-- COLONNA 1: Judge, Vice Judge, Topic -->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="Judge" Style="{StaticResource Caption}"
+                               Margin="0 0 0 5"/>
+                    <TextBox Grid.Row="1" Text="{Binding Judge}" Style="{StaticResource InputBoxStyle}"
+                             Margin="5 0 0 20"/>
+                    <TextBlock Grid.Row="2" Text="Vice Judges" Style="{StaticResource Caption}"
+                               Margin="0 0 0 10"/>
+                    <TextBox Grid.Row="3" Text="{Binding ViceJudge1}" Style="{StaticResource InputBoxStyle}"
+                             Margin="5 0 0 5"/>
+                    <TextBox Grid.Row="4" Text="{Binding ViceJudge2}" Style="{StaticResource InputBoxStyle}"
+                             Margin="5 0 0 20"/>
+                    <TextBlock Grid.Row="5" Text="Topic" Style="{StaticResource Caption}"
+                               Margin="0 0 0 10"/>
+                    <TextBox Grid.Row="6" Text="{Binding Topic}"
+                             Style="{StaticResource InputBoxStyle}"
+                             Margin="5 0 0 0"/>
+                </Grid>
+            </GroupBox>
+
+            <Grid Grid.Column="1">
+                <!-- COLONNA 2: Advocates -->
+                <GroupBox Grid.Column="0" Header="Advocates"
+                      Padding="5" BorderBrush="#FFCCCCCC"
+                      BorderThickness="0.6" Margin="0 0 20 10">
+
+                    <StackPanel>
+                        <TextBlock Text="Plaintiffs" Style="{StaticResource Caption}"
+                                   Margin="0 0 0 5"/>
+                        <TextBox Text="{Binding Plaintiff1}" Style="{StaticResource InputBoxStyle}"
+                                 Margin="5 0 0 5"/>
+                        <TextBox Text="{Binding Plaintiff2}" Style="{StaticResource InputBoxStyle}"
+                                 Margin="5 0 0 5"/>
+                        <TextBox Text="{Binding Plaintiff3}" Style="{StaticResource InputBoxStyle}"
+                                 Margin="5 0 0 5"/>
+                        <TextBlock Text="Plaintiffs Country" Style="{StaticResource Caption}"
+                                   Margin="0 0 0 5"/>
+                        <ComboBox ItemsSource="{Binding Countries}"
+                                  SelectedItem="{Binding PCountry}"
+                                  ItemTemplate="{StaticResource CountryTemplate}"/>
+                        
+                        <TextBlock Text="Defense" Style="{StaticResource Caption}"
+                                   Margin="0 0 0 5"/>
+                        <TextBox Text="{Binding Defense1}" Style="{StaticResource InputBoxStyle}"
+                                 Margin="5 0 0 5"/>
+                        <TextBox Text="{Binding Defense2}" Style="{StaticResource InputBoxStyle}"
+                                 Margin="5 0 0 5"/>
+                        <TextBox Text="{Binding Defense3}" Style="{StaticResource InputBoxStyle}"
+                                 Margin="5 0 0 5"/>
+                        <TextBlock Text="Defense Country" Style="{StaticResource Caption}"
+                                   Margin="0 0 0 5"/>
+                        <ComboBox ItemsSource="{Binding Countries}"
+                                  SelectedItem="{Binding DCountry}"
+                                  DisplayMemberPath="Name"
+                                  Style="{StaticResource CountryComboBoxStyle}"
+                                  Margin="5 0 0 0"/>
+                    </StackPanel>
+                </GroupBox>
+
+            </Grid>
+
+            <Grid Grid.Column="2">
+                <!-- COLONNA 3: Jurors -->
+                <GroupBox Header="Jurors"
+                      Padding="5" BorderBrush="#FFCCCCCC"
+                      BorderThickness="0.6" Margin="0 0 0 10">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <ListView Grid.Row="0" Margin="10 10 10 1"
+                                  Background="{DynamicResource FoscamunWhite}"/>
+                        <Button Grid.Row="1" Style="{StaticResource IconButton}"
+                                Tag="pack://application:,,,/Resources/Icons/close.svg"
+                                Content="Add Juror"
+                                Command="{Binding AddJurorCommand}"
+                                HorizontalAlignment="Right" Margin="0 5 5 0"/>
+                        <Button Grid.Row="2" Style="{StaticResource IconButton}"
+                                Tag="pack://application:,,,/Resources/Icons/close.svg"
+                                Content="Remove Juror"
+                                Command="{Binding RemoveJurorCommand}"
+                                HorizontalAlignment="Right" Margin="0 0 5 0"/>
+
+                    </Grid>
+                </GroupBox>
+            </Grid>
+        </Grid>
+
+        <!-- FOOTER PULSANTI OK / CANCEL -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0 0 10 0">
+
+            <!-- CANCEL -->
+            <Button Style="{StaticResource IconButton}"
+                    Tag="pack://application:,,,/Resources/Icons/close.svg"
+                    Content="Cancel"
+                    Command="{Binding CancelCommand}" Width="150"/>
+
+            <!-- OK -->
+            <Button Style="{StaticResource IconButton}"
+                    Tag="pack://application:,,,/Resources/Icons/check.svg"
+                    Content="OK"
+                    Command="{Binding SaveCommand}" Width="150"/>
+            
+        </StackPanel>
+
+    </Grid>
+    
+</Page>
