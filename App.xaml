@@ -38,14 +38,6 @@
                 </StackPanel>
             </DataTemplate>
 
-            <Style TargetType="ComboBox">
-                <Setter Property="Foreground" Value="Black"/>
-                <Setter Property="IsEditable" Value="True"/>
-                <Setter Property="IsTextSearchEnabled" Value="True"/>
-                <Setter Property="IsTextSearchCaseSensitive" Value="False"/>
-                <Setter Property="TextSearch.TextPath" Value="Name"/>
-            </Style>
-            
             <ResourceDictionary.MergedDictionaries>
 
                 <!-- Colors -->

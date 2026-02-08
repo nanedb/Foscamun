@@ -87,9 +87,16 @@
                                  Margin="5 0 0 5"/>
                         <TextBlock Text="Plaintiffs Country" Style="{StaticResource Caption}"
                                    Margin="0 0 0 5"/>
-                        <ComboBox ItemsSource="{Binding Countries}"
+                        <!--<ComboBox ItemsSource="{Binding Countries}"
                                   SelectedItem="{Binding PCountry}"
-                                  ItemTemplate="{StaticResource CountryTemplate}"/>
+                                  ItemTemplate="{StaticResource CountryTemplate}"/>-->
+                        <ComboBox ItemsSource="{Binding Countries}"
+                                SelectedItem="{Binding PCountry}"
+                                ItemTemplate="{StaticResource CountryTemplate}"
+                                IsEditable="True"
+                                IsTextSearchEnabled="True"
+                                Foreground="Black" Background="{StaticResource FoscamunWhite}"
+                                TextSearch.TextPath="Name" Margin="5 0 0 10"/>
                         
                         <TextBlock Text="Defense" Style="{StaticResource Caption}"
                                    Margin="0 0 0 5"/>
