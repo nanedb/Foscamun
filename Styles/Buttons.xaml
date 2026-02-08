@@ -2,11 +2,15 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:svgc="http://sharpvectors.codeplex.com/svgc/">
 
-    <!-- Base style: sfondo trasparente per default -->
+    <!-- ========================================================= -->
+    <!--                     BASE BUTTON STYLE                     -->
+    <!-- ========================================================= -->
+
     <Style x:Key="BaseButtonStyle" TargetType="Button">
         <Setter Property="FontFamily" Value="{DynamicResource FontPrimary}" />
         <Setter Property="FontSize" Value="18" />
-        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource TextPrimaryBrush}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Padding" Value="{DynamicResource ButtonPadding}" />
         <Setter Property="Height" Value="{DynamicResource ButtonHeight}" />
@@ -16,9 +20,10 @@
         <Setter Property="SnapsToDevicePixels" Value="True" />
     </Style>
 
-    <!-- ========================= -->
-    <!--      MENUBUTTON           -->
-    <!-- ========================= -->
+    <!-- ========================================================= -->
+    <!--                        MENU BUTTON                        -->
+    <!-- ========================================================= -->
+
     <Style x:Key="MenuButton" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
         <Setter Property="Template">
@@ -28,25 +33,25 @@
 
                         <!-- Sfondo base -->
                         <Border x:Name="Bd"
-                            Background="{TemplateBinding Background}"
-                            CornerRadius="{DynamicResource CornerRadiusMedium}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}" />
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="{DynamicResource CornerRadiusMedium}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}" />
 
                         <!-- Overlay animato -->
                         <Border x:Name="Overlay"
-                            Background="{DynamicResource PrimaryDarkBrush}"
-                            CornerRadius="{DynamicResource CornerRadiusMedium}"
-                            Opacity="0"
-                            IsHitTestVisible="False"/>
+                                Background="{DynamicResource PrimaryDarkBrush}"
+                                CornerRadius="{DynamicResource CornerRadiusMedium}"
+                                Opacity="0"
+                                IsHitTestVisible="False"/>
 
                         <!-- Contenuto -->
                         <Grid>
                             <ContentPresenter x:Name="contentPresenter"
-                                          HorizontalAlignment="Left"
-                                          VerticalAlignment="Center"
-                                          RecognizesAccessKey="True"
-                                          Margin="12,0,12,0">
+                                              HorizontalAlignment="Left"
+                                              VerticalAlignment="Center"
+                                              RecognizesAccessKey="True"
+                                              Margin="12,0,12,0">
                                 <ContentPresenter.RenderTransform>
                                     <ScaleTransform ScaleX="1" ScaleY="1" />
                                 </ContentPresenter.RenderTransform>
@@ -63,19 +68,19 @@
                                 <BeginStoryboard>
                                     <Storyboard>
                                         <DoubleAnimation Storyboard.TargetName="Overlay"
-                                                     Storyboard.TargetProperty="Opacity"
-                                                     To="0.12"
-                                                     Duration="0:0:0.18"/>
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="0.12"
+                                                         Duration="0:0:0.18"/>
 
                                         <DoubleAnimation Storyboard.TargetName="contentPresenter"
-                                                     Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
-                                                     To="1.002"
-                                                     Duration="0:0:0.18"/>
+                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                         To="1.002"
+                                                         Duration="0:0:0.18"/>
 
                                         <DoubleAnimation Storyboard.TargetName="contentPresenter"
-                                                     Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
-                                                     To="1.002"
-                                                     Duration="0:0:0.18"/>
+                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                         To="1.002"
+                                                         Duration="0:0:0.18"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.EnterActions>
@@ -84,19 +89,19 @@
                                 <BeginStoryboard>
                                     <Storyboard>
                                         <DoubleAnimation Storyboard.TargetName="Overlay"
-                                                     Storyboard.TargetProperty="Opacity"
-                                                     To="0"
-                                                     Duration="0:0:0.18"/>
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="0"
+                                                         Duration="0:0:0.18"/>
 
                                         <DoubleAnimation Storyboard.TargetName="contentPresenter"
-                                                     Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
-                                                     To="1"
-                                                     Duration="0:0:0.18"/>
+                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                         To="1"
+                                                         Duration="0:0:0.18"/>
 
                                         <DoubleAnimation Storyboard.TargetName="contentPresenter"
-                                                     Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
-                                                     To="1"
-                                                     Duration="0:0:0.18"/>
+                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                         To="1"
+                                                         Duration="0:0:0.18"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
@@ -108,19 +113,19 @@
                                 <BeginStoryboard>
                                     <Storyboard>
                                         <DoubleAnimation Storyboard.TargetName="Overlay"
-                                                     Storyboard.TargetProperty="Opacity"
-                                                     To="0.22"
-                                                     Duration="0:0:0.08"/>
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="0.22"
+                                                         Duration="0:0:0.08"/>
 
                                         <DoubleAnimation Storyboard.TargetName="contentPresenter"
-                                                     Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
-                                                     To="0.995"
-                                                     Duration="0:0:0.08"/>
+                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                         To="0.995"
+                                                         Duration="0:0:0.08"/>
 
                                         <DoubleAnimation Storyboard.TargetName="contentPresenter"
-                                                     Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
-                                                     To="0.995"
-                                                     Duration="0:0:0.08"/>
+                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                         To="0.995"
+                                                         Duration="0:0:0.08"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.EnterActions>
@@ -129,19 +134,19 @@
                                 <BeginStoryboard>
                                     <Storyboard>
                                         <DoubleAnimation Storyboard.TargetName="Overlay"
-                                                     Storyboard.TargetProperty="Opacity"
-                                                     To="0"
-                                                     Duration="0:0:0.12"/>
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="0"
+                                                         Duration="0:0:0.12"/>
 
                                         <DoubleAnimation Storyboard.TargetName="contentPresenter"
-                                                     Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
-                                                     To="1"
-                                                     Duration="0:0:0.12"/>
+                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                         To="1"
+                                                         Duration="0:0:0.12"/>
 
                                         <DoubleAnimation Storyboard.TargetName="contentPresenter"
-                                                     Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
-                                                     To="1"
-                                                     Duration="0:0:0.12"/>
+                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                         To="1"
+                                                         Duration="0:0:0.12"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
@@ -159,36 +164,32 @@
         </Setter>
     </Style>
 
-    <!-- ================================== -->
-    <!--      IconTooltipWhenCollapsed      -->
-    <!-- ================================== -->
-    <!-- Style che imposta il ToolTip solo quando IsPaneCollapsed == True -->
+    <!-- ICON TOOLTIP WHEN COLLAPSED -->
     <Style x:Key="IconTooltipWhenCollapsed" TargetType="Button" BasedOn="{StaticResource MenuButton}">
         <Setter Property="ToolTip" Value="{x:Null}"/>
         <Style.Triggers>
-            <!-- Se la proprietà IsPaneCollapsed (ElementName=Root) è true, usa il Tag come ToolTip -->
             <DataTrigger Binding="{Binding IsPaneCollapsed, ElementName=Root}" Value="True">
                 <Setter Property="ToolTip" Value="{Binding Tag, RelativeSource={RelativeSource Self}}"/>
             </DataTrigger>
         </Style.Triggers>
     </Style>
 
-    <!-- ========================= -->
-    <!--      ICONBUTTON           -->
-    <!-- ========================= -->
+    <!-- ICON BUTTON -->
     <Style x:Key="IconButton" TargetType="Button" BasedOn="{StaticResource MenuButton}">
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="Padding" Value="0"/>
+        <Setter Property="Height" Value="28"/>
+        <Setter Property="MinHeight" Value="0"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="ContentTemplate">
             <Setter.Value>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <svgc:SvgViewbox Width="18" Height="18"
-                                     Stretch="Uniform"
-                                     Margin="0,0,10,0"
-                                     Source="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Tag}"/>
+                                         Stretch="Uniform"
+                                         Margin="0,0,10,0"
+                                         Source="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Tag}"/>
 
-                        <!-- QUI: lasciamo che WPF gestisca il testo -->
                         <ContentPresenter Content="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Content}"
                                           Margin="0"
                                           VerticalAlignment="Center"/>
@@ -198,4 +199,4 @@
         </Setter>
     </Style>
 
-</ResourceDictionary>
+</ResourceDictionary>                                        

@@ -1,0 +1,18 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!-- CornerRadius -->
+    <CornerRadius x:Key="CornerRadiusSmall">4</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusMedium">6</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusLarge">10</CornerRadius>
+
+    <!-- Padding -->
+    <Thickness x:Key="InputPadding">6</Thickness>
+    <Thickness x:Key="ButtonPadding">14,0</Thickness>
+
+    <!-- Heights -->
+    <sys:Double x:Key="InputHeight">36</sys:Double>
+    <sys:Double x:Key="ButtonHeight">48</sys:Double>
+
+</ResourceDictionary>

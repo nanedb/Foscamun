@@ -25,5 +25,5 @@ public class Country
 
     //public string SmallFlagPath => $"/Resources/24/{IsoCode}.png";
     //public string LargeFlagPath => $"/Resources/large/{IsoCode}.png";
-    public string FlagPath => $"/Resources/flags/{IsoCode}.svg";
+    public string FlagPath => $"pack://application:,,,/Resources/flags/{IsoCode.ToLower()}.svg";
 }

@@ -71,15 +71,15 @@
         <!-- Pannello sinistro con gradiente e header hamburger -->
         <Border Grid.Column="0" x:Name="Sidebar"
                 Padding="5"
-                BorderBrush="{DynamicResource FoscamunWhite}"
+                BorderBrush="{DynamicResource TextPrimaryBrush}"
                 BorderThickness="0,0,1,0"
                 Margin="0 0 -2 0"
                 DataContext="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
             
             <Border.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                    <GradientStop Color="{StaticResource FoscamunDarkBlueColor}" Offset="0" />
-                    <GradientStop Color="{StaticResource FoscamunBlueColor}" Offset="1" />
+                    <GradientStop Color="{StaticResource PrimaryDarkColor}" Offset="0" />
+                    <GradientStop Color="{StaticResource PrimaryColor}" Offset="1" />
                 </LinearGradientBrush>
             </Border.Background>
 
@@ -147,7 +147,7 @@
                                  Margin="0,0,10,0"/>
                             <TextBlock Text="{DynamicResource HomeBtn}"
                                        VerticalAlignment="Center"
-                                       Foreground="{DynamicResource FoscamunWhite}">
+                                       Foreground="{DynamicResource TextPrimaryBrush}">
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
                                         <Style.Triggers>
@@ -172,9 +172,9 @@
                                  Stretch="Uniform"
                                  Margin="0,0,10,0"/>
                             <TextBlock Text="{DynamicResource ConfigureBtn}"
-                   TextWrapping="Wrap"
-                   VerticalAlignment="Center"
-                   Foreground="{DynamicResource FoscamunWhite}" MaxWidth="130">
+                                       TextWrapping="Wrap"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource TextPrimaryBrush}" MaxWidth="130">
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
                                         <Style.Triggers>
@@ -199,8 +199,8 @@
                                  Stretch="Uniform"
                                  Margin="0,0,10,0"/>
                             <TextBlock Text="{DynamicResource NextBtn}"
-                   VerticalAlignment="Center"
-                   Foreground="{DynamicResource FoscamunWhite}">
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource TextPrimaryBrush}">
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
                                         <Style.Triggers>
@@ -225,8 +225,8 @@
                                  Stretch="Uniform"
                                  Margin="0,0,10,0"/>
                             <TextBlock Text="{DynamicResource ExitBtn}"
-                   VerticalAlignment="Center"
-                   Foreground="{DynamicResource FoscamunWhite}">
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource TextPrimaryBrush}">
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
                                         <Style.Triggers>
@@ -245,7 +245,7 @@
 
         <!-- Area destra con header e Frame -->
         <Grid Grid.Column="1"
-              Background="{DynamicResource FoscamunBlue}"
+              Background="{DynamicResource PrimaryBrush}"
               ClipToBounds="True">
             <DockPanel LastChildFill="True">
                 <Frame x:Name="RightFrame"

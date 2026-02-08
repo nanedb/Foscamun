@@ -10,8 +10,8 @@
       d:DesignWidth="900"
       d:DesignHeight="600"
       d:DataContext="{x:Null}"
-      Background="{DynamicResource FoscamunBlue}"
-      Foreground="{DynamicResource FoscamunWhite}"
+      Background="{DynamicResource PrimaryBrush}"
+      Foreground="{DynamicResource SurfaceBrush}"
       FontFamily ="{DynamicResource FontPrimary}"
       FontSize="18">
 
@@ -22,7 +22,7 @@
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Margin" Value="0,5,0,5"/>
-            <Setter Property="Foreground" Value="{DynamicResource FoscamunWhite}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
             <Setter Property="FontSize" Value="18"/>
         </Style>
 
@@ -74,14 +74,13 @@
                Content="{Binding SelectedCommittee.Name}"
                HorizontalAlignment="Left"
                Margin="40,0,0,0"
-               Foreground="{DynamicResource FoscamunWhite}" />
+               Foreground="{DynamicResource TextPrimaryBrush}" />
 
         <!-- YEAR -->
         <Label Grid.Row="2" Grid.Column="0"
                Style="{StaticResource LeftAlignedLabelStyle}"
                Content="{DynamicResource YearLbl}"/>
         <TextBox x:Name="YearBox"  Grid.Row="2" Grid.Column="1"
-                 Style="{StaticResource InputBoxStyle}"
                  Text="{Binding Source={x:Static properties:Settings.Default},
                                 Path=Year,
                                 Mode=TwoWay,
@@ -110,7 +109,7 @@
                                      Stretch="Uniform"
                                      Margin="0,0,10,4"/>
                     <TextBlock Text="English" FontSize="18"
-                               Foreground="{DynamicResource FoscamunWhite}"/>
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
                 </StackPanel>
             </RadioButton>
 
@@ -122,7 +121,7 @@
                                Stretch="Uniform"
                                Margin="0,0,10,4"/>
                     <TextBlock Text="Français" FontSize="18"
-                               Foreground="{DynamicResource FoscamunWhite}"/>
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
                 </StackPanel>
             </RadioButton>
 
@@ -134,7 +133,7 @@
                                Stretch="Uniform"
                                Margin="0,0,10,4"/>
                     <TextBlock Text="Español" FontSize="18"
-                               Foreground="{DynamicResource FoscamunWhite}"/>
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
                 </StackPanel>
             </RadioButton>
 
@@ -146,20 +145,29 @@
                Content="{DynamicResource CommitteeLbl}"/>
 
         <!-- COMMITTEE LIST -->
-        <ListBox x:Name="CommitteesListBox"
-                 Grid.Row="5" Grid.Column="0"
-                 ItemsSource="{Binding Committees}"
-                 DisplayMemberPath="Name"
-                 SelectedItem="{Binding SelectedCommittee, Mode=TwoWay}"
-                 Margin="0 0 40 0"
-                 MinHeight="120"
-                 Style="{StaticResource ListBoxStyle}"
-                 SelectionMode="Single" Focusable="True">
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="ListBoxItem">
+        <ListView x:Name="CommitteesListBox"
+                  Grid.Row="5" Grid.Column="0"
+                  ItemsSource="{Binding Committees}"
+                  SelectedItem="{Binding SelectedCommittee, Mode=TwoWay}"
+                  Background="{StaticResource InputBackgroundBrush}"
+                  Foreground="{StaticResource TextInputBrush}"
+                  Margin="0 0 40 0"
+                  MinHeight="120"
+                  SelectionMode="Single" Focusable="True">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}"
+                   Foreground="{StaticResource TextInputBrush}"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Background" Value="{StaticResource InputBackgroundBrush}"/>
+                    <Setter Property="Foreground" Value="{StaticResource TextInputBrush}"/>
                     <Setter Property="Padding" Value="5"/>
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                     <Setter Property="Focusable" Value="True"/>
+
                     <Style.Triggers>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="FontWeight" Value="Bold"/>
@@ -167,8 +175,8 @@
                         </Trigger>
                     </Style.Triggers>
                 </Style>
-            </ListBox.ItemContainerStyle>
-        </ListBox>
+            </ListView.ItemContainerStyle>
+        </ListView>
 
         <!-- ACTION BUTTONS -->
         <StackPanel Grid.Row="5" Grid.Column="1"

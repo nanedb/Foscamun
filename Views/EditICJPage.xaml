@@ -8,8 +8,8 @@
       mc:Ignorable="d"
       d:DesignWidth="900"
       d:DesignHeight="600"
-      Background="{DynamicResource FoscamunBlue}"
-      Foreground="{DynamicResource FoscamunWhite}"
+      Background="{DynamicResource PrimaryBrush}"
+      Foreground="{DynamicResource TextPrimaryBrush}"
       Title="EditICJPage">
 
     <Grid Margin="15">
@@ -34,7 +34,7 @@
                 <!--Colonna 2: Advocates-->
                 <ColumnDefinition Width="*"/>
                 <!--Colonna 3: Jurors-->
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="1.05*"/>
             </Grid.ColumnDefinitions>
 
             <GroupBox Grid.Column="0" Header="Board"
@@ -54,19 +54,18 @@
 
                     <TextBlock Grid.Row="0" Text="Judge" Style="{StaticResource Caption}"
                                Margin="0 0 0 5"/>
-                    <TextBox Grid.Row="1" Text="{Binding Judge}" Style="{StaticResource InputBoxStyle}"
+                    <TextBox Grid.Row="1" Text="{Binding Judge}"
                              Margin="5 0 0 20"/>
                     <TextBlock Grid.Row="2" Text="Vice Judges" Style="{StaticResource Caption}"
                                Margin="0 0 0 10"/>
-                    <TextBox Grid.Row="3" Text="{Binding ViceJudge1}" Style="{StaticResource InputBoxStyle}"
+                    <TextBox Grid.Row="3" Text="{Binding ViceJudge1}"
                              Margin="5 0 0 5"/>
-                    <TextBox Grid.Row="4" Text="{Binding ViceJudge2}" Style="{StaticResource InputBoxStyle}"
+                    <TextBox Grid.Row="4" Text="{Binding ViceJudge2}"
                              Margin="5 0 0 20"/>
                     <TextBlock Grid.Row="5" Text="Topic" Style="{StaticResource Caption}"
                                Margin="0 0 0 10"/>
                     <TextBox Grid.Row="6" Text="{Binding Topic}"
-                             Style="{StaticResource InputBoxStyle}"
-                             Margin="5 0 0 0"/>
+                             Margin="5 0 0 0" TextWrapping="Wrap"/>
                 </Grid>
             </GroupBox>
 
@@ -79,40 +78,39 @@
                     <StackPanel>
                         <TextBlock Text="Plaintiffs" Style="{StaticResource Caption}"
                                    Margin="0 0 0 5"/>
-                        <TextBox Text="{Binding Plaintiff1}" Style="{StaticResource InputBoxStyle}"
+                        <TextBox Text="{Binding Plaintiff1}"
                                  Margin="5 0 0 5"/>
-                        <TextBox Text="{Binding Plaintiff2}" Style="{StaticResource InputBoxStyle}"
+                        <TextBox Text="{Binding Plaintiff2}"
                                  Margin="5 0 0 5"/>
-                        <TextBox Text="{Binding Plaintiff3}" Style="{StaticResource InputBoxStyle}"
-                                 Margin="5 0 0 5"/>
+                        <TextBox Text="{Binding Plaintiff3}"
+                                 Margin="5 0 0 10"/>
                         <TextBlock Text="Plaintiffs Country" Style="{StaticResource Caption}"
                                    Margin="0 0 0 5"/>
-                        <!--<ComboBox ItemsSource="{Binding Countries}"
-                                  SelectedItem="{Binding PCountry}"
-                                  ItemTemplate="{StaticResource CountryTemplate}"/>-->
                         <ComboBox ItemsSource="{Binding Countries}"
-                                SelectedItem="{Binding PCountry}"
-                                ItemTemplate="{StaticResource CountryTemplate}"
-                                IsEditable="True"
-                                IsTextSearchEnabled="True"
-                                Foreground="Black" Background="{StaticResource FoscamunWhite}"
-                                TextSearch.TextPath="Name" Margin="5 0 0 10"/>
+                                  SelectedItem="{Binding PCountry}"
+                                  ItemTemplate="{StaticResource CountryTemplate}"
+                                  IsEditable="True"
+                                  IsTextSearchEnabled="True"
+                                  Foreground="Black" Background="{StaticResource TextPrimaryBrush}"
+                                  TextSearch.TextPath="Name" Margin="5 0 0 20"/>
                         
                         <TextBlock Text="Defense" Style="{StaticResource Caption}"
                                    Margin="0 0 0 5"/>
-                        <TextBox Text="{Binding Defense1}" Style="{StaticResource InputBoxStyle}"
+                        <TextBox Text="{Binding Defense1}"
                                  Margin="5 0 0 5"/>
-                        <TextBox Text="{Binding Defense2}" Style="{StaticResource InputBoxStyle}"
+                        <TextBox Text="{Binding Defense2}"
                                  Margin="5 0 0 5"/>
-                        <TextBox Text="{Binding Defense3}" Style="{StaticResource InputBoxStyle}"
-                                 Margin="5 0 0 5"/>
+                        <TextBox Text="{Binding Defense3}"
+                                 Margin="5 0 0 10"/>
                         <TextBlock Text="Defense Country" Style="{StaticResource Caption}"
                                    Margin="0 0 0 5"/>
                         <ComboBox ItemsSource="{Binding Countries}"
-                                  SelectedItem="{Binding DCountry}"
-                                  DisplayMemberPath="Name"
-                                  Style="{StaticResource CountryComboBoxStyle}"
-                                  Margin="5 0 0 0"/>
+                                  SelectedItem="{Binding PCountry}"
+                                  ItemTemplate="{StaticResource CountryTemplate}"
+                                  IsEditable="True"
+                                  IsTextSearchEnabled="True"
+                                  Foreground="Black" Background="{StaticResource TextPrimaryBrush}"
+                                  TextSearch.TextPath="Name" Margin="5 0 0 10"/>
                     </StackPanel>
                 </GroupBox>
 
@@ -129,18 +127,28 @@
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
-                        <ListView Grid.Row="0" Margin="10 10 10 1"
-                                  Background="{DynamicResource FoscamunWhite}"/>
-                        <Button Grid.Row="1" Style="{StaticResource IconButton}"
-                                Tag="pack://application:,,,/Resources/Icons/close.svg"
+                        <ListView Grid.Row="0" Margin="5 10 5 10"
+                                  Background="{DynamicResource InputBackgroundBrush}"
+                                  ItemsSource="{Binding Jurors}"/>
+                        <Grid Grid.Row="1" Margin="0 5 0 0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0"
+                                 Margin="5 5 0 10"/>
+
+                            <Button Grid.Column="1" Style="{StaticResource IconButton}"
+                                Tag="pack://application:,,,/Resources/Icons/add.svg"
                                 Content="Add Juror"
                                 Command="{Binding AddJurorCommand}"
-                                HorizontalAlignment="Right" Margin="0 5 5 0"/>
+                                HorizontalAlignment="Right"/>
+                        </Grid>
                         <Button Grid.Row="2" Style="{StaticResource IconButton}"
-                                Tag="pack://application:,,,/Resources/Icons/close.svg"
+                                Tag="pack://application:,,,/Resources/Icons/remove.svg"
                                 Content="Remove Juror"
                                 Command="{Binding RemoveJurorCommand}"
-                                HorizontalAlignment="Right" Margin="0 0 5 0"/>
+                                HorizontalAlignment="Right"/>
 
                     </Grid>
                 </GroupBox>

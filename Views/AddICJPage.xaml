@@ -8,8 +8,8 @@
       mc:Ignorable="d"
       d:DesignWidth="800"
       d:DesignHeight="500"
-      Background="{DynamicResource FoscamunBlue}"
-      Foreground="{DynamicResource FoscamunWhite}"
+      Background="{DynamicResource PrimaryBrush}"
+      Foreground="{DynamicResource TextPrimaryBrush}"
       Title="AddICJPage">
 
     <Page.Resources>
