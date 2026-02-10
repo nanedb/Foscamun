@@ -12,6 +12,16 @@
       Foreground="{DynamicResource TextPrimaryBrush}"
       Title="EditICJPage">
 
+    <Page.Resources>
+        <Style x:Key="DisableableIconButton" TargetType="Button" BasedOn="{StaticResource IconButton}">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.5"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
+
     <Grid Margin="15">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -105,7 +115,7 @@
                         <TextBlock Text="Defense Country" Style="{StaticResource Caption}"
                                    Margin="0 0 0 5"/>
                         <ComboBox ItemsSource="{Binding Countries}"
-                                  SelectedItem="{Binding PCountry}"
+                                  SelectedItem="{Binding DCountry}"
                                   ItemTemplate="{StaticResource CountryTemplate}"
                                   IsEditable="True"
                                   IsTextSearchEnabled="True"
@@ -127,24 +137,34 @@
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
-                        <ListView Grid.Row="0" Margin="5 10 5 10"
+                        <ListView x:Name="JurorsList"
+                            Grid.Row="0" Margin="5 10 5 10"
                                   Background="{DynamicResource InputBackgroundBrush}"
-                                  ItemsSource="{Binding Jurors}"/>
+                                  ItemsSource="{Binding Jurors}"
+                                  SelectedItem="{Binding SelectedJuror}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" Foreground="Black"/>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
                         <Grid Grid.Row="1" Margin="0 5 0 0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBox Grid.Column="0"
-                                 Margin="5 5 0 10"/>
+                            <TextBox x:Name="JurorBox"
+                                     Grid.Column="0"
+                                     Text="{Binding NewJurorName, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="5 5 0 10"/>
 
-                            <Button Grid.Column="1" Style="{StaticResource IconButton}"
+                            <Button Grid.Column="1" Style="{StaticResource DisableableIconButton}"
                                 Tag="pack://application:,,,/Resources/Icons/add.svg"
                                 Content="Add Juror"
                                 Command="{Binding AddJurorCommand}"
                                 HorizontalAlignment="Right"/>
                         </Grid>
-                        <Button Grid.Row="2" Style="{StaticResource IconButton}"
+                        <Button Grid.Row="2" Style="{StaticResource DisableableIconButton}"
                                 Tag="pack://application:,,,/Resources/Icons/remove.svg"
                                 Content="Remove Juror"
                                 Command="{Binding RemoveJurorCommand}"
@@ -167,7 +187,7 @@
                     Command="{Binding CancelCommand}" Width="150"/>
 
             <!-- OK -->
-            <Button Style="{StaticResource IconButton}"
+            <Button Style="{StaticResource DisableableIconButton}"
                     Tag="pack://application:,,,/Resources/Icons/check.svg"
                     Content="OK"
                     Command="{Binding SaveCommand}" Width="150"/>

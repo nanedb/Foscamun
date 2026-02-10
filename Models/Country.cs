@@ -26,4 +26,20 @@ public class Country
     //public string SmallFlagPath => $"/Resources/24/{IsoCode}.png";
     //public string LargeFlagPath => $"/Resources/large/{IsoCode}.png";
     public string FlagPath => $"pack://application:,,,/Resources/flags/{IsoCode.ToLower()}.svg";
+
+    // Override Equals per confrontare per IsoCode
+    public override bool Equals(object? obj)
+    {
+        if (obj is Country other)
+        {
+            return IsoCode == other.IsoCode;
+        }
+        return false;
+    }
+
+    // Override GetHashCode per coerenza con Equals
+    public override int GetHashCode()
+    {
+        return IsoCode?.GetHashCode() ?? 0;
+    }
 }
