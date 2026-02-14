@@ -27,6 +27,8 @@ namespace Foscamun2026.ViewModels
 
         public bool IsEditCommitteeEnabled => SelectedCommittee != null;
 
+        public bool IsAddICJEnabled => Committees?.All(c => c.Name != "ICJ") ?? false;
+
         public SetupPageViewModel(SqliteDataAccess db)
         {
             _db = db;
@@ -70,14 +72,44 @@ namespace Foscamun2026.ViewModels
             }
         }
 
+        partial void OnCommitteesChanged(ObservableCollection<Committee> value)
+        {
+            OnPropertyChanged(nameof(IsAddICJEnabled));
+        }
+
         // -------------------------
-        //  ADD
+        //  ADD COMMITTEE
         // -------------------------
 
         [RelayCommand]
         private void AddCommittee()
         {
             var page = new AddCommitteePage(_db);
+            MainWindow.Instance.NavigateRightFrame(page);
+        }
+
+        // -------------------------
+        //  ADD ICJ ⭐ NUOVO
+        // -------------------------
+
+        [RelayCommand]
+        private void AddICJ()
+        {
+            // Crea un nuovo ICJ vuoto
+            var icj = new ICJ();
+
+            // Carica tutti i paesi
+            var countries = _db.CountryRepository.GetAll();
+
+            // Crea il ViewModel
+            var vm = new EditICJViewModel(icj, countries, _db.ICJRepository, MainWindow.Instance);
+
+            // Crea la pagina e assegna il DataContext
+            var page = new EditICJPage
+            {
+                DataContext = vm
+            };
+
             MainWindow.Instance.NavigateRightFrame(page);
         }
 
@@ -120,21 +152,6 @@ namespace Foscamun2026.ViewModels
             var normalPage = new AddCommitteePage(_db, SelectedCommittee);
             MainWindow.Instance.NavigateRightFrame(normalPage);
         }
-        // -------------------------
-        //  EDIT ICJ  ⭐ NUOVO
-        // -------------------------
-
-        //[RelayCommand]
-        //private void EditICJ()
-        //{
-        //    OpenICJSetup();
-        //}
-
-        //private void OpenICJSetup()
-        //{
-        //    var page = new AddICJPage(_db);
-        //    MainWindow.Instance.NavigateRightFrame(page);
-        //}
 
         // -------------------------
         //  REMOVE
@@ -162,6 +179,8 @@ namespace Foscamun2026.ViewModels
 
             Committees.Remove(SelectedCommittee);
             SelectedCommittee = null;
+            
+            OnPropertyChanged(nameof(IsAddICJEnabled));
         }
     }
 }

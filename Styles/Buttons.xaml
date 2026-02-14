@@ -154,8 +154,9 @@
 
                         <!-- DISABLED -->
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="Bd" Property="Opacity" Value="0.5" />
-                            <Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}" />
+                            <Setter TargetName="contentPresenter" Property="Opacity" Value="0.4" />
+                            <Setter Property="Foreground" Value="#808080" />
+                            <Setter Property="Cursor" Value="Arrow" />
                         </Trigger>
 
                     </ControlTemplate.Triggers>
@@ -199,4 +200,4 @@
         </Setter>
     </Style>
 
-</ResourceDictionary>                                        
+</ResourceDictionary>

@@ -12,16 +12,6 @@
       Foreground="{DynamicResource TextPrimaryBrush}"
       Title="EditICJPage">
 
-    <Page.Resources>
-        <Style x:Key="DisableableIconButton" TargetType="Button" BasedOn="{StaticResource IconButton}">
-            <Style.Triggers>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Opacity" Value="0.5"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-    </Page.Resources>
-
     <Grid Margin="15">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -96,13 +86,13 @@
                                  Margin="5 0 0 10"/>
                         <TextBlock Text="Plaintiffs Country" Style="{StaticResource Caption}"
                                    Margin="0 0 0 5"/>
+                        <!-- ComboBox per Plaintiffs Country -->
                         <ComboBox ItemsSource="{Binding Countries}"
-                                  SelectedItem="{Binding PCountry}"
-                                  ItemTemplate="{StaticResource CountryTemplate}"
-                                  IsEditable="True"
+                                  SelectedValue="{Binding PCountry.IsoCode}"
+                                  SelectedValuePath="IsoCode"
                                   IsTextSearchEnabled="True"
-                                  Foreground="Black" Background="{StaticResource TextPrimaryBrush}"
-                                  TextSearch.TextPath="Name" Margin="5 0 0 20"/>
+                                  TextSearch.TextPath="Name" 
+                                  Margin="5 0 0 20"/>
                         
                         <TextBlock Text="Defense" Style="{StaticResource Caption}"
                                    Margin="0 0 0 5"/>
@@ -114,20 +104,20 @@
                                  Margin="5 0 0 10"/>
                         <TextBlock Text="Defense Country" Style="{StaticResource Caption}"
                                    Margin="0 0 0 5"/>
+                        <!-- ComboBox per Defense Country -->
                         <ComboBox ItemsSource="{Binding Countries}"
-                                  SelectedItem="{Binding DCountry}"
-                                  ItemTemplate="{StaticResource CountryTemplate}"
-                                  IsEditable="True"
+                                  SelectedValue="{Binding DCountry.IsoCode}"
+                                  SelectedValuePath="IsoCode"
                                   IsTextSearchEnabled="True"
-                                  Foreground="Black" Background="{StaticResource TextPrimaryBrush}"
-                                  TextSearch.TextPath="Name" Margin="5 0 0 10"/>
+                                  TextSearch.TextPath="Name" 
+                                  Margin="5 0 0 10"/>
                     </StackPanel>
                 </GroupBox>
 
             </Grid>
 
+            <!-- COLONNA 3: Jurors -->
             <Grid Grid.Column="2">
-                <!-- COLONNA 3: Jurors -->
                 <GroupBox Header="Jurors"
                       Padding="5" BorderBrush="#FFCCCCCC"
                       BorderThickness="0.6" Margin="0 0 0 10">
@@ -136,9 +126,11 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
-                        <ListView x:Name="JurorsList"
-                            Grid.Row="0" Margin="5 10 5 10"
+                        
+                        <ListView Grid.Row="0" x:Name="JurorsList"
+                                  Margin="5 10 5 10"
                                   Background="{DynamicResource InputBackgroundBrush}"
                                   ItemsSource="{Binding Jurors}"
                                   SelectedItem="{Binding SelectedJuror}">
@@ -148,29 +140,21 @@
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
-                        <Grid Grid.Row="1" Margin="0 5 0 0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBox x:Name="JurorBox"
-                                     Grid.Column="0"
-                                     Text="{Binding NewJurorName, UpdateSourceTrigger=PropertyChanged}"
-                                     Margin="5 5 0 10"/>
-
-                            <Button Grid.Column="1" Style="{StaticResource DisableableIconButton}"
+                        
+                        <TextBox Grid.Row="1" x:Name="JurorBox"
+                                 Text="{Binding NewJurorName, UpdateSourceTrigger=PropertyChanged}"
+                                 Margin="5 5 5 10"/>
+                        <Button Grid.Row="2" Style="{StaticResource IconButton}"
                                 Tag="pack://application:,,,/Resources/Icons/add.svg"
                                 Content="Add Juror"
                                 Command="{Binding AddJurorCommand}"
                                 HorizontalAlignment="Right"/>
-                        </Grid>
-                        <Button Grid.Row="2" Style="{StaticResource DisableableIconButton}"
+                        <Button Grid.Row="3" Style="{StaticResource IconButton}"
                                 Tag="pack://application:,,,/Resources/Icons/remove.svg"
                                 Content="Remove Juror"
                                 Command="{Binding RemoveJurorCommand}"
                                 HorizontalAlignment="Right"/>
-
-                    </Grid>
+                        </Grid>
                 </GroupBox>
             </Grid>
         </Grid>
@@ -187,7 +171,7 @@
                     Command="{Binding CancelCommand}" Width="150"/>
 
             <!-- OK -->
-            <Button Style="{StaticResource DisableableIconButton}"
+            <Button Style="{StaticResource IconButton}"
                     Tag="pack://application:,,,/Resources/Icons/check.svg"
                     Content="OK"
                     Command="{Binding SaveCommand}" Width="150"/>
