@@ -48,10 +48,10 @@
 
     <Grid Margin="20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <!-- Header con altezza fissa -->
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <!-- Main Content -->
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <!-- Header -->
@@ -83,14 +83,15 @@
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0"
                            Text="{DynamicResource PresidentLbl}"
                            Style="{StaticResource Caption}"
                            Margin="10,3,20,3"
-                           VerticalAlignment="Center"/>
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right"/>
                 <TextBlock Grid.Row="0" Grid.Column="1"
                            Text="{Binding President}"
                            Style="{StaticResource Body}"
@@ -101,7 +102,8 @@
                            Text="{DynamicResource VicePresidentLbl}"
                            Style="{StaticResource Caption}"
                            Margin="10,3,20,3"
-                           VerticalAlignment="Center"/>
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right"/>
                 <TextBlock Grid.Row="1" Grid.Column="1"
                            Text="{Binding VicePresident}"
                            Style="{StaticResource Body}"
@@ -112,7 +114,8 @@
                            Text="{DynamicResource ModeratorLbl}"
                            Style="{StaticResource Caption}"
                            Margin="10,3,20,3"
-                           VerticalAlignment="Center"/>
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right"/>
                 <TextBlock Grid.Row="2" Grid.Column="1"
                            Text="{Binding Moderator}"
                            Style="{StaticResource Body}"
@@ -122,9 +125,8 @@
 
             <!-- Topic & Session -->
             <StackPanel Grid.Column="2" 
-                        VerticalAlignment="Top"
-                        Margin="20,20,0,0"
-                        MaxWidth="350">
+                        VerticalAlignment="Top" HorizontalAlignment="Right"
+                        Margin="20,20,0,0">
                 <TextBlock Text="{Binding Topic}"
                            Style="{StaticResource Body}"
                            TextWrapping="Wrap"
