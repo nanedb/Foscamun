@@ -188,17 +188,18 @@
                         </StackPanel>
                     </Button>
 
-                    <!-- Next -->
-                    <Button x:Name="NextBtn" Style="{StaticResource IconTooltipWhenCollapsed}"
+                    <!-- Roll call -->
+                    <Button x:Name="RollCallBtn" Style="{StaticResource IconTooltipWhenCollapsed}"
                             Margin="0,0,0,8"
-                            Click="NextBtn_Click"
-                            Tag="{DynamicResource NextBtn}">
+                            IsEnabled="{Binding IsRollCallEnabled}"
+                            Click="RollCallBtn_Click"
+                            Tag="{DynamicResource RollCallBtn}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <svgc:SvgViewbox Width="18" Height="18"
                                  Source="pack://application:,,,/Resources/Icons/next.svg"
                                  Stretch="Uniform"
                                  Margin="0,0,10,0"/>
-                            <TextBlock Text="{DynamicResource NextBtn}"
+                            <TextBlock Text="{DynamicResource RollCallBtn}"
                                        VerticalAlignment="Center"
                                        Foreground="{DynamicResource TextPrimaryBrush}">
                                 <TextBlock.Style>
@@ -242,24 +243,24 @@
                 </StackPanel>
             </StackPanel>
         </Border>
-
+                    
         <!-- Area destra con header e Frame -->
         <Grid Grid.Column="1"
               Background="{DynamicResource PrimaryBrush}"
               ClipToBounds="True">
-            <DockPanel LastChildFill="True">
-                <Frame x:Name="RightFrame"
-                       NavigationUIVisibility="Hidden"
-                       Opacity="1"
-                       RenderTransformOrigin="0,0">
-                    <Frame.RenderTransform>
-                        <TranslateTransform X="0"/>
-                    </Frame.RenderTransform>
-                    <Frame.Effect>
-                        <BlurEffect Radius="0"/>
-                    </Frame.Effect>
-                </Frame>
-            </DockPanel>
+            <Frame x:Name="RightFrame"
+                   NavigationUIVisibility="Hidden"
+                   Opacity="1"
+                   RenderTransformOrigin="0,0"
+                   Margin="0"
+                   Padding="0">
+                <Frame.RenderTransform>
+                    <TranslateTransform X="0"/>
+                </Frame.RenderTransform>
+                <Frame.Effect>
+                    <BlurEffect Radius="0"/>
+                </Frame.Effect>
+            </Frame>
         </Grid>
     </Grid>
 </Window>

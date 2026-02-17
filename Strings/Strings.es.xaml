@@ -25,6 +25,7 @@
     <sys:String x:Key="OkBtn">Aceptar</sys:String>
     <sys:String x:Key="CancelBtn">Cancelar</sys:String>
     <sys:String x:Key="EditICJBtn">Editar ICJ</sys:String>
+    <sys:String x:Key="RollCallBtn">Lista</sys:String>
     
     <!-- ToolTips -->
     <sys:String x:Key="HamburgerBtn">Abrir/Cerrar menú</sys:String>
@@ -34,4 +35,30 @@
     <sys:String x:Key="HintStr1">El comité seleccionado es</sys:String>
     <sys:String x:Key="HintStr2">Para cambiarlo, edítalo; para añadir o eliminar un comité, haz clic en</sys:String>
 
+    <!-- Páginas de Lista -->
+    <sys:String x:Key="CommitteeRollCallTitle">Lista</sys:String>
+    <sys:String x:Key="CommitteeRollCallPlaceholder">Esta página mostrará la lista del comité seleccionado.</sys:String>
+    <sys:String x:Key="ICJRollCallTitle">Lista de la CIJ</sys:String>
+    <sys:String x:Key="ICJRollCallPlaceholder">Esta página mostrará la lista de la Corte Internacional de Justicia.</sys:String>
+    <sys:String x:Key="TopicLbl">Tema:</sys:String>
+    <sys:String x:Key="SessionLbl">Sesión:</sys:String>
+    <sys:String x:Key="PresidentLbl">Presidente:</sys:String>
+    <sys:String x:Key="VicePresidentLbl">Vicepresidente:</sys:String>
+    <sys:String x:Key="ModeratorLbl">Moderador:</sys:String>
+    <sys:String x:Key="MarkPresentLbl">Haz clic para marcar como presente</sys:String>
+    <sys:String x:Key="MarkAbsentLbl">Haz clic para marcar como ausente</sys:String>
+    <sys:String x:Key="ProceedBtn">Continuar</sys:String>
+
+    <!-- Página de Sesión -->
+    <sys:String x:Key="AvailableSpeakersLbl">Oradores disponibles</sys:String>
+    <sys:String x:Key="SpeakersListLbl">Lista de oradores</sys:String>
+    <sys:String x:Key="CurrentSpeakerLbl">Orador actual</sys:String>
+    <sys:String x:Key="WarningsLbl">Advertencias</sys:String>
+    <sys:String x:Key="RemoveSpeakerBtn">Eliminar</sys:String>
+    <sys:String x:Key="WarnBtn">Advertir</sys:String>
+    <sys:String x:Key="RemoveWarningBtn">Eliminar advertencia</sys:String>
+    <sys:String x:Key="TimerBtn">Temporizador</sys:String>
+    <sys:String x:Key="VotingBtn">Votación</sys:String>
+    <sys:String x:Key="NoSpeakerSelectedLbl">Ningún orador seleccionado</sys:String>
+    <sys:String x:Key="SessionLbl2">Sesión</sys:String>
 </ResourceDictionary>

@@ -17,6 +17,18 @@
 
     <!-- PNG e icone -->
     <Resource Include="Resources\**\*.png" />
+    <Resource Include="Resources\Committee Logo\DISEC.svg" />
+    <Resource Include="Resources\Committee Logo\ECOSOC.svg" />
+    <Resource Include="Resources\Committee Logo\FAO.svg" />
+    <Resource Include="Resources\Committee Logo\ICJ.svg" />
+    <Resource Include="Resources\Committee Logo\UNEP.svg" />
+    <Resource Include="Resources\Committee Logo\UNESCO.svg" />
+    <Resource Include="Resources\Committee Logo\UNHCR.svg" />
+    <Resource Include="Resources\Committee Logo\UNICEF.svg" />
+    <Resource Include="Resources\Committee Logo\UNODC.svg" />
+    <Resource Include="Resources\Committee Logo\UNWOMEN.svg" />
+    <Resource Include="Resources\Committee Logo\UNWTO.svg" />
+    <Resource Include="Resources\Committee Logo\WHO.svg" />
     <Resource Include="Resources\Foscamun.ico" />
     <Resource Include="Resources\Icons\Foscamun.ico" />
 
@@ -25,6 +37,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Foscamun.db" />
+    <None Remove="Resources\Committee Logo\DISEC.svg" />
+    <None Remove="Resources\Committee Logo\ECOSOC.svg" />
+    <None Remove="Resources\Committee Logo\FAO.svg" />
+    <None Remove="Resources\Committee Logo\ICJ.svg" />
+    <None Remove="Resources\Committee Logo\UNEP.svg" />
+    <None Remove="Resources\Committee Logo\UNESCO.svg" />
+    <None Remove="Resources\Committee Logo\UNHCR.svg" />
+    <None Remove="Resources\Committee Logo\UNICEF.svg" />
+    <None Remove="Resources\Committee Logo\UNODC.svg" />
+    <None Remove="Resources\Committee Logo\UNWOMEN.svg" />
+    <None Remove="Resources\Committee Logo\UNWTO.svg" />
+    <None Remove="Resources\Committee Logo\WHO.svg" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Foscamun.db">

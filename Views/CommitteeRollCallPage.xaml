@@ -1,0 +1,490 @@
+<Page x:Class="Foscamun2026.Views.CommitteeRollCallPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+      mc:Ignorable="d"
+      d:DesignWidth="800"
+      d:DesignHeight="450"
+      Background="{DynamicResource PrimaryBrush}"
+      Foreground="{DynamicResource TextPrimaryBrush}"
+      Title="Committee Roll Call">
+
+    <Page.Resources>
+        <!-- Template per lista paesi con font più grande -->
+        <DataTemplate x:Key="CountryTemplateList">
+            <StackPanel Orientation="Horizontal">
+                <svgc:SvgViewbox Width="28" Height="19"
+                                 Source="{Binding FlagPath}"
+                                 Stretch="Uniform"/>
+                <TextBlock Text="{Binding Name}"
+                           Margin="10,0,0,0"
+                           VerticalAlignment="Center"
+                           FontSize="16"
+                           Foreground="{StaticResource TextInputBrush}"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <!-- Stile per ComboBox con testo semplice -->
+        <Style x:Key="SimpleComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="FontFamily" Value="{StaticResource FontPrimary}"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="6"/>
+            <Setter Property="Background" Value="{StaticResource InputBackgroundBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextInputBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource SurfaceBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="MinHeight" Value="32"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <!-- BOX PRINCIPALE -->
+                            <Border x:Name="Border"
+                                    Background="{StaticResource InputBackgroundBrush}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="{StaticResource CornerRadiusMedium}"
+                                    Padding="4"
+                                    SnapsToDevicePixels="True"/>
+
+                            <!-- CONTENUTO SELEZIONATO -->
+                            <ContentPresenter x:Name="ContentSite"
+                                              Margin="8,0,28,0"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Left"
+                                              Content="{TemplateBinding SelectionBoxItem}">
+                                <ContentPresenter.ContentTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" Foreground="{StaticResource TextInputBrush}"/>
+                                    </DataTemplate>
+                                </ContentPresenter.ContentTemplate>
+                            </ContentPresenter>
+
+                            <!-- FRECCIA + TOGGLEBUTTON -->
+                            <ToggleButton x:Name="ToggleButton"
+                                          Grid.Column="1"
+                                          Focusable="False"
+                                          Background="Transparent"
+                                          BorderThickness="0"
+                                          HorizontalAlignment="Right"
+                                          VerticalAlignment="Center"
+                                          Width="25" Height="25"
+                                          IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+                                <Path Width="10" Height="6"
+                                      Fill="{StaticResource TextInputBrush}"
+                                      Data="M 0 0 L 10 0 L 5 6 Z"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"/>
+                            </ToggleButton>
+
+                            <!-- POPUP -->
+                            <Popup x:Name="PART_Popup"
+                                   Placement="Bottom"
+                                   AllowsTransparency="True"
+                                   Focusable="False"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   PopupAnimation="Slide"
+                                   Width="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}">
+                                <Border Background="{StaticResource InputBackgroundBrush}"
+                                        BorderBrush="{StaticResource SurfaceBorderBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="{StaticResource CornerRadiusMedium}"
+                                        Padding="4">
+                                    <ScrollViewer>
+                                        <ItemsPresenter/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource SurfaceBorderHoverBrush}"/>
+                            </Trigger>
+
+                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource SurfaceBorderFocusBrush}"/>
+                                <Setter TargetName="Border" Property="BorderThickness" Value="1.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Stile per pulsante con icona a destra -->
+        <Style x:Key="IconRightButton" TargetType="Button" BasedOn="{StaticResource MenuButton}">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Right"/>
+            <Setter Property="Padding" Value="10,0,10,0"/>
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" 
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Right">
+                            <ContentPresenter Content="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Content}"
+                                              Margin="0,0,10,0"
+                                              VerticalAlignment="Center"/>
+
+                            <svgc:SvgViewbox Width="18" Height="18"
+                                             Stretch="Uniform"
+                                             Margin="0"
+                                             Source="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Tag}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <!-- Sfondo base -->
+                            <Border x:Name="Bd"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="{DynamicResource CornerRadiusMedium}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}" />
+
+                            <!-- Overlay animato -->
+                            <Border x:Name="Overlay"
+                                    Background="{DynamicResource PrimaryDarkBrush}"
+                                    CornerRadius="{DynamicResource CornerRadiusMedium}"
+                                    Opacity="0"
+                                    IsHitTestVisible="False"/>
+
+                            <!-- Contenuto -->
+                            <Grid>
+                                <ContentPresenter x:Name="contentPresenter"
+                                                  HorizontalAlignment="Right"
+                                                  VerticalAlignment="Center"
+                                                  RecognizesAccessKey="True"
+                                                  Margin="12,0,12,0">
+                                    <ContentPresenter.RenderTransform>
+                                        <ScaleTransform ScaleX="1" ScaleY="1" />
+                                    </ContentPresenter.RenderTransform>
+                                </ContentPresenter>
+                            </Grid>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <!-- HOVER -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Overlay"
+                                                             Storyboard.TargetProperty="Opacity"
+                                                             To="0.12"
+                                                             Duration="0:0:0.18"/>
+
+                                            <DoubleAnimation Storyboard.TargetName="contentPresenter"
+                                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                             To="1.002"
+                                                             Duration="0:0:0.18"/>
+
+                                            <DoubleAnimation Storyboard.TargetName="contentPresenter"
+                                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                             To="1.002"
+                                                             Duration="0:0:0.18"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Overlay"
+                                                             Storyboard.TargetProperty="Opacity"
+                                                             To="0"
+                                                             Duration="0:0:0.18"/>
+
+                                            <DoubleAnimation Storyboard.TargetName="contentPresenter"
+                                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                             To="1"
+                                                             Duration="0:0:0.18"/>
+
+                                            <DoubleAnimation Storyboard.TargetName="contentPresenter"
+                                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                             To="1"
+                                                             Duration="0:0:0.18"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+
+                            <!-- PRESSED -->
+                            <Trigger Property="IsPressed" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Overlay"
+                                                             Storyboard.TargetProperty="Opacity"
+                                                             To="0.22"
+                                                             Duration="0:0:0.08"/>
+
+                                            <DoubleAnimation Storyboard.TargetName="contentPresenter"
+                                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                             To="0.995"
+                                                             Duration="0:0:0.08"/>
+
+                                            <DoubleAnimation Storyboard.TargetName="contentPresenter"
+                                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                             To="0.995"
+                                                             Duration="0:0:0.08"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Overlay"
+                                                             Storyboard.TargetProperty="Opacity"
+                                                             To="0"
+                                                             Duration="0:0:0.12"/>
+
+                                            <DoubleAnimation Storyboard.TargetName="contentPresenter"
+                                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                             To="1"
+                                                             Duration="0:0:0.12"/>
+
+                                            <DoubleAnimation Storyboard.TargetName="contentPresenter"
+                                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                             To="1"
+                                                             Duration="0:0:0.12"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+
+                            <!-- DISABLED -->
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="contentPresenter" Property="Opacity" Value="0.4" />
+                                <Setter Property="Foreground" Value="#808080" />
+                                <Setter Property="Cursor" Value="Arrow" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <Grid Margin="20 15 20 15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Titolo -->
+        <TextBlock Grid.Row="0"
+                   Text="{DynamicResource CommitteeRollCallTitle}" 
+                   Style="{StaticResource H3}"
+                   Margin="0,0,0,0"/>
+
+        <!-- Contenuto -->
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <!-- Logo e Board -->
+                <RowDefinition Height="Auto"/>
+                <!-- Topic e Session -->
+                <RowDefinition Height="*"/>
+                <!-- Contenuto principale -->
+            </Grid.RowDefinitions>
+
+            <!-- Logo e Board -->
+            <Grid Grid.Row="0" Margin="0,10,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Logo -->
+                <Viewbox Grid.Column="0" Grid.Row="0" Grid.RowSpan="3"
+                         Margin="0,0,20,0" 
+                         HorizontalAlignment="Left" 
+                         VerticalAlignment="Center" 
+                         MaxHeight="110" 
+                         MinHeight="80">
+                    <svgc:SvgViewbox Source="{Binding CommitteeLogoPath}"
+                                     Stretch="Uniform"/>
+                </Viewbox>
+
+                <!-- Labels Board -->
+                <TextBlock Grid.Column="1" Grid.Row="0"
+                           Text="{DynamicResource PresidentLbl}"
+                           Style="{StaticResource Caption}"
+                           Margin="20,3,20,3"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right"/>
+                <TextBlock Grid.Column="1" Grid.Row="1" 
+                           Text="{DynamicResource VicePresidentLbl}"
+                           Style="{StaticResource Caption}"
+                           Margin="20,3,20,3"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right"/>
+                <TextBlock Grid.Column="1" Grid.Row="2" 
+                           Text="{DynamicResource ModeratorLbl}"
+                           Style="{StaticResource Caption}"
+                           Margin="20,3,20,3"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right"/>
+
+                <!-- Valori Board -->
+                <TextBlock Grid.Column="2" Grid.Row="0"
+                           Text="{Binding President}"
+                           Style="{StaticResource Body}"
+                           Margin="0,3,0,3"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Left"/>
+                <TextBlock Grid.Column="2" Grid.Row="1" 
+                           Text="{Binding VicePresident}"
+                           Style="{StaticResource Body}"
+                           Margin="0,3,0,3"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Left"/>
+                <TextBlock Grid.Column="2" Grid.Row="2" 
+                           Text="{Binding Moderator}"
+                           Style="{StaticResource Body}"
+                           Margin="0,3,0,3"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Left"/>
+            </Grid>
+
+            <!-- Topic e Session -->
+            <Grid Grid.Row="1" Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Label Topic -->
+                <TextBlock Grid.Column="0"
+                           Text="{DynamicResource TopicLbl}"
+                           Style="{StaticResource Caption}"
+                           VerticalAlignment="Center"
+                           Margin="0,0,10,0"/>
+
+                <!-- ComboBox Topic -->
+                <ComboBox x:Name="TopicComboBox"
+                          Grid.Column="1"
+                          Style="{StaticResource SimpleComboBoxStyle}"
+                          ItemsSource="{Binding Topics}"
+                          SelectedItem="{Binding SelectedTopic}"
+                          VerticalAlignment="Center"
+                          Margin="0,0,9,0"
+                          MinWidth="150">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" Foreground="{StaticResource TextInputBrush}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <!-- Label Session -->
+                <TextBlock Grid.Column="3"
+                           Text="{DynamicResource SessionLbl}"
+                           Style="{StaticResource Caption}"
+                           VerticalAlignment="Center"
+                           Margin="0,0,10,0"/>
+
+                <!-- ComboBox Session -->
+                <ComboBox x:Name="SessionComboBox"
+                          Grid.Column="4"
+                          Style="{StaticResource SimpleComboBoxStyle}"
+                          ItemsSource="{Binding Sessions}"
+                          SelectedItem="{Binding SelectedSession}"
+                          VerticalAlignment="Center"
+                          MinWidth="80">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" Foreground="{StaticResource TextInputBrush}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </Grid>
+
+            <!-- Contenuto principale -->
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Titoli delle liste -->
+                <TextBlock Grid.Column="0" Grid.Row="0"
+                           Text="{DynamicResource MarkPresentLbl}"
+                           Style="{StaticResource Caption}"
+                           HorizontalAlignment="Center"
+                           TextWrapping="Wrap"
+                           Margin="0,0,5,0"/>
+
+                <TextBlock Grid.Column="1" Grid.Row="0"
+                           Text="{DynamicResource MarkAbsentLbl}"
+                           Style="{StaticResource Caption}"
+                           HorizontalAlignment="Center"
+                           TextWrapping="Wrap"
+                           Margin="5,0,0,0"/>
+
+                <!-- Lista paesi disponibili (Absent) -->
+                <ListView Grid.Column="0" Grid.Row="1"
+                          ItemsSource="{Binding AvailableCountries}"
+                          ItemTemplate="{StaticResource CountryTemplateList}"
+                          SelectedItem="{Binding SelectedCountry, Mode=OneWayToSource}"
+                          MouseLeftButtonUp="AvailableCountries_Click"
+                          Background="{StaticResource InputBackgroundBrush}"
+                          BorderBrush="{StaticResource SurfaceBorderBrush}"
+                          BorderThickness="1"
+                          Margin="0,0,10,0"
+                          Padding="4"/>
+
+                <!-- Lista paesi presenti (Present) -->
+                <ListView Grid.Column="1" Grid.Row="1"
+                          ItemsSource="{Binding PresentCountries}"
+                          ItemTemplate="{StaticResource CountryTemplateList}"
+                          SelectedItem="{Binding SelectedCountry, Mode=OneWayToSource}"
+                          MouseLeftButtonUp="PresentCountries_Click"
+                          Background="{StaticResource InputBackgroundBrush}"
+                          BorderBrush="{StaticResource SurfaceBorderBrush}"
+                          BorderThickness="1"
+                          Margin="10,0,0,0"
+                          Padding="4"/>
+
+                <!-- Colonna pulsante Proceed -->
+                <Grid Grid.Column="2" Grid.Row="1"
+                      Margin="20,0,0,0"
+                      VerticalAlignment="Bottom">
+                    <Button Style="{StaticResource IconRightButton}"
+                            Tag="pack://application:,,,/Resources/Icons/next.svg"
+                            Content="{DynamicResource ProceedBtn}"
+                            Command="{Binding ProceedCommand}"
+                            Width="150"
+                            HorizontalAlignment="Right"/>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

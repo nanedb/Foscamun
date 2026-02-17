@@ -183,6 +183,38 @@ namespace Foscamun2026.Data
         }
 
         /// <summary>
+        /// Loads a committee by name from the Committees table.
+        /// </summary>
+        public async Task<Committee?> GetCommitteeByNameAsync(string name)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            await connection.OpenAsync();
+
+            string sql = "SELECT * FROM Committees WHERE Name = @Name";
+
+            using var cmd = new SqliteCommand(sql, connection);
+            cmd.Parameters.AddWithValue("@Name", name);
+
+            using var reader = await cmd.ExecuteReaderAsync();
+
+            if (await reader.ReadAsync())
+            {
+                return new Committee
+                {
+                    CommID = reader.GetInt32(0),
+                    Name = reader.GetString(1),
+                    TopicA = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                    TopicB = reader.IsDBNull(3) ? "" : reader.GetString(3),
+                    President = reader.IsDBNull(4) ? "" : reader.GetString(4),
+                    VicePresident = reader.IsDBNull(5) ? "" : reader.GetString(5),
+                    Moderator = reader.IsDBNull(6) ? "" : reader.GetString(6)
+                };
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Inserts a new committee and returns it with the generated CommID.
         /// </summary>
         public async Task<Committee> AddCommitteeAsync(Committee committee)

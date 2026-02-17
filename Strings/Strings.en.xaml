@@ -26,6 +26,7 @@
     <sys:String x:Key="OkBtn">OK</sys:String>
     <sys:String x:Key="CancelBtn">Cancel</sys:String>
     <sys:String x:Key="EditICJBtn">Edit ICJ</sys:String>
+    <sys:String x:Key="RollCallBtn">Roll call</sys:String>
 
     <!-- ToolTips -->
     <sys:String x:Key="HamburgerBtn">Open/Close menu</sys:String>
@@ -33,5 +34,32 @@
     <!--Strings-->
     <sys:String x:Key="HintStr1">The selected committee is </sys:String>
     <sys:String x:Key="HintStr2">To change it, edit it; to add or remove a committee, click </sys:String>
+
+    <!-- Roll Call Pages -->
+    <sys:String x:Key="CommitteeRollCallTitle">Roll Call</sys:String>
+    <sys:String x:Key="CommitteeRollCallPlaceholder">This page will display the roll call for the selected committee.</sys:String>
+    <sys:String x:Key="ICJRollCallTitle">ICJ Roll Call</sys:String>
+    <sys:String x:Key="ICJRollCallPlaceholder">This page will display the roll call for the International Court of Justice.</sys:String>
+    <sys:String x:Key="TopicLbl">Topic:</sys:String>
+    <sys:String x:Key="SessionLbl">Session:</sys:String>
+    <sys:String x:Key="PresidentLbl">President:</sys:String>
+    <sys:String x:Key="VicePresidentLbl">Vice President:</sys:String>
+    <sys:String x:Key="ModeratorLbl">Moderator:</sys:String>
+    <sys:String x:Key="MarkPresentLbl">Click to mark as Present</sys:String>
+    <sys:String x:Key="MarkAbsentLbl">Click to mark as Absent</sys:String>
+    <sys:String x:Key="ProceedBtn">Proceed</sys:String>
+
+    <!-- Session Page -->
+    <sys:String x:Key="AvailableSpeakersLbl">Available Speakers</sys:String>
+    <sys:String x:Key="SpeakersListLbl">Speakers List</sys:String>
+    <sys:String x:Key="CurrentSpeakerLbl">Current Speaker</sys:String>
+    <sys:String x:Key="WarningsLbl">Warnings</sys:String>
+    <sys:String x:Key="RemoveSpeakerBtn">Remove</sys:String>
+    <sys:String x:Key="WarnBtn">Warn</sys:String>
+    <sys:String x:Key="RemoveWarningBtn">Remove Warning</sys:String>
+    <sys:String x:Key="TimerBtn">Timer</sys:String>
+    <sys:String x:Key="VotingBtn">Voting</sys:String>
+    <sys:String x:Key="NoSpeakerSelectedLbl">No speaker selected</sys:String>
+    <sys:String x:Key="SessionLbl2">Session</sys:String>
 
 </ResourceDictionary>

@@ -1,4 +1,5 @@
 ﻿using Foscamun2026.Data;
+using Foscamun2026.Properties;
 using Foscamun2026.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
@@ -24,6 +25,9 @@ namespace Foscamun2026.Views
             }
         }
 
+        // ⭐ NUOVA PROPRIETÀ
+        public bool IsRollCallEnabled => !string.IsNullOrWhiteSpace(Settings.Default.SelCommName);
+
         public SqliteDataAccess Db { get; }
 
         public static MainWindow Instance { get; private set; } = null!;
@@ -40,6 +44,18 @@ namespace Foscamun2026.Views
 
             // Prima pagina
             RightFrame.Navigate(new HomePage());
+
+            // ⭐ Monitora i cambiamenti delle impostazioni
+            Settings.Default.PropertyChanged += Settings_PropertyChanged;
+        }
+
+        // ⭐ NUOVO METODO
+        private void Settings_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Settings.Default.SelCommName))
+            {
+                OnPropertyChanged(nameof(IsRollCallEnabled));
+            }
         }
 
         private void RightFrame_Navigated(object sender, NavigationEventArgs e)
@@ -86,9 +102,38 @@ namespace Foscamun2026.Views
             _isNavigating = false;
         }
 
-        private void NextBtn_Click(object sender, RoutedEventArgs e)
+        // ⭐ NUOVO METODO per Roll Call
+        private void RollCallBtn_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: implementazione futura
+            var selectedCommitteeName = Settings.Default.SelCommName;
+
+            if (string.IsNullOrWhiteSpace(selectedCommitteeName))
+            {
+                MessageBox.Show("Please select a committee first.", "No Committee Selected", 
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // ICJ -> ICJRollCallPage
+            if (selectedCommitteeName == "ICJ")
+            {
+                var icjPage = new ICJRollCallPage();
+                NavigateRightFrame(icjPage);
+                return;
+            }
+
+            // Committee normale -> Carica il Committee dal DB
+            var committee = Db.GetCommitteeByNameAsync(selectedCommitteeName).GetAwaiter().GetResult();
+
+            if (committee == null)
+            {
+                MessageBox.Show($"Committee '{selectedCommitteeName}' not found.", "Error", 
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var committeePage = new CommitteeRollCallPage(committee, Db);
+            NavigateRightFrame(committeePage);
         }
 
         private void ExitBtn_Click(object sender, RoutedEventArgs e)
@@ -134,5 +179,12 @@ namespace Foscamun2026.Views
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged(string name) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+        // ⭐ CLEANUP
+        protected override void OnClosed(EventArgs e)
+        {
+            Settings.Default.PropertyChanged -= Settings_PropertyChanged;
+            base.OnClosed(e);
+        }
     }
 }
