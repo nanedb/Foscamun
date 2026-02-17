@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Foscamun2026.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows;
 using System.Windows.Data;
 
 namespace Foscamun2026.ViewModels
@@ -170,8 +171,10 @@ namespace Foscamun2026.ViewModels
 
         private void OpenTimer()
         {
-            // TODO: Implementare timer window
-            System.Windows.MessageBox.Show("Timer feature coming soon!");
+            // Open non-modal timer window
+            var timer = new Views.TimerWindow();
+            timer.Owner = Application.Current.MainWindow;
+            timer.Show();
         }
 
         private void OpenVoting()
