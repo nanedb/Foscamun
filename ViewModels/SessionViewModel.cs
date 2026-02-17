@@ -10,6 +10,7 @@ namespace Foscamun2026.ViewModels
     public partial class SessionViewModel : ObservableObject
     {
         private readonly Committee _committee;
+        private readonly Action<List<Country>> _navigateToVoting;
 
         [ObservableProperty]
         private string committeeName = string.Empty;
@@ -55,9 +56,10 @@ namespace Foscamun2026.ViewModels
         public IRelayCommand OpenTimerCommand { get; }
         public IRelayCommand OpenVotingCommand { get; }
 
-        public SessionViewModel(Committee committee, string topic, int session, List<Country> presentCountries)
+        public SessionViewModel(Committee committee, string topic, int session, List<Country> presentCountries, Action<List<Country>> navigateToVoting)
         {
             _committee = committee;
+            _navigateToVoting = navigateToVoting;
 
             CommitteeName = committee.Name;
             President = committee.President;
@@ -174,8 +176,28 @@ namespace Foscamun2026.ViewModels
 
         private void OpenVoting()
         {
-            // TODO: Implementare voting window
-            System.Windows.MessageBox.Show("Voting feature coming soon!");
+            var voters = AvailableSpeakers.ToList();
+            if (voters.Count == 0)
+            {
+                System.Windows.MessageBox.Show(
+                    Properties.Settings.Default.Lang switch
+                    {
+                        "fr" => "Aucun pays disponible pour voter.",
+                        "es" => "No hay países disponibles para votar.",
+                        _ => "No countries available to vote."
+                    },
+                    Properties.Settings.Default.Lang switch
+                    {
+                        "fr" => "Aucun votant",
+                        "es" => "Sin votantes",
+                        _ => "No Voters"
+                    },
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Information);
+                return;
+            }
+
+            _navigateToVoting(voters);
         }
     }
 }

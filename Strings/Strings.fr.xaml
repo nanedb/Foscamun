@@ -62,4 +62,15 @@
     <sys:String x:Key="NoSpeakerSelectedLbl">Aucun orateur sélectionné</sys:String>
     <sys:String x:Key="SessionLbl2">Séance</sys:String>
 
+    <!-- Vote -->
+    <sys:String x:Key="ApproveBtn">Approuver</sys:String>
+    <sys:String x:Key="AbstainBtn">S'abstenir</sys:String>
+    <sys:String x:Key="RejectBtn">Rejeter</sys:String>
+    <sys:String x:Key="VotingResultsLbl">Résultats du vote</sys:String>
+    <sys:String x:Key="FinalResultsLbl">Résultats finaux</sys:String>
+    <sys:String x:Key="InFavorLbl">Pour</sys:String>
+    <sys:String x:Key="AbstainedLbl">Abstentions</sys:String>
+    <sys:String x:Key="AgainstLbl">Contre</sys:String>
+    <sys:String x:Key="NewRoundBtn">Nouveau tour</sys:String>
+
 </ResourceDictionary>

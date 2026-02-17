@@ -13,8 +13,15 @@ namespace Foscamun2026.Views
         {
             InitializeComponent();
 
-            _viewModel = new SessionViewModel(committee, topic, session, presentCountries);
+            _viewModel = new SessionViewModel(committee, topic, session, presentCountries, NavigateToVoting);
             DataContext = _viewModel;
+        }
+
+        private void NavigateToVoting(List<Country> voters)
+        {
+            CastVotePage.Round = 1;
+            var castVotePage = new CastVotePage(voters, this);
+            NavigationService?.Navigate(castVotePage);
         }
 
         private void AvailableSpeakers_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
