@@ -72,4 +72,22 @@
     <sys:String x:Key="AbstainedLbl">Abstenciones</sys:String>
     <sys:String x:Key="AgainstLbl">En contra</sys:String>
     <sys:String x:Key="NewRoundBtn">Nueva ronda</sys:String>
+
+    <!-- Ventana Temporizador -->
+    <sys:String x:Key="TimerWindowTitle">Temporizador</sys:String>
+    <sys:String x:Key="MinutesLbl">Minutos:</sys:String>
+    <sys:String x:Key="SecondsLbl">Segundos:</sys:String>
+    <sys:String x:Key="SetBtn">Establecer</sys:String>
+    <sys:String x:Key="StartBtn">Iniciar</sys:String>
+    <sys:String x:Key="PauseBtn">Pausar</sys:String>
+    <sys:String x:Key="ResetBtn">Reiniciar</sys:String>
+
+    <!-- Mensajes del Temporizador -->
+    <sys:String x:Key="TimerRunningTitle">Temporizador en ejecución</sys:String>
+    <sys:String x:Key="TimerRunningMsg">Detenga el temporizador antes de establecer un nuevo tiempo.</sys:String>
+    <sys:String x:Key="InvalidInputTitle">Entrada no válida</sys:String>
+    <sys:String x:Key="InvalidValuesMsg">Por favor, introduzca valores válidos (Minutos ≥ 0, Segundos 0-59).</sys:String>
+    <sys:String x:Key="InvalidNumbersMsg">Por favor, introduzca números válidos.</sys:String>
+    <sys:String x:Key="NoTimeSetTitle">No se ha establecido tiempo</sys:String>
+    <sys:String x:Key="NoTimeSetMsg">Por favor, establezca primero un tiempo usando el botón Establecer.</sys:String>
 </ResourceDictionary>

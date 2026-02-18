@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 
@@ -12,12 +14,46 @@ namespace Foscamun2026.Views
         private TimeSpan _initialTime = TimeSpan.Zero;
         private bool _running = false;
         private bool _isOvertime = false;
+        private readonly MediaPlayer _tickPlayer = new();
+        private readonly MediaPlayer _bellPlayer = new();
+        private bool _tickSoundPlaying = false;
 
         public TimerWindow()
         {
             InitializeComponent();
             _timer.Interval = TimeSpan.FromSeconds(1);
             _timer.Tick += Timer_Tick;
+
+            // Initialize audio players
+            try
+            {
+                string tickPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Sounds", "tick.wav");
+                string bellPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Sounds", "bell.wav");
+
+                if (File.Exists(tickPath))
+                {
+                    _tickPlayer.Open(new Uri(tickPath, UriKind.Absolute));
+                }
+
+                if (File.Exists(bellPath))
+                {
+                    _bellPlayer.Open(new Uri(bellPath, UriKind.Absolute));
+                }
+            }
+            catch
+            {
+                // Silently handle audio initialization errors
+            }
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Toggle Start/Pause with spacebar
+            if (e.Key == Key.Space)
+            {
+                e.Handled = true; // Prevent the spacebar from triggering focused buttons
+                StartPauseBtn_Click(this, new RoutedEventArgs());
+            }
         }
 
         private void Timer_Tick(object? sender, EventArgs e)
@@ -31,13 +67,20 @@ namespace Foscamun2026.Views
 
                     if (_remainingTime.TotalSeconds <= 0)
                     {
-                        // Enter overtime mode
+                        // Timer reached zero - stop tick and play bell, enter overtime mode
+                        StopTickSound();
+                        PlayBellSound();
                         _isOvertime = true;
                         _remainingTime = TimeSpan.Zero;
                         UpdateTimerDisplay();
                     }
                     else
                     {
+                        // Start tick sound once when reaching 10 seconds
+                        if (_remainingTime.TotalSeconds == 10 && !_tickSoundPlaying)
+                        {
+                            PlayTickSound();
+                        }
                         UpdateTimerDisplay();
                     }
                 }
@@ -47,6 +90,49 @@ namespace Foscamun2026.Views
                     _remainingTime = _remainingTime.Add(TimeSpan.FromSeconds(1));
                     UpdateTimerDisplay();
                 }
+            }
+        }
+
+        private void PlayTickSound()
+        {
+            try
+            {
+                _tickPlayer.Position = TimeSpan.Zero;
+                _tickPlayer.Play();
+                _tickSoundPlaying = true;
+            }
+            catch
+            {
+                // Silently handle audio playback errors
+            }
+        }
+
+        private void StopTickSound()
+        {
+            try
+            {
+                if (_tickSoundPlaying)
+                {
+                    _tickPlayer.Stop();
+                    _tickSoundPlaying = false;
+                }
+            }
+            catch
+            {
+                // Silently handle audio stop errors
+            }
+        }
+
+        private void PlayBellSound()
+        {
+            try
+            {
+                _bellPlayer.Position = TimeSpan.Zero;
+                _bellPlayer.Play();
+            }
+            catch
+            {
+                // Silently handle audio playback errors
             }
         }
 
@@ -120,32 +206,69 @@ namespace Foscamun2026.Views
             }
         }
 
-        private void StartBtn_Click(object sender, RoutedEventArgs e)
+        private void StartPauseBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (_initialTime.TotalSeconds == 0 && _remainingTime.TotalSeconds == 0 && !_isOvertime)
+            if (_running)
             {
-                MessageBox.Show("Please set a time first using the Set button.", "No Time Set", 
-                    MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
+                // Pause
+                _running = false;
+                _timer.Stop();
+                StopTickSound();
+            }
+            else
+            {
+                // Start
+                if (_initialTime.TotalSeconds == 0 && _remainingTime.TotalSeconds == 0 && !_isOvertime)
+                {
+                    MessageBox.Show(
+                        (string)FindResource("NoTimeSetMsg"),
+                        (string)FindResource("NoTimeSetTitle"), 
+                        MessageBoxButton.OK, 
+                        MessageBoxImage.Information);
+                    return;
+                }
+
+                _running = true;
+                _timer.Start();
+
+                // Restart tick sound if we're resuming within the last 10 seconds
+                if (!_isOvertime && _remainingTime.TotalSeconds <= 10 && _remainingTime.TotalSeconds > 0)
+                {
+                    PlayTickSound();
+                }
             }
 
-            _running = true;
-            _timer.Start();
+            UpdateStartPauseButton();
         }
 
-        private void PauseBtn_Click(object sender, RoutedEventArgs e)
+        private void UpdateStartPauseButton()
         {
-            _running = false;
-            _timer.Stop();
+            if (_running)
+            {
+                StartPauseIcon.Source = new Uri("pack://application:,,,/Resources/Icons/pause.svg");
+                StartPauseText.Text = (string)FindResource("PauseBtn");
+            }
+            else
+            {
+                StartPauseIcon.Source = new Uri("pack://application:,,,/Resources/Icons/start.svg");
+                StartPauseText.Text = (string)FindResource("StartBtn");
+            }
         }
 
         private void ResetBtn_Click(object sender, RoutedEventArgs e)
         {
             _running = false;
             _timer.Stop();
+            StopTickSound();
             _remainingTime = _initialTime;
             _isOvertime = false;
             UpdateTimerDisplay();
+            UpdateStartPauseButton();
+        }
+
+        private void CloseBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

@@ -293,12 +293,12 @@
         <!-- Contenuto -->
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <!-- Logo e Board -->
                 <RowDefinition Height="Auto"/>
                 <!-- Topic e Session -->
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
                 <!-- Contenuto principale -->
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <!-- Logo e Board -->

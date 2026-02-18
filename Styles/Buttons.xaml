@@ -110,7 +110,7 @@
                         <!-- PRESSED -->
                         <Trigger Property="IsPressed" Value="True">
                             <Trigger.EnterActions>
-                                <BeginStoryboard>
+                                <BeginStoryboard Name="PressedStoryboard">
                                     <Storyboard>
                                         <DoubleAnimation Storyboard.TargetName="Overlay"
                                                          Storyboard.TargetProperty="Opacity"
@@ -131,6 +131,7 @@
                             </Trigger.EnterActions>
 
                             <Trigger.ExitActions>
+                                <StopStoryboard BeginStoryboardName="PressedStoryboard"/>
                                 <BeginStoryboard>
                                     <Storyboard>
                                         <DoubleAnimation Storyboard.TargetName="Overlay"

@@ -17,25 +17,28 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-         <!-- Titolo -->
+        <!-- Titolo -->
         <TextBlock Grid.Row="0"
-                   Text="Roll Call" 
+                   Text="{DynamicResource CommitteeRollCallTitle}" 
                    Style="{StaticResource H3}"
-                   Margin="0,0,0,10"/>
+                   Margin="0,0,0,0"/>
 
-		<!-- Contenuto -->
+        <!-- Contenuto -->
 		<Grid Grid.Row="1">
-			<Grid.RowDefinitions>
+            <Grid.RowDefinitions>
+                <!-- Logo e Board -->
                 <RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="*"/>
-			</Grid.RowDefinitions>
+                <!-- Topic e Session -->
+                <RowDefinition Height="Auto"/>
+                <!-- Contenuto principale -->
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
             <!-- Logo e Board -->
-            <Grid Grid.Row="0">
+            <Grid Grid.Row="0" Margin="0,10,0,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -43,43 +46,70 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                
+
                 <!-- Logo -->
                 <Viewbox Grid.Column="0" Grid.Row="0" Grid.RowSpan="3"
-                         Margin="0,0,0,10" HorizontalAlignment="Left" VerticalAlignment="Top" MaxHeight="150" MinHeight="100">
-				    <svgc:SvgViewbox Source="{Binding CommitteeLogoPath}"
+                         Margin="0,0,20,0" 
+                         HorizontalAlignment="Left" 
+                         VerticalAlignment="Center" 
+                         MaxHeight="110" 
+                         MinHeight="80">
+                    <svgc:SvgViewbox Source="{Binding CommitteeLogoPath}"
                                      Stretch="Uniform"/>
-			    </Viewbox>
-                
-                <!-- Board -->
+                </Viewbox>
+
+                <!-- Labels Board -->
                 <TextBlock Grid.Column="1" Grid.Row="0"
-                            Text="President"
-                            HorizontalAlignment="Left"/>
+                           Text="{DynamicResource PresidentLbl}"
+                           Style="{StaticResource Caption}"
+                           Margin="20,3,20,3"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right"/>
                 <TextBlock Grid.Column="1" Grid.Row="1" 
-                            Text="Vice President"/>
+                           Text="{DynamicResource VicePresidentLbl}"
+                           Style="{StaticResource Caption}"
+                           Margin="20,3,20,3"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right"/>
                 <TextBlock Grid.Column="1" Grid.Row="2" 
-                            Text="Moderator"
-                            Margin="0,0,0,5"/>
-                
+                           Text="{DynamicResource ModeratorLbl}"
+                           Style="{StaticResource Caption}"
+                           Margin="20,3,20,3"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right"/>
+
+                <!-- Valori Board -->
                 <TextBlock Grid.Column="2" Grid.Row="0"
-                            Text="President"/>
+                           Text="{Binding President}"
+                           Style="{StaticResource Body}"
+                           Margin="0,3,0,3"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Left"/>
                 <TextBlock Grid.Column="2" Grid.Row="1" 
-                            Text="Vice President"/>
+                           Text="{Binding VicePresident}"
+                           Style="{StaticResource Body}"
+                           Margin="0,3,0,3"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Left"/>
                 <TextBlock Grid.Column="2" Grid.Row="2" 
-                            Text="Moderator"
-                            Margin="0,0,0,5"/>
+                           Text="{Binding Moderator}"
+                           Style="{StaticResource Body}"
+                           Margin="0,3,0,3"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Left"/>
             </Grid>
 			
-			<!-- Contenuto placeholder -->
-			<Border Grid.Row="1"
-					Background="{DynamicResource SurfaceBrush}"
-					CornerRadius="{StaticResource CornerRadiusMedium}">
-				<TextBlock Text="{DynamicResource ICJRollCallPlaceholder}"
-						   Style="{StaticResource Body}"
-						   HorizontalAlignment="Center"
-						   VerticalAlignment="Center"
-						   TextAlignment="Center"/>
-			</Border>
-		</Grid>
+		    <!-- Contenuto placeholder -->
+		    <Border Grid.Row="2"
+				    Background="{DynamicResource SurfaceBrush}"
+				    CornerRadius="{StaticResource CornerRadiusMedium}">
+			    <TextBlock Text="{DynamicResource ICJRollCallPlaceholder}"
+						    Style="{StaticResource Body}"
+						    HorizontalAlignment="Center"
+						    VerticalAlignment="Center"
+						    TextAlignment="Center"/>
+		    </Border>
+            
+        </Grid>
     </Grid>
 </Page>

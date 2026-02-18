@@ -73,4 +73,22 @@
     <sys:String x:Key="AgainstLbl">Against</sys:String>
     <sys:String x:Key="NewRoundBtn">New Round</sys:String>
 
+    <!-- Timer Window -->
+    <sys:String x:Key="TimerWindowTitle">Timer</sys:String>
+    <sys:String x:Key="MinutesLbl">Minutes:</sys:String>
+    <sys:String x:Key="SecondsLbl">Seconds:</sys:String>
+    <sys:String x:Key="SetBtn">Set</sys:String>
+    <sys:String x:Key="StartBtn">Start</sys:String>
+    <sys:String x:Key="PauseBtn">Pause</sys:String>
+    <sys:String x:Key="ResetBtn">Reset</sys:String>
+
+    <!-- Timer Messages -->
+    <sys:String x:Key="TimerRunningTitle">Timer Running</sys:String>
+    <sys:String x:Key="TimerRunningMsg">Stop the timer before setting a new time.</sys:String>
+    <sys:String x:Key="InvalidInputTitle">Invalid Input</sys:String>
+    <sys:String x:Key="InvalidValuesMsg">Please enter valid values (Minutes ≥ 0, Seconds 0-59).</sys:String>
+    <sys:String x:Key="InvalidNumbersMsg">Please enter valid numbers.</sys:String>
+    <sys:String x:Key="NoTimeSetTitle">No Time Set</sys:String>
+    <sys:String x:Key="NoTimeSetMsg">Please set a time first using the Set button.</sys:String>
+
 </ResourceDictionary>

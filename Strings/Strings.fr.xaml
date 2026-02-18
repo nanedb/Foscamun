@@ -73,4 +73,22 @@
     <sys:String x:Key="AgainstLbl">Contre</sys:String>
     <sys:String x:Key="NewRoundBtn">Nouveau tour</sys:String>
 
+    <!-- Fenêtre Minuteur -->
+    <sys:String x:Key="TimerWindowTitle">Minuteur</sys:String>
+    <sys:String x:Key="MinutesLbl">Minutes:</sys:String>
+    <sys:String x:Key="SecondsLbl">Secondes:</sys:String>
+    <sys:String x:Key="SetBtn">Définir</sys:String>
+    <sys:String x:Key="StartBtn">Démarrer</sys:String>
+    <sys:String x:Key="PauseBtn">Pause</sys:String>
+    <sys:String x:Key="ResetBtn">Réinitialiser</sys:String>
+
+    <!-- Messages du Minuteur -->
+    <sys:String x:Key="TimerRunningTitle">Minuteur en cours</sys:String>
+    <sys:String x:Key="TimerRunningMsg">Arrêtez le minuteur avant de définir une nouvelle heure.</sys:String>
+    <sys:String x:Key="InvalidInputTitle">Entrée invalide</sys:String>
+    <sys:String x:Key="InvalidValuesMsg">Veuillez entrer des valeurs valides (Minutes ≥ 0, Secondes 0-59).</sys:String>
+    <sys:String x:Key="InvalidNumbersMsg">Veuillez entrer des nombres valides.</sys:String>
+    <sys:String x:Key="NoTimeSetTitle">Aucune heure définie</sys:String>
+    <sys:String x:Key="NoTimeSetMsg">Veuillez d'abord définir une heure en utilisant le bouton Définir.</sys:String>
+
 </ResourceDictionary>

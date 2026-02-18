@@ -11,29 +11,34 @@
 
   <!-- Risorse -->
   <ItemGroup>
-    <!-- SVG per SharpVectors -->
-    <Resource Include="Resources\flags\**\*.svg" />
+	<!-- SVG per SharpVectors -->
+	<Resource Include="Resources\flags\**\*.svg" />
 	<Resource Include="Resources\Icons\**\*.svg" />
 
-    <!-- PNG e icone -->
-    <Resource Include="Resources\**\*.png" />
-    <Resource Include="Resources\Committee Logo\DISEC.svg" />
-    <Resource Include="Resources\Committee Logo\ECOSOC.svg" />
-    <Resource Include="Resources\Committee Logo\FAO.svg" />
-    <Resource Include="Resources\Committee Logo\ICJ.svg" />
-    <Resource Include="Resources\Committee Logo\UNEP.svg" />
-    <Resource Include="Resources\Committee Logo\UNESCO.svg" />
-    <Resource Include="Resources\Committee Logo\UNHCR.svg" />
-    <Resource Include="Resources\Committee Logo\UNICEF.svg" />
-    <Resource Include="Resources\Committee Logo\UNODC.svg" />
-    <Resource Include="Resources\Committee Logo\UNWOMEN.svg" />
-    <Resource Include="Resources\Committee Logo\UNWTO.svg" />
-    <Resource Include="Resources\Committee Logo\WHO.svg" />
-    <Resource Include="Resources\Foscamun.ico" />
-    <Resource Include="Resources\Icons\Foscamun.ico" />
+	<!-- PNG e icone -->
+	<Resource Include="Resources\**\*.png" />
+	<Resource Include="Resources\Committee Logo\DISEC.svg" />
+	<Resource Include="Resources\Committee Logo\ECOSOC.svg" />
+	<Resource Include="Resources\Committee Logo\FAO.svg" />
+	<Resource Include="Resources\Committee Logo\ICJ.svg" />
+	<Resource Include="Resources\Committee Logo\UNEP.svg" />
+	<Resource Include="Resources\Committee Logo\UNESCO.svg" />
+	<Resource Include="Resources\Committee Logo\UNHCR.svg" />
+	<Resource Include="Resources\Committee Logo\UNICEF.svg" />
+	<Resource Include="Resources\Committee Logo\UNODC.svg" />
+	<Resource Include="Resources\Committee Logo\UNWOMEN.svg" />
+	<Resource Include="Resources\Committee Logo\UNWTO.svg" />
+	<Resource Include="Resources\Committee Logo\WHO.svg" />
+	<Resource Include="Resources\Foscamun.ico" />
+	<Resource Include="Resources\Icons\Foscamun.ico" />
 
-    <!-- Font -->
-    <Resource Include="Fonts\**\*.ttf" />
+	<!-- Font -->
+	<Resource Include="Fonts\**\*.ttf" />
+
+	<!-- Audio files -->
+	<None Include="Resources\Sounds\**\*.wav">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
   </ItemGroup>
   <ItemGroup>
     <None Remove="Foscamun.db" />
