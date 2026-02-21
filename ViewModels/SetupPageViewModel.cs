@@ -25,9 +25,11 @@ namespace Foscamun2026.ViewModels
         [ObservableProperty]
         private Committee? selectedCommittee;
 
-        public bool IsEditCommitteeEnabled => SelectedCommittee != null;
+        public bool IsEditCommitteeEnabled => SelectedCommittee != null && SelectedCommittee.Name != "ICJ";
 
-        public bool IsAddICJEnabled => Committees?.All(c => c.Name != "ICJ") ?? false;
+        public bool IsRemoveCommitteeEnabled => SelectedCommittee != null;
+
+        public bool IsICJButtonEnabled => true; // Always enabled to allow creating or editing ICJ
 
         public SetupPageViewModel(SqliteDataAccess db)
         {
@@ -64,6 +66,7 @@ namespace Foscamun2026.ViewModels
         partial void OnSelectedCommitteeChanged(Committee? value)
         {
             OnPropertyChanged(nameof(IsEditCommitteeEnabled));
+            OnPropertyChanged(nameof(IsRemoveCommitteeEnabled));
 
             if (value != null)
             {
@@ -74,7 +77,7 @@ namespace Foscamun2026.ViewModels
 
         partial void OnCommitteesChanged(ObservableCollection<Committee> value)
         {
-            OnPropertyChanged(nameof(IsAddICJEnabled));
+            // No need to update IsICJButtonEnabled anymore as it's always true
         }
 
         // -------------------------
@@ -84,19 +87,19 @@ namespace Foscamun2026.ViewModels
         [RelayCommand]
         private void AddCommittee()
         {
-            var page = new AddCommitteePage(_db);
+            var page = new EditCommitteePage(_db);
             MainWindow.Instance.NavigateRightFrame(page);
         }
 
         // -------------------------
-        //  ADD ICJ ⭐ NUOVO
+        //  ICJ BUTTON
         // -------------------------
 
         [RelayCommand]
-        private void AddICJ()
+        private void OpenICJ()
         {
-            // Crea un nuovo ICJ vuoto
-            var icj = new ICJ();
+            // Carica il modello ICJ dal database (se esiste, altrimenti crea uno nuovo vuoto)
+            var icj = _db.ICJRepository.Load() ?? new ICJ();
 
             // Carica tutti i paesi
             var countries = _db.CountryRepository.GetAll();
@@ -114,7 +117,7 @@ namespace Foscamun2026.ViewModels
         }
 
         // -------------------------
-        //  EDIT
+        //  EDIT COMMITTEE
         // -------------------------
 
         [RelayCommand]
@@ -126,31 +129,9 @@ namespace Foscamun2026.ViewModels
                 return;
             }
 
-            // ⭐ Caso speciale: ICJ
-            if (SelectedCommittee.Name == "ICJ")
-            {
-                // Carica il modello ICJ dal database
-                var icj = _db.ICJRepository.Load();
-
-                // Carica tutti i paesi
-                var countries = _db.CountryRepository.GetAll();
-
-                // Crea il ViewModel
-                var vm = new EditICJViewModel(icj, countries, _db.ICJRepository, MainWindow.Instance);
-
-                // Crea la pagina e assegna il DataContext
-                var page = new EditICJPage
-                {
-                    DataContext = vm
-                };
-
-                MainWindow.Instance.NavigateRightFrame(page);
-                return;
-            }
-
-            // ⭐ Tutti gli altri comitati
-            var normalPage = new AddCommitteePage(_db, SelectedCommittee);
-            MainWindow.Instance.NavigateRightFrame(normalPage);
+            // Apre EditCommitteePage popolata con i dati del comitato selezionato
+            var page = new EditCommitteePage(_db, SelectedCommittee);
+            MainWindow.Instance.NavigateRightFrame(page);
         }
 
         // -------------------------
@@ -177,10 +158,17 @@ namespace Foscamun2026.ViewModels
 
             await _db.RemoveCommitteeAsync(SelectedCommittee);
 
-            Committees.Remove(SelectedCommittee);
+            // If ICJ was deleted, reload the entire list (because ICJ is dynamically added)
+            if (SelectedCommittee.CommID == -1)
+            {
+                await LoadCommitteesAsync();
+            }
+            else
+            {
+                Committees.Remove(SelectedCommittee);
+            }
+
             SelectedCommittee = null;
-            
-            OnPropertyChanged(nameof(IsAddICJEnabled));
         }
     }
 }

@@ -152,6 +152,7 @@ namespace Foscamun2026.Data
 
         /// <summary>
         /// Loads all committees from the Committees table.
+        /// Also adds ICJ with CommID = -1 if the ICJ table contains data.
         /// </summary>
         public async Task<List<Committee>> GetCommitteesAsync()
         {
@@ -160,7 +161,8 @@ namespace Foscamun2026.Data
             using var connection = new SqliteConnection(_connectionString);
             await connection.OpenAsync();
 
-            string sql = "SELECT * FROM Committees ORDER BY Name";
+            // Load regular committees (excluding ICJ if it exists in Committees table)
+            string sql = "SELECT * FROM Committees WHERE Name != 'ICJ' ORDER BY Name";
 
             using var cmd = new SqliteCommand(sql, connection);
             using var reader = await cmd.ExecuteReaderAsync();
@@ -176,6 +178,21 @@ namespace Foscamun2026.Data
                     President = reader.IsDBNull(4) ? "" : reader.GetString(4),
                     VicePresident = reader.IsDBNull(5) ? "" : reader.GetString(5),
                     Moderator = reader.IsDBNull(6) ? "" : reader.GetString(6)
+                });
+            }
+
+            // Add ICJ with CommID = -1 if ICJ table has data
+            if (ICJRepository.HasData())
+            {
+                list.Add(new Committee
+                {
+                    CommID = -1,
+                    Name = "ICJ",
+                    TopicA = "",
+                    TopicB = "",
+                    President = "",
+                    VicePresident = "",
+                    Moderator = ""
                 });
             }
 
@@ -279,21 +296,35 @@ namespace Foscamun2026.Data
 
         /// <summary>
         /// Removes a committee and all its assigned countries.
+        /// If the committee is ICJ (CommID = -1), deletes all data from the ICJ table instead.
         /// </summary>
         public async Task RemoveCommitteeAsync(Committee committee)
         {
-            using var connection = new SqliteConnection(_connectionString);
-            await connection.OpenAsync();
+            // Special case: ICJ (CommID = -1)
+            if (committee.CommID == -1)
+            {
+                using var connection = new SqliteConnection(_connectionString);
+                await connection.OpenAsync();
+
+                string sql = "DELETE FROM ICJ";
+                using var cmd = new SqliteCommand(sql, connection);
+                await cmd.ExecuteNonQueryAsync();
+                return;
+            }
+
+            // Regular committee
+            using var conn = new SqliteConnection(_connectionString);
+            await conn.OpenAsync();
 
             string sqlCountries = "DELETE FROM CountryLists WHERE CommID = @CommID";
-            using (var cmd = new SqliteCommand(sqlCountries, connection))
+            using (var cmd = new SqliteCommand(sqlCountries, conn))
             {
                 cmd.Parameters.AddWithValue("@CommID", committee.CommID);
                 await cmd.ExecuteNonQueryAsync();
             }
 
             string sqlCommittee = "DELETE FROM Committees WHERE CommID = @CommID";
-            using (var cmd = new SqliteCommand(sqlCommittee, connection))
+            using (var cmd = new SqliteCommand(sqlCommittee, conn))
             {
                 cmd.Parameters.AddWithValue("@CommID", committee.CommID);
                 await cmd.ExecuteNonQueryAsync();

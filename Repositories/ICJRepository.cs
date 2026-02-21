@@ -107,5 +107,20 @@ namespace Foscamun2026.Repositories
 
             cmd.ExecuteNonQuery();
         }
+
+        // -------------------------
+        // HAS DATA
+        // -------------------------
+        public bool HasData()
+        {
+            using var conn = new SqliteConnection(_connectionString);
+            conn.Open();
+
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT COUNT(*) FROM ICJ";
+
+            var count = (long)(cmd.ExecuteScalar() ?? 0);
+            return count > 0;
+        }
     }
 }

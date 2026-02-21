@@ -25,6 +25,7 @@
     <sys:String x:Key="OkBtn">Aceptar</sys:String>
     <sys:String x:Key="CancelBtn">Cancelar</sys:String>
     <sys:String x:Key="EditICJBtn">Editar ICJ</sys:String>
+    <sys:String x:Key="ICJBtn">CIJ</sys:String>
     <sys:String x:Key="RollCallBtn">Lista</sys:String>
     
     <!-- ToolTips -->

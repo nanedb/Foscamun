@@ -47,12 +47,22 @@ namespace Foscamun2026.ViewModels
         _plaintiff1 = model.Plaintiff1;
         _plaintiff2 = model.Plaintiff2;
         _plaintiff3 = model.Plaintiff3;
-        _pCountry = model.PCountry;
+
+        // Find the full Country object from the collection based on IsoCode
+        if (model.PCountry != null && !string.IsNullOrEmpty(model.PCountry.IsoCode))
+        {
+            _pCountry = Countries.FirstOrDefault(c => c.IsoCode == model.PCountry.IsoCode);
+        }
 
         _defense1 = model.Defense1;
         _defense2 = model.Defense2;
         _defense3 = model.Defense3;
-        _dCountry = model.DCountry;
+
+        // Find the full Country object from the collection based on IsoCode
+        if (model.DCountry != null && !string.IsNullOrEmpty(model.DCountry.IsoCode))
+        {
+            _dCountry = Countries.FirstOrDefault(c => c.IsoCode == model.DCountry.IsoCode);
+        }
 
         Jurors = new ObservableCollection<string>(model.Jurors);
 
@@ -286,6 +296,7 @@ namespace Foscamun2026.ViewModels
         {
             Jurors.Add(NewJurorName);
             NewJurorName = ""; // Pulisce la TextBox dopo l'aggiunta
+            (SaveCommand as RelayCommand)?.NotifyCanExecuteChanged();
         }
     }
 
@@ -294,7 +305,10 @@ namespace Foscamun2026.ViewModels
     private void RemoveJuror()
     {
         if (SelectedJuror != null)
+        {
             Jurors.Remove(SelectedJuror);
+            (SaveCommand as RelayCommand)?.NotifyCanExecuteChanged();
+        }
     }
 
     private bool CanSave() =>
@@ -305,11 +319,12 @@ namespace Foscamun2026.ViewModels
         !string.IsNullOrWhiteSpace(Plaintiff1) &&
         !string.IsNullOrWhiteSpace(Plaintiff2) &&
         !string.IsNullOrWhiteSpace(Plaintiff3) &&
-        !string.IsNullOrWhiteSpace(PCountry?.IsoCode) &&
+        PCountry != null &&
         !string.IsNullOrWhiteSpace(Defense1) &&
         !string.IsNullOrWhiteSpace(Defense2) &&
         !string.IsNullOrWhiteSpace(Defense3) &&
-        !string.IsNullOrWhiteSpace(DCountry?.IsoCode);
+        DCountry != null &&
+        Jurors.Count > 0; // At least one juror is required
 
     private void Save()
     {

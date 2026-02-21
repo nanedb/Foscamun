@@ -53,7 +53,7 @@ namespace Foscamun2026.Views
         // -------------------------
         private void AddBtn_Click(object sender, RoutedEventArgs e)
         {
-            var page = new AddCommitteePage(_db);
+            var page = new EditCommitteePage(_db);
 
             MainWindow.Instance.NavigateRightFrame(page);
         }
@@ -69,7 +69,7 @@ namespace Foscamun2026.Views
                 return;
             }
 
-            var page = new AddCommitteePage(_db, _vm.SelectedCommittee);
+            var page = new EditCommitteePage(_db, _vm.SelectedCommittee);
 
             MainWindow.Instance.NavigateRightFrame(page);
         }

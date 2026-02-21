@@ -54,17 +54,17 @@
 
                     <TextBlock Grid.Row="0" Text="Judge" Style="{StaticResource Caption}"
                                Margin="0 0 0 5"/>
-                    <TextBox Grid.Row="1" Text="{Binding Judge}"
+                    <TextBox Grid.Row="1" Text="{Binding Judge, UpdateSourceTrigger=PropertyChanged}"
                              Margin="5 0 0 20"/>
                     <TextBlock Grid.Row="2" Text="Vice Judges" Style="{StaticResource Caption}"
                                Margin="0 0 0 10"/>
-                    <TextBox Grid.Row="3" Text="{Binding ViceJudge1}"
+                    <TextBox Grid.Row="3" Text="{Binding ViceJudge1, UpdateSourceTrigger=PropertyChanged}"
                              Margin="5 0 0 5"/>
-                    <TextBox Grid.Row="4" Text="{Binding ViceJudge2}"
+                    <TextBox Grid.Row="4" Text="{Binding ViceJudge2, UpdateSourceTrigger=PropertyChanged}"
                              Margin="5 0 0 20"/>
                     <TextBlock Grid.Row="5" Text="Topic" Style="{StaticResource Caption}"
                                Margin="0 0 0 10"/>
-                    <TextBox Grid.Row="6" Text="{Binding Topic}"
+                    <TextBox Grid.Row="6" Text="{Binding Topic, UpdateSourceTrigger=PropertyChanged}"
                              Margin="5 0 0 0" TextWrapping="Wrap"/>
                 </Grid>
             </GroupBox>
@@ -78,38 +78,38 @@
                     <StackPanel>
                         <TextBlock Text="Plaintiffs" Style="{StaticResource Caption}"
                                    Margin="0 0 0 5"/>
-                        <TextBox Text="{Binding Plaintiff1}"
+                        <TextBox Text="{Binding Plaintiff1, UpdateSourceTrigger=PropertyChanged}"
                                  Margin="5 0 0 5"/>
-                        <TextBox Text="{Binding Plaintiff2}"
+                        <TextBox Text="{Binding Plaintiff2, UpdateSourceTrigger=PropertyChanged}"
                                  Margin="5 0 0 5"/>
-                        <TextBox Text="{Binding Plaintiff3}"
+                        <TextBox Text="{Binding Plaintiff3, UpdateSourceTrigger=PropertyChanged}"
                                  Margin="5 0 0 10"/>
                         <TextBlock Text="Plaintiffs Country" Style="{StaticResource Caption}"
                                    Margin="0 0 0 5"/>
                         <!-- ComboBox per Plaintiffs Country -->
                         <ComboBox ItemsSource="{Binding Countries}"
-                                  SelectedValue="{Binding PCountry.IsoCode}"
-                                  SelectedValuePath="IsoCode"
+                                  SelectedItem="{Binding PCountry}"
                                   IsTextSearchEnabled="True"
-                                  TextSearch.TextPath="Name" 
+                                  TextSearch.TextPath="EnglishName"
+                                  DisplayMemberPath="EnglishName"
                                   Margin="5 0 0 20"/>
-                        
+
                         <TextBlock Text="Defense" Style="{StaticResource Caption}"
                                    Margin="0 0 0 5"/>
-                        <TextBox Text="{Binding Defense1}"
+                        <TextBox Text="{Binding Defense1, UpdateSourceTrigger=PropertyChanged}"
                                  Margin="5 0 0 5"/>
-                        <TextBox Text="{Binding Defense2}"
+                        <TextBox Text="{Binding Defense2, UpdateSourceTrigger=PropertyChanged}"
                                  Margin="5 0 0 5"/>
-                        <TextBox Text="{Binding Defense3}"
+                        <TextBox Text="{Binding Defense3, UpdateSourceTrigger=PropertyChanged}"
                                  Margin="5 0 0 10"/>
                         <TextBlock Text="Defense Country" Style="{StaticResource Caption}"
                                    Margin="0 0 0 5"/>
                         <!-- ComboBox per Defense Country -->
                         <ComboBox ItemsSource="{Binding Countries}"
-                                  SelectedValue="{Binding DCountry.IsoCode}"
-                                  SelectedValuePath="IsoCode"
+                                  SelectedItem="{Binding DCountry}"
                                   IsTextSearchEnabled="True"
-                                  TextSearch.TextPath="Name" 
+                                  TextSearch.TextPath="EnglishName"
+                                  DisplayMemberPath="EnglishName"
                                   Margin="5 0 0 10"/>
                     </StackPanel>
                 </GroupBox>

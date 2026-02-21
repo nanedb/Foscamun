@@ -181,7 +181,7 @@
         <!-- ACTION BUTTONS -->
         <StackPanel Grid.Row="5" Grid.Column="1"
                     Orientation="Vertical" VerticalAlignment="Center">
-            
+
             <!--ADD COMMITTEE BUTTON-->
             <Button Style="{StaticResource MenuButton}" x:Name="AddCommitteeButton"
                     Margin="40 0 0 4"
@@ -192,26 +192,11 @@
                                    Source="pack://application:,,,/Resources/Icons/add.svg"
                                    Stretch="Uniform"
                                    Margin="0,0,10,0"/>
-                    <TextBlock Text="Add Committee" Padding="10 3"/>
+                    <TextBlock Text="{DynamicResource AddCommittee}" Padding="10 3"/>
                 </StackPanel>
             </Button>
 
-            <!--ADD ICJ BUTTON-->
-            <Button Style="{StaticResource MenuButton}" x:Name="AddICJButton"
-                    Margin="40 0 0 4"
-                    IsEnabled="{Binding IsAddICJEnabled}"
-                    Command="{Binding AddICJCommand}">
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
-                            HorizontalAlignment="Left">
-                    <svgc:SvgViewbox Width="18" Height="18"
-                                   Source="pack://application:,,,/Resources/Icons/add.svg"
-                                   Stretch="Uniform"
-                                   Margin="0,0,10,0"/>
-                    <TextBlock Text="Add ICJ" Padding="10 3"/>
-                </StackPanel>
-            </Button>
-
-            <!--EDIT BUTTON-->
+            <!--EDIT COMMITTEE BUTTON-->
             <Button Style="{StaticResource MenuButton}" x:Name="EditButton"
                     Margin="40 0 0 4"
                     IsEnabled="{Binding IsEditCommitteeEnabled}"
@@ -222,14 +207,29 @@
                                    Source="pack://application:,,,/Resources/Icons/edit.svg"
                                    Stretch="Uniform"
                                    Margin="0,0,10,0"/>
-                    <TextBlock Text="{DynamicResource EditBtn}" Padding="10 3"/>
+                    <TextBlock Text="{DynamicResource EditCommittee}" Padding="10 3"/>
+                </StackPanel>
+            </Button>
+
+            <!--ICJ BUTTON-->
+            <Button Style="{StaticResource MenuButton}" x:Name="ICJButton"
+                    Margin="40 0 0 4"
+                    IsEnabled="{Binding IsICJButtonEnabled}"
+                    Command="{Binding OpenICJCommand}">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
+                            HorizontalAlignment="Left">
+                    <svgc:SvgViewbox Width="18" Height="18"
+                                   Source="pack://application:,,,/Resources/Icons/edit.svg"
+                                   Stretch="Uniform"
+                                   Margin="0,0,10,0"/>
+                    <TextBlock Text="{DynamicResource ICJBtn}" Padding="10 3"/>
                 </StackPanel>
             </Button>
 
             <!--REMOVE BUTTON-->
             <Button Style="{StaticResource MenuButton}" x:Name="RemoveButton"
                     Margin="40 0 0 4"
-                    IsEnabled="{Binding IsEditCommitteeEnabled}"
+                    IsEnabled="{Binding IsRemoveCommitteeEnabled}"
                     Command="{Binding RemoveCommitteeCommand}">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
                             HorizontalAlignment="Left">

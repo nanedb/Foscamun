@@ -7,17 +7,17 @@ using System.Windows.Input;
 
 namespace Foscamun2026.Views
 {
-    public partial class AddCommitteePage : Page
+    public partial class EditCommitteePage : Page
     {
         private AddCommitteeViewModel VM => (AddCommitteeViewModel)DataContext;
 
-        public AddCommitteePage(SqliteDataAccess db)
+        public EditCommitteePage(SqliteDataAccess db)
         {
             InitializeComponent();
             DataContext = new AddCommitteeViewModel(db);
         }
 
-        public AddCommitteePage(SqliteDataAccess db, Committee committee)
+        public EditCommitteePage(SqliteDataAccess db, Committee committee)
         {
             InitializeComponent();
             DataContext = new AddCommitteeViewModel(db, committee);
