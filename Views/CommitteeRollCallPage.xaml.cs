@@ -8,11 +8,13 @@ namespace Foscamun2026.Views
     public partial class CommitteeRollCallPage : Page
     {
         private readonly CommitteeRollCallViewModel _viewModel;
+        private readonly SqliteDataAccess _db;
 
         public CommitteeRollCallPage(Committee committee, SqliteDataAccess db)
         {
             InitializeComponent();
 
+            _db = db;
             _viewModel = new CommitteeRollCallViewModel(committee, db, NavigateToSession);
             DataContext = _viewModel;
         }
@@ -35,7 +37,7 @@ namespace Foscamun2026.Views
 
         private void NavigateToSession(Committee committee, string topic, int session, List<Country> presentCountries)
         {
-            var sessionPage = new SessionPage(committee, topic, session, presentCountries);
+            var sessionPage = new SessionPage(committee, topic, session, presentCountries, _db);
             NavigationService?.Navigate(sessionPage);
         }
     }

@@ -33,8 +33,7 @@ namespace Foscamun2026.ViewModels
             var newCommittee = new Committee
             {
                 Name = "Nuovo Comitato",
-                TopicA = "Tema A",
-                TopicB = "Tema B",
+                Topic = "Tema",
                 President = "Presidente",
                 VicePresident = "VicePresidente",
                 Moderator = "Moderatore"

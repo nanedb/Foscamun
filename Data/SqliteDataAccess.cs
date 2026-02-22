@@ -85,7 +85,7 @@ namespace Foscamun2026.Data
             await connection.OpenAsync();
 
             string sql = @"
-                SELECT c.IsoCode, c.EnglishName, c.FrenchName, c.SpanishName
+                SELECT c.IsoCode, c.EnglishName, c.FrenchName, c.SpanishName, cl.Warnings
                 FROM CountryLists cl
                 JOIN Countries c ON cl.IsoCode = c.IsoCode
                 WHERE cl.CommID = @CommID
@@ -103,7 +103,8 @@ namespace Foscamun2026.Data
                     IsoCode = reader.GetString(0),
                     EnglishName = reader.GetString(1),
                     FrenchName = reader.GetString(2),
-                    SpanishName = reader.GetString(3)
+                    SpanishName = reader.GetString(3),
+                    Warnings = reader.IsDBNull(4) ? 0 : reader.GetInt32(4)
                 });
             }
 
@@ -146,6 +147,65 @@ namespace Foscamun2026.Data
             await cmd.ExecuteNonQueryAsync();
         }
 
+        /// <summary>
+        /// Updates the Warnings count for a specific country in a specific committee.
+        /// </summary>
+        public async Task UpdateCountryWarningsAsync(int committeeId, string isoCode, int warnings)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            await connection.OpenAsync();
+
+            string sql = @"
+                UPDATE CountryLists
+                SET Warnings = @Warnings
+                WHERE CommID = @CommID AND IsoCode = @IsoCode;
+            ";
+
+            using var cmd = new SqliteCommand(sql, connection);
+            cmd.Parameters.AddWithValue("@CommID", committeeId);
+            cmd.Parameters.AddWithValue("@IsoCode", isoCode);
+            cmd.Parameters.AddWithValue("@Warnings", warnings);
+
+            await cmd.ExecuteNonQueryAsync();
+        }
+
+        /// <summary>
+        /// Loads all countries with warnings > 0 for a specific committee.
+        /// </summary>
+        public async Task<List<Country>> LoadCountriesWithWarningsAsync(int commID)
+        {
+            var list = new List<Country>();
+
+            using var connection = new SqliteConnection(_connectionString);
+            await connection.OpenAsync();
+
+            string sql = @"
+                SELECT c.IsoCode, c.EnglishName, c.FrenchName, c.SpanishName, cl.Warnings
+                FROM CountryLists cl
+                JOIN Countries c ON cl.IsoCode = c.IsoCode
+                WHERE cl.CommID = @CommID AND cl.Warnings > 0
+                ORDER BY c.EnglishName;
+            ";
+
+            using var cmd = new SqliteCommand(sql, connection);
+            cmd.Parameters.AddWithValue("@CommID", commID);
+
+            using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                list.Add(new Country
+                {
+                    IsoCode = reader.GetString(0),
+                    EnglishName = reader.GetString(1),
+                    FrenchName = reader.GetString(2),
+                    SpanishName = reader.GetString(3),
+                    Warnings = reader.GetInt32(4)
+                });
+            }
+
+            return list;
+        }
+
         // ============================================================
         //  COMMITTEES (NORMAL)
         // ============================================================
@@ -173,11 +233,10 @@ namespace Foscamun2026.Data
                 {
                     CommID = reader.GetInt32(0),
                     Name = reader.GetString(1),
-                    TopicA = reader.IsDBNull(2) ? "" : reader.GetString(2),
-                    TopicB = reader.IsDBNull(3) ? "" : reader.GetString(3),
-                    President = reader.IsDBNull(4) ? "" : reader.GetString(4),
-                    VicePresident = reader.IsDBNull(5) ? "" : reader.GetString(5),
-                    Moderator = reader.IsDBNull(6) ? "" : reader.GetString(6)
+                    Topic = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                    President = reader.IsDBNull(3) ? "" : reader.GetString(3),
+                    VicePresident = reader.IsDBNull(4) ? "" : reader.GetString(4),
+                    Moderator = reader.IsDBNull(5) ? "" : reader.GetString(5)
                 });
             }
 
@@ -188,8 +247,7 @@ namespace Foscamun2026.Data
                 {
                     CommID = -1,
                     Name = "ICJ",
-                    TopicA = "",
-                    TopicB = "",
+                    Topic = "",
                     President = "",
                     VicePresident = "",
                     Moderator = ""
@@ -220,11 +278,10 @@ namespace Foscamun2026.Data
                 {
                     CommID = reader.GetInt32(0),
                     Name = reader.GetString(1),
-                    TopicA = reader.IsDBNull(2) ? "" : reader.GetString(2),
-                    TopicB = reader.IsDBNull(3) ? "" : reader.GetString(3),
-                    President = reader.IsDBNull(4) ? "" : reader.GetString(4),
-                    VicePresident = reader.IsDBNull(5) ? "" : reader.GetString(5),
-                    Moderator = reader.IsDBNull(6) ? "" : reader.GetString(6)
+                    Topic = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                    President = reader.IsDBNull(3) ? "" : reader.GetString(3),
+                    VicePresident = reader.IsDBNull(4) ? "" : reader.GetString(4),
+                    Moderator = reader.IsDBNull(5) ? "" : reader.GetString(5)
                 };
             }
 
@@ -240,15 +297,14 @@ namespace Foscamun2026.Data
             await connection.OpenAsync();
 
             string sql = @"
-                INSERT INTO Committees (Name, TopicA, TopicB, President, VicePresident, Moderator)
-                VALUES (@Name, @TopicA, @TopicB, @President, @VicePresident, @Moderator);
+                INSERT INTO Committees (Name, Topic, President, VicePresident, Moderator)
+                VALUES (@Name, @Topic, @President, @VicePresident, @Moderator);
                 SELECT last_insert_rowid();
             ";
 
             using var cmd = new SqliteCommand(sql, connection);
             cmd.Parameters.AddWithValue("@Name", committee.Name);
-            cmd.Parameters.AddWithValue("@TopicA", committee.TopicA);
-            cmd.Parameters.AddWithValue("@TopicB", committee.TopicB);
+            cmd.Parameters.AddWithValue("@Topic", committee.Topic);
             cmd.Parameters.AddWithValue("@President", committee.President);
             cmd.Parameters.AddWithValue("@VicePresident", committee.VicePresident);
             cmd.Parameters.AddWithValue("@Moderator", committee.Moderator);
@@ -274,8 +330,7 @@ namespace Foscamun2026.Data
             string sql = @"
                 UPDATE Committees
                 SET Name = @Name,
-                    TopicA = @TopicA,
-                    TopicB = @TopicB,
+                    Topic = @Topic,
                     President = @President,
                     VicePresident = @VicePresident,
                     Moderator = @Moderator
@@ -285,8 +340,7 @@ namespace Foscamun2026.Data
             using var cmd = new SqliteCommand(sql, connection);
             cmd.Parameters.AddWithValue("@CommID", committee.CommID);
             cmd.Parameters.AddWithValue("@Name", committee.Name);
-            cmd.Parameters.AddWithValue("@TopicA", committee.TopicA);
-            cmd.Parameters.AddWithValue("@TopicB", committee.TopicB);
+            cmd.Parameters.AddWithValue("@Topic", committee.Topic);
             cmd.Parameters.AddWithValue("@President", committee.President);
             cmd.Parameters.AddWithValue("@VicePresident", committee.VicePresident);
             cmd.Parameters.AddWithValue("@Moderator", committee.Moderator);
@@ -344,7 +398,7 @@ namespace Foscamun2026.Data
             await connection.OpenAsync();
 
             string sql = @"
-                    SELECT CommID, Name, TopicA, TopicB, President, VicePresident, Moderator
+                    SELECT CommID, Name, Topic, President, VicePresident, Moderator
                     FROM Committees
                     WHERE Name = 'ICJ';
                 ";
@@ -358,11 +412,10 @@ namespace Foscamun2026.Data
                 {
                     CommID = reader.GetInt32(0),
                     Name = reader.GetString(1),
-                    TopicA = reader.GetString(2),
-                    TopicB = reader.GetString(3),
-                    President = reader.GetString(4),
-                    VicePresident = reader.GetString(5),
-                    Moderator = reader.GetString(6)
+                    Topic = reader.GetString(2),
+                    President = reader.GetString(3),
+                    VicePresident = reader.GetString(4),
+                    Moderator = reader.GetString(5)
                 };
             }
 
@@ -380,8 +433,7 @@ namespace Foscamun2026.Data
 
             string sql = @"
                     UPDATE Committees
-                    SET TopicA = @TopicA,
-                        TopicB = @TopicB,
+                    SET Topic = @Topic,
                         President = @President,
                         VicePresident = @VicePresident,
                         Moderator = @Moderator
@@ -390,8 +442,7 @@ namespace Foscamun2026.Data
 
             using var cmd = new SqliteCommand(sql, connection);
 
-            cmd.Parameters.AddWithValue("@TopicA", icj.TopicA);
-            cmd.Parameters.AddWithValue("@TopicB", icj.TopicB);
+            cmd.Parameters.AddWithValue("@Topic", icj.Topic);
             cmd.Parameters.AddWithValue("@President", icj.President);
             cmd.Parameters.AddWithValue("@VicePresident", icj.VicePresident);
             cmd.Parameters.AddWithValue("@Moderator", icj.Moderator);
@@ -484,7 +535,7 @@ namespace Foscamun2026.Data
             await connection.OpenAsync();
 
             string sql = @"
-                    SELECT c.IsoCode, c.EnglishName, c.FrenchName, c.SpanishName
+                    SELECT c.IsoCode, c.EnglishName, c.FrenchName, c.SpanishName, cl.Warnings
                     FROM CountryLists cl
                     JOIN Countries c ON cl.IsoCode = c.IsoCode
                     WHERE cl.CommID = (SELECT CommID FROM Committees WHERE Name = 'ICJ')
@@ -501,7 +552,8 @@ namespace Foscamun2026.Data
                     IsoCode = reader.GetString(0),
                     EnglishName = reader.GetString(1),
                     FrenchName = reader.GetString(2),
-                    SpanishName = reader.GetString(3)
+                    SpanishName = reader.GetString(3),
+                    Warnings = reader.IsDBNull(4) ? 0 : reader.GetInt32(4)
                 });
             }
 

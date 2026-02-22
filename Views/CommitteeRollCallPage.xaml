@@ -278,7 +278,7 @@
         </Style>
     </Page.Resources>
 
-    <Grid Margin="20 15 20 15">
+    <Grid Margin="30 25 30 25">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -295,9 +295,7 @@
             <Grid.RowDefinitions>
                 <!-- Logo e Board -->
                 <RowDefinition Height="Auto"/>
-                <!-- Topic e Session -->
-                <RowDefinition Height="Auto"/>
-                <!-- Contenuto principale -->
+                <!-- Liste e Session -->
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
@@ -366,67 +364,12 @@
                            HorizontalAlignment="Left"/>
             </Grid>
 
-            <!-- Topic e Session -->
+            <!-- Liste e Session -->
             <Grid Grid.Row="1" Margin="0,0,0,10">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="20"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-
-                <!-- Label Topic -->
-                <TextBlock Grid.Column="0"
-                           Text="{DynamicResource TopicLbl}"
-                           Style="{StaticResource Caption}"
-                           VerticalAlignment="Center"
-                           Margin="0,0,10,0"/>
-
-                <!-- ComboBox Topic -->
-                <ComboBox x:Name="TopicComboBox"
-                          Grid.Column="1"
-                          Style="{StaticResource SimpleComboBoxStyle}"
-                          ItemsSource="{Binding Topics}"
-                          SelectedItem="{Binding SelectedTopic}"
-                          VerticalAlignment="Center"
-                          Margin="0,0,9,0"
-                          MinWidth="150">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding}" Foreground="{StaticResource TextInputBrush}"/>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-
-                <!-- Label Session -->
-                <TextBlock Grid.Column="3"
-                           Text="{DynamicResource SessionLbl}"
-                           Style="{StaticResource Caption}"
-                           VerticalAlignment="Center"
-                           Margin="0,0,10,0"/>
-
-                <!-- ComboBox Session -->
-                <ComboBox x:Name="SessionComboBox"
-                          Grid.Column="4"
-                          Style="{StaticResource SimpleComboBoxStyle}"
-                          ItemsSource="{Binding Sessions}"
-                          SelectedItem="{Binding SelectedSession}"
-                          VerticalAlignment="Center"
-                          MinWidth="80">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding}" Foreground="{StaticResource TextInputBrush}"/>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-            </Grid>
-
-            <!-- Contenuto principale -->
-            <Grid Grid.Row="2">
-                <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -440,14 +383,41 @@
                            Style="{StaticResource Caption}"
                            HorizontalAlignment="Center"
                            TextWrapping="Wrap"
-                           Margin="0,0,5,0"/>
+                           Margin="0,7,5,2"/>
 
                 <TextBlock Grid.Column="1" Grid.Row="0"
                            Text="{DynamicResource MarkAbsentLbl}"
                            Style="{StaticResource Caption}"
                            HorizontalAlignment="Center"
                            TextWrapping="Wrap"
-                           Margin="5,0,0,0"/>
+                           Margin="5,7,0,2"/>
+
+                <!-- Session in alto a destra -->
+                <StackPanel Grid.Column="3" Grid.Row="0"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Margin="20,0,0,2">
+                    <!-- Label Session -->
+                    <TextBlock Text="{DynamicResource SessionLbl}"
+                               Style="{StaticResource Caption}"
+                               VerticalAlignment="Center"
+                               Margin="0,0,10,0"/>
+
+                    <!-- ComboBox Session -->
+                    <ComboBox x:Name="SessionComboBox"
+                              Style="{StaticResource SimpleComboBoxStyle}"
+                              ItemsSource="{Binding Sessions}"
+                              SelectedItem="{Binding SelectedSession}"
+                              VerticalAlignment="Center"
+                              MinWidth="80">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" Foreground="{StaticResource TextInputBrush}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
 
                 <!-- Lista paesi disponibili (Absent) -->
                 <ListView Grid.Column="0" Grid.Row="1"
@@ -474,7 +444,7 @@
                           Padding="4"/>
 
                 <!-- Colonna pulsante Proceed -->
-                <Grid Grid.Column="2" Grid.Row="1"
+                <Grid Grid.Column="3" Grid.Row="1"
                       Margin="20,0,0,0"
                       VerticalAlignment="Bottom">
                     <Button Style="{StaticResource IconRightButton}"

@@ -4,10 +4,12 @@ using Foscamun2026.Data;
 using Foscamun2026.Models;
 using Foscamun2026.Views;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 
 namespace Foscamun2026.ViewModels
 {
@@ -35,6 +37,10 @@ namespace Foscamun2026.ViewModels
         {
             _db = db;
             _ = LoadCommitteesAsync();
+
+            // Applica ordinamento alfabetico alla lista Committees
+            var view = CollectionViewSource.GetDefaultView(Committees);
+            view.SortDescriptions.Add(new SortDescription(nameof(Committee.Name), ListSortDirection.Ascending));
         }
 
         // -------------------------

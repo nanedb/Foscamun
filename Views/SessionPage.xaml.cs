@@ -1,3 +1,4 @@
+using Foscamun2026.Data;
 using Foscamun2026.Models;
 using Foscamun2026.ViewModels;
 using System.Windows;
@@ -9,11 +10,11 @@ namespace Foscamun2026.Views
     {
         private SessionViewModel _viewModel = null!;
 
-        public SessionPage(Committee committee, string topic, int session, List<Country> presentCountries)
+        public SessionPage(Committee committee, string topic, int session, List<Country> presentCountries, SqliteDataAccess dataAccess)
         {
             InitializeComponent();
 
-            _viewModel = new SessionViewModel(committee, topic, session, presentCountries, NavigateToVoting);
+            _viewModel = new SessionViewModel(committee, topic, session, presentCountries, NavigateToVoting, dataAccess);
             DataContext = _viewModel;
         }
 

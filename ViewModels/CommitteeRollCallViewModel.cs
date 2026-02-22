@@ -59,15 +59,6 @@ namespace Foscamun2026.ViewModels
             VicePresident = committee.VicePresident;
             Moderator = committee.Moderator;
 
-            if (!string.IsNullOrWhiteSpace(committee.TopicA))
-                Topics.Add(committee.TopicA);
-
-            if (!string.IsNullOrWhiteSpace(committee.TopicB))
-                Topics.Add(committee.TopicB);
-
-            if (Topics.Count > 0)
-                SelectedTopic = Topics[0];
-
             for (int i = 1; i <= 10; i++)
             {
                 Sessions.Add(i);
@@ -128,16 +119,13 @@ namespace Foscamun2026.ViewModels
 
         private bool CanProceed()
         {
-            return PresentCountries.Count > 0 && !string.IsNullOrWhiteSpace(SelectedTopic);
+            return PresentCountries.Count > 0;
         }
 
         private void Proceed()
         {
-            if (string.IsNullOrWhiteSpace(SelectedTopic))
-                return;
-
             var presentCountriesList = PresentCountries.ToList();
-            _navigateToSession(_committee, SelectedTopic, SelectedSession, presentCountriesList);
+            _navigateToSession(_committee, _committee.Topic, SelectedSession, presentCountriesList);
         }
     }
 }

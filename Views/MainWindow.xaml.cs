@@ -117,7 +117,7 @@ namespace Foscamun2026.Views
             // ICJ -> ICJRollCallPage
             if (selectedCommitteeName == "ICJ")
             {
-                var icjPage = new ICJRollCallPage();
+                var icjPage = new ICJRollCallPage(Db);
                 NavigateRightFrame(icjPage);
                 return;
             }

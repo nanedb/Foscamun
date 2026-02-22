@@ -184,7 +184,7 @@
 
             <!--ADD COMMITTEE BUTTON-->
             <Button Style="{StaticResource MenuButton}" x:Name="AddCommitteeButton"
-                    Margin="40 0 0 4"
+                    Margin="20 0 0 4"
                     Command="{Binding AddCommitteeCommand}">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
                             HorizontalAlignment="Left">
@@ -198,7 +198,7 @@
 
             <!--EDIT COMMITTEE BUTTON-->
             <Button Style="{StaticResource MenuButton}" x:Name="EditButton"
-                    Margin="40 0 0 4"
+                    Margin="20 0 0 4"
                     IsEnabled="{Binding IsEditCommitteeEnabled}"
                     Command="{Binding EditCommitteeCommand}">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
@@ -213,7 +213,7 @@
 
             <!--ICJ BUTTON-->
             <Button Style="{StaticResource MenuButton}" x:Name="ICJButton"
-                    Margin="40 0 0 4"
+                    Margin="20 0 0 4"
                     IsEnabled="{Binding IsICJButtonEnabled}"
                     Command="{Binding OpenICJCommand}">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
@@ -222,13 +222,13 @@
                                    Source="pack://application:,,,/Resources/Icons/edit.svg"
                                    Stretch="Uniform"
                                    Margin="0,0,10,0"/>
-                    <TextBlock Text="{DynamicResource ICJBtn}" Padding="10 3"/>
+                    <TextBlock Text="{DynamicResource EditICJBtn}" Padding="10 3"/>
                 </StackPanel>
             </Button>
 
             <!--REMOVE BUTTON-->
             <Button Style="{StaticResource MenuButton}" x:Name="RemoveButton"
-                    Margin="40 0 0 4"
+                    Margin="20 0 0 4"
                     IsEnabled="{Binding IsRemoveCommitteeEnabled}"
                     Command="{Binding RemoveCommitteeCommand}">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center"

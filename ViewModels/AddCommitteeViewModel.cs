@@ -195,8 +195,7 @@ namespace Foscamun2026.ViewModels
         {
             CanSave =
                 !string.IsNullOrWhiteSpace(Committee.Name) &&
-                !string.IsNullOrWhiteSpace(Committee.TopicA) &&
-                !string.IsNullOrWhiteSpace(Committee.TopicB) &&
+                !string.IsNullOrWhiteSpace(Committee.Topic) &&
                 !string.IsNullOrWhiteSpace(Committee.President) &&
                 !string.IsNullOrWhiteSpace(Committee.VicePresident) &&
                 !string.IsNullOrWhiteSpace(Committee.Moderator) &&

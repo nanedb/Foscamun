@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Foscamun2026.Data;
 using Foscamun2026.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -12,6 +13,7 @@ namespace Foscamun2026.ViewModels
     {
         private readonly Committee _committee;
         private readonly Action<List<Country>> _navigateToVoting;
+        private readonly SqliteDataAccess _dataAccess;
 
         [ObservableProperty]
         private string committeeName = string.Empty;
@@ -57,10 +59,11 @@ namespace Foscamun2026.ViewModels
         public IRelayCommand OpenTimerCommand { get; }
         public IRelayCommand OpenVotingCommand { get; }
 
-        public SessionViewModel(Committee committee, string topic, int session, List<Country> presentCountries, Action<List<Country>> navigateToVoting)
+        public SessionViewModel(Committee committee, string topic, int session, List<Country> presentCountries, Action<List<Country>> navigateToVoting, SqliteDataAccess dataAccess)
         {
             _committee = committee;
             _navigateToVoting = navigateToVoting;
+            _dataAccess = dataAccess;
 
             CommitteeName = committee.Name;
             President = committee.President;
@@ -89,6 +92,38 @@ namespace Foscamun2026.ViewModels
             RemoveWarningCommand = new RelayCommand<Country>(RemoveWarning);
             OpenTimerCommand = new RelayCommand(OpenTimer);
             OpenVotingCommand = new RelayCommand(OpenVoting);
+
+            // Carica tutti i paesi con warnings dal database
+            _ = LoadWarningsAsync();
+        }
+
+        private async Task LoadWarningsAsync()
+        {
+            try
+            {
+                var warnedCountries = await _dataAccess.LoadCountriesWithWarningsAsync(_committee.CommID);
+
+                foreach (var country in warnedCountries)
+                {
+                    // Cerca se il paese è già nella lista present countries per usare la stessa istanza
+                    var existingCountry = AvailableSpeakers.FirstOrDefault(c => c.IsoCode == country.IsoCode);
+                    if (existingCountry != null)
+                    {
+                        // Aggiorna i warnings dell'istanza esistente
+                        existingCountry.Warnings = country.Warnings;
+                        WarnedList.Add(existingCountry);
+                    }
+                    else
+                    {
+                        // Il paese non è presente ma ha warnings, aggiungilo comunque alla warned list
+                        WarnedList.Add(country);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"ERROR loading warnings: {ex.Message}");
+            }
         }
 
         private void OnLanguageChanged()
@@ -131,7 +166,7 @@ namespace Foscamun2026.ViewModels
 
         private bool CanWarnCurrentSpeaker() => CurrentSpeaker != null;
 
-        private void WarnCurrentSpeaker()
+        private async void WarnCurrentSpeaker()
         {
             if (CurrentSpeaker != null)
             {
@@ -145,18 +180,24 @@ namespace Foscamun2026.ViewModels
                 }
                 WarnedList.Add(CurrentSpeaker);
 
+                // Aggiorna nel database
+                await _dataAccess.UpdateCountryWarningsAsync(_committee.CommID, CurrentSpeaker.IsoCode, CurrentSpeaker.Warnings);
+
                 // Refresh della visualizzazione
                 CollectionViewSource.GetDefaultView(WarnedList).Refresh();
             }
         }
 
-        private void RemoveWarning(Country? country)
+        private async void RemoveWarning(Country? country)
         {
             if (country != null)
             {
                 if (country.Warnings > 0)
                 {
                     country.Warnings--;
+
+                    // Aggiorna nel database
+                    await _dataAccess.UpdateCountryWarningsAsync(_committee.CommID, country.IsoCode, country.Warnings);
                 }
 
                 if (country.Warnings == 0)

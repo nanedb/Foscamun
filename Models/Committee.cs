@@ -16,18 +16,11 @@ namespace Foscamun2026.Models
             set { _name = value; OnPropertyChanged(); }
         }
 
-        private string _topicA = "";
-        public string TopicA
+        private string _topic = "";
+        public string Topic
         {
-            get => _topicA;
-            set { _topicA = value; OnPropertyChanged(); }
-        }
-
-        private string _topicB = "";
-        public string TopicB
-        {
-            get => _topicB;
-            set { _topicB = value; OnPropertyChanged(); }
+            get => _topic;
+            set { _topic = value; OnPropertyChanged(); }
         }
 
         private string _president = "";
