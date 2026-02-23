@@ -1,115 +1,442 @@
 <Page x:Class="Foscamun2026.Views.ICJRollCallPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
-      mc:Ignorable="d"
-      d:DesignWidth="800"
-      d:DesignHeight="450"
-      Background="{DynamicResource PrimaryBrush}"
-      Foreground="{DynamicResource TextPrimaryBrush}"
-      Title="ICJ Roll Call">
+	  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	  xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+	  mc:Ignorable="d"
+	  d:DesignWidth="800"
+	  d:DesignHeight="450"
+	  Background="{DynamicResource PrimaryBrush}"
+	  Foreground="{DynamicResource TextPrimaryBrush}"
+	  Title="ICJ Roll Call">
 
-    <Grid Margin="20 15 20 15">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+	<Page.Resources>
+		<!-- Template per lista membri con font più grande -->
+		<DataTemplate x:Key="MemberTemplateList">
+			<StackPanel Orientation="Horizontal">
+				<svgc:SvgViewbox Width="28" Height="19"
+								 Source="{Binding FlagPath}"
+								 Stretch="Uniform"
+								 Visibility="{Binding FlagPath, Converter={StaticResource NullToVisibilityConverter}}"/>
+				<TextBlock Text="{Binding DisplayName}"
+						   Margin="10,0,0,0"
+						   VerticalAlignment="Center"
+						   FontSize="14"
+						   Foreground="{StaticResource TextInputBrush}"/>
+			</StackPanel>
+		</DataTemplate>
 
-        <!-- Titolo -->
-        <TextBlock Grid.Row="0"
-                   Text="{DynamicResource CommitteeRollCallTitle}" 
-                   Style="{StaticResource H3}"
-                   Margin="0,0,0,0"/>
+		<!-- Stile per ComboBox con testo semplice -->
+		<Style x:Key="SimpleComboBoxStyle" TargetType="ComboBox">
+			<Setter Property="FontFamily" Value="{StaticResource FontPrimary}"/>
+			<Setter Property="FontSize" Value="14"/>
+			<Setter Property="Padding" Value="6"/>
+			<Setter Property="Background" Value="{StaticResource InputBackgroundBrush}"/>
+			<Setter Property="Foreground" Value="{StaticResource TextInputBrush}"/>
+			<Setter Property="BorderBrush" Value="{StaticResource SurfaceBorderBrush}"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="MinHeight" Value="32"/>
+			<Setter Property="SnapsToDevicePixels" Value="True"/>
 
-        <!-- Contenuto -->
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="ComboBox">
+						<Grid>
+							<Border x:Name="Border"
+									Background="{StaticResource InputBackgroundBrush}"
+									BorderBrush="{TemplateBinding BorderBrush}"
+									BorderThickness="{TemplateBinding BorderThickness}"
+									CornerRadius="{StaticResource CornerRadiusMedium}"
+									Padding="4"
+									SnapsToDevicePixels="True"/>
+
+							<ContentPresenter x:Name="ContentSite"
+											  Margin="8,0,28,0"
+											  VerticalAlignment="Center"
+											  HorizontalAlignment="Left"
+											  Content="{TemplateBinding SelectionBoxItem}">
+								<ContentPresenter.ContentTemplate>
+									<DataTemplate>
+										<TextBlock Text="{Binding}" Foreground="{StaticResource TextInputBrush}"/>
+									</DataTemplate>
+								</ContentPresenter.ContentTemplate>
+							</ContentPresenter>
+
+							<ToggleButton x:Name="ToggleButton"
+										  Grid.Column="1"
+										  Focusable="False"
+										  Background="Transparent"
+										  BorderThickness="0"
+										  HorizontalAlignment="Right"
+										  VerticalAlignment="Center"
+										  Width="25" Height="25"
+										  IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+								<Path Width="10" Height="6"
+									  Fill="{StaticResource TextInputBrush}"
+									  Data="M 0 0 L 10 0 L 5 6 Z"
+									  HorizontalAlignment="Center"
+									  VerticalAlignment="Center"/>
+							</ToggleButton>
+
+							<Popup x:Name="PART_Popup"
+								   Placement="Bottom"
+								   AllowsTransparency="True"
+								   Focusable="False"
+								   IsOpen="{TemplateBinding IsDropDownOpen}"
+								   PopupAnimation="Slide"
+								   Width="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}">
+								<Border Background="{StaticResource InputBackgroundBrush}"
+										BorderBrush="{StaticResource SurfaceBorderBrush}"
+										BorderThickness="1"
+										CornerRadius="{StaticResource CornerRadiusMedium}"
+										Padding="4">
+									<ScrollViewer>
+										<ItemsPresenter/>
+									</ScrollViewer>
+								</Border>
+							</Popup>
+						</Grid>
+
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource SurfaceBorderHoverBrush}"/>
+							</Trigger>
+
+							<Trigger Property="IsKeyboardFocusWithin" Value="True">
+								<Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource SurfaceBorderFocusBrush}"/>
+								<Setter TargetName="Border" Property="BorderThickness" Value="1.5"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<!-- Stile per pulsante con icona a destra -->
+		<Style x:Key="IconRightButton" TargetType="Button" BasedOn="{StaticResource MenuButton}">
+			<Setter Property="HorizontalAlignment" Value="Center"/>
+			<Setter Property="HorizontalContentAlignment" Value="Right"/>
+			<Setter Property="Padding" Value="10,0,10,0"/>
+			<Setter Property="Height" Value="28"/>
+			<Setter Property="MinHeight" Value="0"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+			<Setter Property="ContentTemplate">
+				<Setter.Value>
+					<DataTemplate>
+						<StackPanel Orientation="Horizontal" 
+									VerticalAlignment="Center"
+									HorizontalAlignment="Right">
+							<ContentPresenter Content="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Content}"
+											  Margin="0,0,10,0"
+											  VerticalAlignment="Center"/>
+
+							<svgc:SvgViewbox Width="18" Height="18"
+											 Stretch="Uniform"
+											 Margin="0"
+											 Source="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Tag}"/>
+						</StackPanel>
+					</DataTemplate>
+				</Setter.Value>
+			</Setter>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Button">
+						<Grid>
+							<Border x:Name="Bd"
+									Background="{TemplateBinding Background}"
+									CornerRadius="{DynamicResource CornerRadiusMedium}"
+									BorderBrush="{TemplateBinding BorderBrush}"
+									BorderThickness="{TemplateBinding BorderThickness}" />
+
+							<Border x:Name="Overlay"
+									Background="{DynamicResource PrimaryDarkBrush}"
+									CornerRadius="{DynamicResource CornerRadiusMedium}"
+									Opacity="0"
+									IsHitTestVisible="False"/>
+
+							<Grid>
+								<ContentPresenter x:Name="contentPresenter"
+												  HorizontalAlignment="Right"
+												  VerticalAlignment="Center"
+												  RecognizesAccessKey="True"
+												  Margin="12,0,12,0">
+									<ContentPresenter.RenderTransform>
+										<ScaleTransform ScaleX="1" ScaleY="1" />
+									</ContentPresenter.RenderTransform>
+								</ContentPresenter>
+							</Grid>
+						</Grid>
+
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Trigger.EnterActions>
+									<BeginStoryboard>
+										<Storyboard>
+											<DoubleAnimation Storyboard.TargetName="Overlay"
+															 Storyboard.TargetProperty="Opacity"
+															 To="0.12"
+															 Duration="0:0:0.18"/>
+											<DoubleAnimation Storyboard.TargetName="contentPresenter"
+															 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+															 To="1.002"
+															 Duration="0:0:0.18"/>
+											<DoubleAnimation Storyboard.TargetName="contentPresenter"
+															 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+															 To="1.002"
+															 Duration="0:0:0.18"/>
+										</Storyboard>
+									</BeginStoryboard>
+								</Trigger.EnterActions>
+								<Trigger.ExitActions>
+									<BeginStoryboard>
+										<Storyboard>
+											<DoubleAnimation Storyboard.TargetName="Overlay"
+															 Storyboard.TargetProperty="Opacity"
+															 To="0"
+															 Duration="0:0:0.18"/>
+											<DoubleAnimation Storyboard.TargetName="contentPresenter"
+															 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+															 To="1"
+															 Duration="0:0:0.18"/>
+											<DoubleAnimation Storyboard.TargetName="contentPresenter"
+															 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+															 To="1"
+															 Duration="0:0:0.18"/>
+										</Storyboard>
+									</BeginStoryboard>
+								</Trigger.ExitActions>
+							</Trigger>
+
+							<Trigger Property="IsPressed" Value="True">
+								<Trigger.EnterActions>
+									<BeginStoryboard>
+										<Storyboard>
+											<DoubleAnimation Storyboard.TargetName="Overlay"
+															 Storyboard.TargetProperty="Opacity"
+															 To="0.22"
+															 Duration="0:0:0.08"/>
+											<DoubleAnimation Storyboard.TargetName="contentPresenter"
+															 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+															 To="0.995"
+															 Duration="0:0:0.08"/>
+											<DoubleAnimation Storyboard.TargetName="contentPresenter"
+															 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+															 To="0.995"
+															 Duration="0:0:0.08"/>
+										</Storyboard>
+									</BeginStoryboard>
+								</Trigger.EnterActions>
+								<Trigger.ExitActions>
+									<BeginStoryboard>
+										<Storyboard>
+											<DoubleAnimation Storyboard.TargetName="Overlay"
+															 Storyboard.TargetProperty="Opacity"
+															 To="0"
+															 Duration="0:0:0.12"/>
+											<DoubleAnimation Storyboard.TargetName="contentPresenter"
+															 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+															 To="1"
+															 Duration="0:0:0.12"/>
+											<DoubleAnimation Storyboard.TargetName="contentPresenter"
+															 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+															 To="1"
+															 Duration="0:0:0.12"/>
+										</Storyboard>
+									</BeginStoryboard>
+								</Trigger.ExitActions>
+							</Trigger>
+
+							<Trigger Property="IsEnabled" Value="False">
+								<Setter TargetName="contentPresenter" Property="Opacity" Value="0.4" />
+								<Setter Property="Foreground" Value="#808080" />
+								<Setter Property="Cursor" Value="Arrow" />
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+	</Page.Resources>
+
+	<Grid Margin="30 25 30 25">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+
+		<!-- Titolo -->
+		<TextBlock Grid.Row="0"
+				   Text="{DynamicResource CommitteeRollCallTitle}" 
+				   Style="{StaticResource H3}"
+				   Margin="0,0,0,0"/>
+
+		<!-- Contenuto -->
 		<Grid Grid.Row="1">
-            <Grid.RowDefinitions>
-                <!-- Logo e Board -->
-                <RowDefinition Height="Auto"/>
-                <!-- Topic e Session -->
-                <RowDefinition Height="Auto"/>
-                <!-- Contenuto principale -->
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+			<Grid.RowDefinitions>
+				<!-- Logo e Board -->
+				<RowDefinition Height="Auto"/>
+				<!-- Liste e Session -->
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
 
-            <!-- Logo e Board -->
-            <Grid Grid.Row="0" Margin="0,10,0,10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+			<!-- Logo e Board -->
+			<Grid Grid.Row="0" Margin="0,10,0,10">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
 
-                <!-- Logo -->
-                <Viewbox Grid.Column="0" Grid.Row="0" Grid.RowSpan="3"
-                         Margin="0,0,20,0" 
-                         HorizontalAlignment="Left" 
-                         VerticalAlignment="Center" 
-                         MaxHeight="110" 
-                         MinHeight="80">
-                    <svgc:SvgViewbox Source="{Binding CommitteeLogoPath}"
-                                     Stretch="Uniform"/>
-                </Viewbox>
+				<!-- Logo -->
+				<Viewbox Grid.Column="0" Grid.Row="0" Grid.RowSpan="3"
+						 Margin="0,0,20,0" 
+						 HorizontalAlignment="Left" 
+						 VerticalAlignment="Center" 
+						 MaxHeight="110" 
+						 MinHeight="80">
+					<svgc:SvgViewbox Source="{Binding CommitteeLogoPath}"
+									 Stretch="Uniform"/>
+				</Viewbox>
 
-                <!-- Labels Board -->
-                <TextBlock Grid.Column="1" Grid.Row="0"
-                           Text="Judge"
-                           Style="{StaticResource Caption}"
-                           Margin="20,3,20,3"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Right"/>
-                <TextBlock Grid.Column="1" Grid.Row="1" 
-                           Text="Vice Judge 1"
-                           Style="{StaticResource Caption}"
-                           Margin="20,3,20,3"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Right"/>
-                <TextBlock Grid.Column="1" Grid.Row="2" 
-                           Text="Vice Judge 2"
-                           Style="{StaticResource Caption}"
-                           Margin="20,3,20,3"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Right"/>
+				<!-- Labels Board -->
+				<TextBlock Grid.Column="1" Grid.Row="0"
+						   Text="{DynamicResource JudgeLbl}"
+						   Style="{StaticResource Caption}"
+						   Margin="20,3,20,3"
+						   VerticalAlignment="Center"
+						   HorizontalAlignment="Right"/>
+				<TextBlock Grid.Column="1" Grid.Row="1" 
+						   Text="{DynamicResource ViceJudge1Lbl}"
+						   Style="{StaticResource Caption}"
+						   Margin="20,3,20,3"
+						   VerticalAlignment="Center"
+						   HorizontalAlignment="Right"/>
+				<TextBlock Grid.Column="1" Grid.Row="2" 
+						   Text="{DynamicResource ViceJudge2Lbl}"
+						   Style="{StaticResource Caption}"
+						   Margin="20,3,20,3"
+						   VerticalAlignment="Center"
+						   HorizontalAlignment="Right"/>
 
-                <!-- Valori Board -->
-                <TextBlock Grid.Column="2" Grid.Row="0"
-                           Text="{Binding Judge}"
-                           Style="{StaticResource Body}"
-                           Margin="0,3,0,3"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Left"/>
-                <TextBlock Grid.Column="2" Grid.Row="1" 
-                           Text="{Binding ViceJudge1}"
-                           Style="{StaticResource Body}"
-                           Margin="0,3,0,3"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Left"/>
-                <TextBlock Grid.Column="2" Grid.Row="2" 
-                           Text="{Binding ViceJudge2}"
-                           Style="{StaticResource Body}"
-                           Margin="0,3,0,3"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Left"/>
-            </Grid>
-			
-		    <!-- Contenuto placeholder -->
-		    <Border Grid.Row="2"
-				    Background="{DynamicResource SurfaceBrush}"
-				    CornerRadius="{StaticResource CornerRadiusMedium}">
-			    <TextBlock Text="{DynamicResource ICJRollCallPlaceholder}"
-						    Style="{StaticResource Body}"
-						    HorizontalAlignment="Center"
-						    VerticalAlignment="Center"
-						    TextAlignment="Center"/>
-		    </Border>
-            
-        </Grid>
-    </Grid>
+				<!-- Valori Board -->
+				<TextBlock Grid.Column="2" Grid.Row="0"
+						   Text="{Binding Judge}"
+						   Style="{StaticResource Body}"
+						   Margin="0,3,0,3"
+						   VerticalAlignment="Center"
+						   HorizontalAlignment="Left"/>
+				<TextBlock Grid.Column="2" Grid.Row="1" 
+						   Text="{Binding ViceJudge1}"
+						   Style="{StaticResource Body}"
+						   Margin="0,3,0,3"
+						   VerticalAlignment="Center"
+						   HorizontalAlignment="Left"/>
+				<TextBlock Grid.Column="2" Grid.Row="2" 
+						   Text="{Binding ViceJudge2}"
+						   Style="{StaticResource Body}"
+						   Margin="0,3,0,3"
+						   VerticalAlignment="Center"
+						   HorizontalAlignment="Left"/>
+			</Grid>
+
+			<!-- Liste e Session -->
+			<Grid Grid.Row="1" Margin="0,0,0,10">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="3*"/>
+					<ColumnDefinition Width="3*"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+
+				<!-- Titoli delle liste -->
+				<TextBlock Grid.Column="0" Grid.Row="0"
+						   Text="{DynamicResource MarkPresentLbl}"
+						   Style="{StaticResource Caption}"
+						   HorizontalAlignment="Center"
+						   TextWrapping="Wrap"
+						   Margin="0,8,0,2"/>
+
+				<TextBlock Grid.Column="1" Grid.Row="0"
+						   Text="{DynamicResource MarkAbsentLbl}"
+						   Style="{StaticResource Caption}"
+						   HorizontalAlignment="Center"
+						   TextWrapping="Wrap"
+						   Margin="5,8,0,2"/>
+
+				<!-- Session in alto a destra -->
+				<StackPanel Grid.Column="2" Grid.Row="0"
+							Orientation="Horizontal"
+							HorizontalAlignment="Right"
+							VerticalAlignment="Top"
+							Margin="10,0,0,2">
+					<!-- Label Session -->
+					<TextBlock Text="{DynamicResource SessionLbl}"
+							   Style="{StaticResource Caption}"
+							   VerticalAlignment="Center"
+							   Margin="0,0,10,0"/>
+
+					<!-- ComboBox Session -->
+					<ComboBox x:Name="SessionComboBox"
+							  Style="{StaticResource SimpleComboBoxStyle}"
+							  ItemsSource="{Binding Sessions}"
+							  SelectedItem="{Binding SelectedSession}"
+							  VerticalAlignment="Center"
+							  MinWidth="50">
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding}" Foreground="{StaticResource TextInputBrush}"/>
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
+				</StackPanel>
+
+				<!-- Lista membri disponibili (Absent) -->
+				<ListView Grid.Column="0" Grid.Row="1"
+						  ItemsSource="{Binding AvailableMembers}"
+						  ItemTemplate="{StaticResource MemberTemplateList}"
+						  SelectedItem="{Binding SelectedMember, Mode=OneWayToSource}"
+						  MouseLeftButtonUp="AvailableMembers_Click"
+						  Background="{StaticResource InputBackgroundBrush}"
+						  BorderBrush="{StaticResource SurfaceBorderBrush}"
+						  BorderThickness="1"
+						  Margin="0,0,5,0"
+						  Padding="8"
+						  ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
+
+				<!-- Lista membri presenti (Present) -->
+				<ListView Grid.Column="1" Grid.Row="1"
+						  ItemsSource="{Binding PresentMembers}"
+						  ItemTemplate="{StaticResource MemberTemplateList}"
+						  SelectedItem="{Binding SelectedMember, Mode=OneWayToSource}"
+						  MouseLeftButtonUp="PresentMembers_Click"
+						  Background="{StaticResource InputBackgroundBrush}"
+						  BorderBrush="{StaticResource SurfaceBorderBrush}"
+						  BorderThickness="1"
+						  Margin="5,0,0,0"
+						  Padding="8"
+						  ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
+
+				<!-- Colonna pulsante Proceed -->
+				<Grid Grid.Column="2" Grid.Row="1"
+					  Margin="15,0,0,0"
+					  VerticalAlignment="Bottom">
+					<Button Style="{StaticResource IconRightButton}"
+							Tag="pack://application:,,,/Resources/Icons/next.svg"
+							Content="{DynamicResource ProceedBtn}"
+							Command="{Binding ProceedCommand}"
+							Width="150"
+							HorizontalAlignment="Right"/>
+				</Grid>
+			</Grid>
+		</Grid>
+	</Grid>
 </Page>

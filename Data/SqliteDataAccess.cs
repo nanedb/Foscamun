@@ -454,70 +454,44 @@ namespace Foscamun2026.Data
         // ============================================================
 
         /// <summary>
-        /// Loads all ICJ members (Jurors and Lawyers).
+        /// Loads ICJ members from the ICJ table (Advocates from Plaintiff/Defense positions, Jurors from JurorsJson).
         /// </summary>
         public async Task<List<ICJMember>> LoadICJMembersAsync()
         {
             var list = new List<ICJMember>();
 
-            using var connection = new SqliteConnection(_connectionString);
-            await connection.OpenAsync();
+            var icj = ICJRepository.Load();
+            
+            if (icj == null)
+                return list;
 
-            string sql = "SELECT MemberID, Name, IsoCode, Kind, Warnings FROM ICJMembers ORDER BY Name";
+            // Aggiungi Plaintiffs (Advocates con bandiera)
+            if (!string.IsNullOrWhiteSpace(icj.Plaintiff1))
+                list.Add(new ICJMember { Name = icj.Plaintiff1, IsoCode = icj.PCountry?.IsoCode, Kind = "Plaintiff", Warnings = 0 });
+            if (!string.IsNullOrWhiteSpace(icj.Plaintiff2))
+                list.Add(new ICJMember { Name = icj.Plaintiff2, IsoCode = icj.PCountry?.IsoCode, Kind = "Plaintiff", Warnings = 0 });
+            if (!string.IsNullOrWhiteSpace(icj.Plaintiff3))
+                list.Add(new ICJMember { Name = icj.Plaintiff3, IsoCode = icj.PCountry?.IsoCode, Kind = "Plaintiff", Warnings = 0 });
 
-            using var cmd = new SqliteCommand(sql, connection);
-            using var reader = await cmd.ExecuteReaderAsync();
+            // Aggiungi Defense (Advocates con bandiera)
+            if (!string.IsNullOrWhiteSpace(icj.Defense1))
+                list.Add(new ICJMember { Name = icj.Defense1, IsoCode = icj.DCountry?.IsoCode, Kind = "Defense", Warnings = 0 });
+            if (!string.IsNullOrWhiteSpace(icj.Defense2))
+                list.Add(new ICJMember { Name = icj.Defense2, IsoCode = icj.DCountry?.IsoCode, Kind = "Defense", Warnings = 0 });
+            if (!string.IsNullOrWhiteSpace(icj.Defense3))
+                list.Add(new ICJMember { Name = icj.Defense3, IsoCode = icj.DCountry?.IsoCode, Kind = "Defense", Warnings = 0 });
 
-            while (await reader.ReadAsync())
+            // Aggiungi Jurors (senza IsoCode, senza bandiera)
+            if (icj.Jurors != null)
             {
-                list.Add(new ICJMember
+                foreach (var juror in icj.Jurors)
                 {
-                    MemberID = reader.GetInt32(0),
-                    Name = reader.GetString(1),
-                    IsoCode = reader.GetString(2),
-                    Kind = reader.GetString(3),
-                    Warnings = reader.GetInt32(4)
-                });
+                    if (!string.IsNullOrWhiteSpace(juror))
+                        list.Add(new ICJMember { Name = juror, IsoCode = null, Kind = "Juror", Warnings = 0 });
+                }
             }
 
-            return list;
-        }
-
-        /// <summary>
-        /// Inserts a new ICJ member (Juror or Lawyer).
-        /// </summary>
-        public async Task InsertICJMemberAsync(string name, string kind, string isoCode = "IC")
-        {
-            using var connection = new SqliteConnection(_connectionString);
-            await connection.OpenAsync();
-
-            string sql = @"
-                INSERT INTO ICJMembers (Name, IsoCode, Kind, Warnings)
-                VALUES (@Name, @IsoCode, @Kind, 0);
-            ";
-
-            using var cmd = new SqliteCommand(sql, connection);
-            cmd.Parameters.AddWithValue("@Name", name);
-            cmd.Parameters.AddWithValue("@IsoCode", isoCode);
-            cmd.Parameters.AddWithValue("@Kind", kind);
-
-            await cmd.ExecuteNonQueryAsync();
-        }
-
-        /// <summary>
-        /// Deletes an ICJ member by MemberID.
-        /// </summary>
-        public async Task DeleteICJMemberAsync(int memberId)
-        {
-            using var connection = new SqliteConnection(_connectionString);
-            await connection.OpenAsync();
-
-            string sql = "DELETE FROM ICJMembers WHERE MemberID = @ID";
-
-            using var cmd = new SqliteCommand(sql, connection);
-            cmd.Parameters.AddWithValue("@ID", memberId);
-
-            await cmd.ExecuteNonQueryAsync();
+            return await Task.FromResult(list);
         }
 
         // ============================================================

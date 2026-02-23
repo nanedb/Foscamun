@@ -46,6 +46,9 @@
     <sys:String x:Key="PresidentLbl">Président:</sys:String>
     <sys:String x:Key="VicePresidentLbl">Vice-président:</sys:String>
     <sys:String x:Key="ModeratorLbl">Modérateur:</sys:String>
+    <sys:String x:Key="JudgeLbl">Juge:</sys:String>
+    <sys:String x:Key="ViceJudge1Lbl">Vice-juge 1:</sys:String>
+    <sys:String x:Key="ViceJudge2Lbl">Vice-juge 2:</sys:String>
     <sys:String x:Key="MarkPresentLbl">Cliquez pour marquer comme présent</sys:String>
     <sys:String x:Key="MarkAbsentLbl">Cliquez pour marquer comme absent</sys:String>
     <sys:String x:Key="ProceedBtn">Continuer</sys:String>
