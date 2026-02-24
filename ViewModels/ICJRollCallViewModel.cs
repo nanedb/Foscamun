@@ -12,6 +12,7 @@ namespace Foscamun2026.ViewModels
     public partial class ICJRollCallViewModel : ObservableObject
     {
         private readonly SqliteDataAccess _db;
+        private readonly Action<string, string, string, string, int, List<ICJRollCallMember>> _navigateToSession;
 
         [ObservableProperty]
         private string judge = "";
@@ -41,9 +42,10 @@ namespace Foscamun2026.ViewModels
 
         public IRelayCommand ProceedCommand { get; }
 
-        public ICJRollCallViewModel(SqliteDataAccess db)
+        public ICJRollCallViewModel(SqliteDataAccess db, Action<string, string, string, string, int, List<ICJRollCallMember>> navigateToSession)
         {
             _db = db;
+            _navigateToSession = navigateToSession;
 
             for (int i = 1; i <= 10; i++)
             {
@@ -114,8 +116,8 @@ namespace Foscamun2026.ViewModels
 
         private void Proceed()
         {
-            // TODO: Navigate to ICJ Session page
-            Debug.WriteLine($"Proceeding with {PresentMembers.Count} present members in session {SelectedSession}");
+            var presentMembersList = PresentMembers.ToList();
+            _navigateToSession(Judge, ViceJudge1, ViceJudge2, Topic, SelectedSession, presentMembersList);
         }
     }
 }

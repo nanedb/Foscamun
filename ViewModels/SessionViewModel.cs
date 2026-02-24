@@ -14,6 +14,7 @@ namespace Foscamun2026.ViewModels
         private readonly Committee _committee;
         private readonly Action<List<Country>> _navigateToVoting;
         private readonly SqliteDataAccess _dataAccess;
+        private readonly List<Country> _presentCountries; // ✅ Lista immutabile dei presenti
 
         [ObservableProperty]
         private string committeeName = string.Empty;
@@ -64,6 +65,7 @@ namespace Foscamun2026.ViewModels
             _committee = committee;
             _navigateToVoting = navigateToVoting;
             _dataAccess = dataAccess;
+            _presentCountries = presentCountries; // ✅ Salva la lista originale
 
             CommitteeName = committee.Name;
             President = committee.President;
@@ -220,7 +222,9 @@ namespace Foscamun2026.ViewModels
 
         private void OpenVoting()
         {
-            var voters = AvailableSpeakers.ToList();
+            // ✅ Usa la lista originale dei presenti, non le liste speakers
+            var voters = _presentCountries;
+            
             if (voters.Count == 0)
             {
                 System.Windows.MessageBox.Show(

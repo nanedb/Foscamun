@@ -1,0 +1,367 @@
+<Page x:Class="Foscamun2026.Views.ICJSessionPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+      mc:Ignorable="d"
+      d:DesignWidth="900"
+      d:DesignHeight="600"
+      Background="{DynamicResource PrimaryBrush}"
+      Foreground="{DynamicResource TextPrimaryBrush}"
+      Title="ICJ Session">
+
+    <Page.Resources>
+        <!-- Template per lista membri ICJ -->
+        <DataTemplate x:Key="ICJMemberTemplate">
+            <StackPanel Orientation="Horizontal">
+                <svgc:SvgViewbox Width="28" Height="19"
+                                 Source="{Binding FlagPath}"
+                                 Stretch="Uniform"/>
+                <TextBlock Text="{Binding DisplayName}"
+                           Margin="10,0,0,0"
+                           VerticalAlignment="Center"
+                           FontSize="14"
+                           Foreground="{StaticResource TextInputBrush}"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <!-- Template per warned members con count -->
+        <DataTemplate x:Key="WarnedMemberTemplate">
+            <StackPanel Orientation="Horizontal">
+                <svgc:SvgViewbox Width="28" Height="19"
+                                 Source="{Binding FlagPath}"
+                                 Stretch="Uniform"/>
+                <TextBlock Text="{Binding DisplayName}"
+                           Margin="10,0,5,0"
+                           VerticalAlignment="Center"
+                           FontSize="14"
+                           Foreground="{StaticResource TextInputBrush}"/>
+                <TextBlock Text="{Binding Warnings, StringFormat='({0})'}"
+                           VerticalAlignment="Center"
+                           FontSize="14"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource WarningBrush}"/>
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Logo ICJ -->
+            <svgc:SvgViewbox Grid.Column="0"
+                             Width="150" Height="150"
+                             Margin="0,0,20,0" 
+                             HorizontalAlignment="Left" 
+                             VerticalAlignment="Center"
+                             Source="{Binding CommitteeLogoPath}"
+                             Stretch="Uniform"/>
+
+            <!-- Board info -->
+            <Grid Grid.Column="1" VerticalAlignment="Top" Margin="0 20 0 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0"
+                           Text="Judge"
+                           Style="{StaticResource Caption}"
+                           Margin="10,3,20,3"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right"/>
+                <TextBlock Grid.Row="0" Grid.Column="1"
+                           Text="{Binding Judge}"
+                           Style="{StaticResource Body}"
+                           Margin="0,3,0,3"
+                           VerticalAlignment="Center"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0"
+                           Text="Vice Judge 1"
+                           Style="{StaticResource Caption}"
+                           Margin="10,3,20,3"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right"/>
+                <TextBlock Grid.Row="1" Grid.Column="1"
+                           Text="{Binding ViceJudge1}"
+                           Style="{StaticResource Body}"
+                           Margin="0,3,0,3"
+                           VerticalAlignment="Center"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="0"
+                           Text="Vice Judge 2"
+                           Style="{StaticResource Caption}"
+                           Margin="10,3,20,3"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right"/>
+                <TextBlock Grid.Row="2" Grid.Column="1"
+                           Text="{Binding ViceJudge2}"
+                           Style="{StaticResource Body}"
+                           Margin="0,3,0,3"
+                           VerticalAlignment="Center"/>
+            </Grid>
+
+            <!-- Topic & Session -->
+            <StackPanel Grid.Column="2" 
+                        VerticalAlignment="Top" HorizontalAlignment="Right"
+                        Margin="20,20,0,0">
+                <TextBlock Text="{Binding Topic}"
+                           Style="{StaticResource Body}"
+                           TextWrapping="Wrap"
+                           FontStyle="Italic"
+                           FontWeight="Normal"
+                           TextAlignment="Right"
+                           Margin="0,0,0,5"/>
+                <TextBlock Style="{StaticResource Body}" Margin="0 20 0 0"
+                           TextAlignment="Right">
+                    <Run Text="{DynamicResource SessionLbl2}"/>
+                    <Run Text=" "/>
+                    <Run Text="{Binding Session}"/>
+                </TextBlock>
+            </StackPanel>
+        </Grid>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="1" Margin="0,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.9*"/>
+                <ColumnDefinition Width="0.9*"/>
+                <ColumnDefinition Width="1.3*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Available Speakers Title -->
+            <TextBlock Grid.Row="0" Grid.Column="0"
+                       Text="{DynamicResource AvailableSpeakersLbl}"
+                       Style="{StaticResource Caption}"
+                       Margin="0,0,8,5"/>
+
+            <!-- Available Speakers List -->
+            <ListView Grid.Row="1" Grid.RowSpan="2" Grid.Column="0"
+                      ItemsSource="{Binding AvailableSpeakers}"
+                      ItemTemplate="{StaticResource ICJMemberTemplate}"
+                      SelectedItem="{Binding SelectedSpeaker, Mode=TwoWay}"
+                      MouseLeftButtonUp="AvailableSpeakers_Click"
+                      Background="{StaticResource InputBackgroundBrush}"
+                      BorderBrush="{StaticResource SurfaceBorderBrush}"
+                      BorderThickness="1"
+                      Padding="4"
+                      Margin="0,0,8,0"/>
+
+            <!-- Speakers List Title -->
+            <TextBlock Grid.Row="0" Grid.Column="1"
+                       Text="{DynamicResource SpeakersListLbl}"
+                       Style="{StaticResource Caption}"
+                       Margin="0,0,8,5"/>
+
+            <!-- Speakers List -->
+            <ListView Grid.Row="1" Grid.RowSpan="2" Grid.Column="1"
+                      ItemsSource="{Binding SpeakersList}"
+                      ItemTemplate="{StaticResource ICJMemberTemplate}"
+                      SelectedItem="{Binding CurrentSpeaker, Mode=TwoWay}"
+                      Background="{StaticResource InputBackgroundBrush}"
+                      BorderBrush="{StaticResource SurfaceBorderBrush}"
+                      BorderThickness="1"
+                      Padding="4"
+                      Margin="0,0,8,0"/>
+
+            <!-- Current Speaker Title -->
+            <TextBlock Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"
+                       Text="{DynamicResource CurrentSpeakerLbl}"
+                       Style="{StaticResource Caption}"
+                       Margin="0,0,0,5"/>
+
+            <!-- Current Speaker Border -->
+            <Border Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"
+                    Background="{StaticResource SurfaceBrush}"
+                    BorderBrush="{StaticResource SurfaceBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="{StaticResource CornerRadiusMedium}"
+                    Padding="10"
+                    Margin="0,0,0,10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Flag -->
+                    <svgc:SvgViewbox Grid.Column="0"
+                                     Width="80" Height="55"
+                                     Source="{Binding CurrentSpeaker.FlagPath}"
+                                     Stretch="Uniform"
+                                     VerticalAlignment="Center"
+                                     Margin="0,0,15,0">
+                        <svgc:SvgViewbox.Style>
+                            <Style TargetType="svgc:SvgViewbox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentSpeaker}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </svgc:SvgViewbox.Style>
+                    </svgc:SvgViewbox>
+
+                    <!-- Name -->
+                    <TextBlock Grid.Column="1"
+                               VerticalAlignment="Center"
+                               TextWrapping="Wrap">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource Body}">
+                                <Setter Property="Text" Value="{Binding CurrentSpeaker.DisplayName}"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentSpeaker}" Value="{x:Null}">
+                                        <Setter Property="Text" Value="{DynamicResource NoSpeakerSelectedLbl}"/>
+                                        <Setter Property="FontStyle" Value="Italic"/>
+                                        <Setter Property="FontWeight" Value="Normal"/>
+                                        <Setter Property="Opacity" Value="0.6"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <!-- Buttons -->
+                    <StackPanel Grid.Column="2" 
+                                Orientation="Vertical"
+                                VerticalAlignment="Center"
+                                Margin="15,0,0,0">
+                        <Button Command="{Binding RemoveCurrentSpeakerCommand}"
+                                Style="{StaticResource MenuButton}"
+                                Margin="0,0,0,6"
+                                Padding="10,6"
+                                MinWidth="90">
+                            <StackPanel Orientation="Horizontal">
+                                <svgc:SvgViewbox Width="16" Height="16"
+                                                 Source="pack://application:,,,/Resources/Icons/remove.svg"
+                                                 Stretch="Uniform"
+                                                 Margin="0,0,8,0"/>
+                                <TextBlock Text="{DynamicResource RemoveSpeakerBtn}"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding WarnCurrentSpeakerCommand}"
+                                Style="{StaticResource MenuButton}"
+                                Padding="10,6"
+                                MinWidth="90">
+                            <StackPanel Orientation="Horizontal">
+                                <svgc:SvgViewbox Width="16" Height="16"
+                                                 Source="pack://application:,,,/Resources/Icons/warning.svg"
+                                                 Stretch="Uniform"
+                                                 Margin="0,0,8,0"/>
+                                <TextBlock Text="{DynamicResource WarnBtn}"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Warnings Section -->
+            <Grid Grid.Row="2" Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Text="{DynamicResource WarningsLbl}"
+                           Style="{StaticResource Caption}"
+                           Margin="0,0,0,5"/>
+
+                <ListView Grid.Row="1"
+                          ItemsSource="{Binding WarnedList}"
+                          ItemTemplate="{StaticResource WarnedMemberTemplate}"
+                          SelectedItem="{Binding SelectedWarnedMember, Mode=TwoWay}"
+                          Background="{StaticResource InputBackgroundBrush}"
+                          BorderBrush="{StaticResource SurfaceBorderBrush}"
+                          BorderThickness="1"
+                          Padding="4"
+                          Margin="0,0,0,10"/>
+
+                <Button Grid.Row="2"
+                        Content="{DynamicResource RemoveWarningBtn}"
+                        Command="{Binding RemoveWarningCommand}"
+                        CommandParameter="{Binding SelectedWarnedMember}"
+                        Style="{StaticResource MenuButton}"
+                        HorizontalAlignment="Center"
+                        Padding="15,8"/>
+            </Grid>
+
+            <!-- Action Buttons Column -->
+            <StackPanel Grid.Row="1" Grid.RowSpan="2" Grid.Column="3" 
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Bottom">
+                <Button Command="{Binding OpenTimerCommand}"
+                        Style="{StaticResource MenuButton}"
+                        Margin="0,0,0,8"
+                        Padding="15,10"
+                        MinWidth="120">
+                    <StackPanel Orientation="Horizontal">
+                        <svgc:SvgViewbox Width="18" Height="18"
+                                         Source="pack://application:,,,/Resources/Icons/timer.svg"
+                                         Stretch="Uniform"
+                                         Margin="0,0,8,0"/>
+                        <TextBlock Text="{DynamicResource TimerBtn}"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Command="{Binding OpenVotingCommand}"
+                        Style="{StaticResource MenuButton}"
+                        Margin="0,0,0,8"
+                        Padding="15,10"
+                        MinWidth="120">
+                    <StackPanel Orientation="Horizontal">
+                        <svgc:SvgViewbox Width="18" Height="18"
+                                         Source="pack://application:,,,/Resources/Icons/voting.svg"
+                                         Stretch="Uniform"
+                                         Margin="0,0,8,0"/>
+                        <TextBlock Text="{DynamicResource VotingBtn}"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Click="BackButton_Click"
+                        Style="{StaticResource MenuButton}"
+                        Padding="15,10"
+                        MinWidth="120">
+                    <StackPanel Orientation="Horizontal">
+                        <svgc:SvgViewbox Width="18" Height="18"
+                                         Source="pack://application:,,,/Resources/Icons/back.svg"
+                                         Stretch="Uniform"
+                                         Margin="0,0,8,0"/>
+                        <TextBlock Text="{DynamicResource BackBtn}"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>

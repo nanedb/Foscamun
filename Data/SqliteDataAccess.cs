@@ -34,6 +34,31 @@ namespace Foscamun2026.Data
             CommitteeRepository = new CommitteeRepository(_connectionString);
             CountryRepository = new CountryRepository(_connectionString);
             ICJRepository = new ICJRepository(_connectionString);
+
+            // Ensure ICJMemberWarnings table exists
+            EnsureICJMemberWarningsTableExists();
+        }
+
+        /// <summary>
+        /// Creates ICJMemberWarnings table if it doesn't exist.
+        /// Stores warnings for ICJ members (Advocates and Jurors) identified by Name and Kind.
+        /// </summary>
+        private void EnsureICJMemberWarningsTableExists()
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            string sql = @"
+                CREATE TABLE IF NOT EXISTS ICJMemberWarnings (
+                    Name TEXT NOT NULL,
+                    Kind TEXT NOT NULL,
+                    Warnings INTEGER DEFAULT 0,
+                    PRIMARY KEY (Name, Kind)
+                );
+            ";
+
+            using var cmd = new SqliteCommand(sql, connection);
+            cmd.ExecuteNonQuery();
         }
 
         // ============================================================
@@ -563,6 +588,66 @@ namespace Foscamun2026.Data
                 cmd.Parameters.AddWithValue("@IsoCode", c.IsoCode);
                 await cmd.ExecuteNonQueryAsync();
             }
+        }
+
+        // ============================================================
+        //  ICJ — MEMBER WARNINGS
+        // ============================================================
+
+        /// <summary>
+        /// Updates the warnings count for a specific ICJ member.
+        /// </summary>
+        public async Task UpdateICJMemberWarningsAsync(string name, string kind, int warnings)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            await connection.OpenAsync();
+
+            string sql = @"
+                INSERT INTO ICJMemberWarnings (Name, Kind, Warnings)
+                VALUES (@Name, @Kind, @Warnings)
+                ON CONFLICT(Name, Kind)
+                DO UPDATE SET Warnings = @Warnings;
+            ";
+
+            using var cmd = new SqliteCommand(sql, connection);
+            cmd.Parameters.AddWithValue("@Name", name);
+            cmd.Parameters.AddWithValue("@Kind", kind);
+            cmd.Parameters.AddWithValue("@Warnings", warnings);
+
+            await cmd.ExecuteNonQueryAsync();
+        }
+
+        /// <summary>
+        /// Loads all ICJ members with warnings > 0.
+        /// </summary>
+        public async Task<List<ICJMember>> LoadICJMembersWithWarningsAsync()
+        {
+            var list = new List<ICJMember>();
+
+            using var connection = new SqliteConnection(_connectionString);
+            await connection.OpenAsync();
+
+            string sql = @"
+                SELECT Name, Kind, Warnings
+                FROM ICJMemberWarnings
+                WHERE Warnings > 0;
+            ";
+
+            using var cmd = new SqliteCommand(sql, connection);
+            using var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                list.Add(new ICJMember
+                {
+                    Name = reader.GetString(0),
+                    Kind = reader.GetString(1),
+                    Warnings = reader.GetInt32(2),
+                    IsoCode = null // Will be populated by matching with actual members
+                });
+            }
+
+            return list;
         }
     }
 }
