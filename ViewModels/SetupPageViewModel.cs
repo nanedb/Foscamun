@@ -93,7 +93,7 @@ namespace Foscamun2026.ViewModels
         [RelayCommand]
         private void AddCommittee()
         {
-            var page = new EditCommitteePage(_db);
+            var page = new CommitteeEditPage(_db);
             MainWindow.Instance.NavigateRightFrame(page);
         }
 
@@ -114,7 +114,7 @@ namespace Foscamun2026.ViewModels
             var vm = new EditICJViewModel(icj, countries, _db.ICJRepository, MainWindow.Instance);
 
             // Crea la pagina e assegna il DataContext
-            var page = new EditICJPage
+            var page = new ICJEditPage
             {
                 DataContext = vm
             };
@@ -135,8 +135,8 @@ namespace Foscamun2026.ViewModels
                 return;
             }
 
-            // Apre EditCommitteePage popolata con i dati del comitato selezionato
-            var page = new EditCommitteePage(_db, SelectedCommittee);
+            // Apre CommitteeEditPage popolata con i dati del comitato selezionato
+            var page = new CommitteeEditPage(_db, SelectedCommittee);
             MainWindow.Instance.NavigateRightFrame(page);
         }
 

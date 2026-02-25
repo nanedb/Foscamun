@@ -6,11 +6,11 @@ using System.Windows.Controls;
 
 namespace Foscamun2026.Views
 {
-    public partial class SessionPage : Page
+    public partial class CommitteeSessionPage : Page
     {
         private SessionViewModel _viewModel = null!;
 
-        public SessionPage(Committee committee, string topic, int session, List<Country> presentCountries, SqliteDataAccess dataAccess)
+        public CommitteeSessionPage(Committee committee, string topic, int session, List<Country> presentCountries, SqliteDataAccess dataAccess)
         {
             InitializeComponent();
 
@@ -20,9 +20,9 @@ namespace Foscamun2026.Views
 
         private void NavigateToVoting(List<Country> voters)
         {
-            CastVotePage.Round = 1;
-            var castVotePage = new CastVotePage(voters, this);
-            NavigationService?.Navigate(castVotePage);
+            CommitteeVotingPage.Round = 1;
+            var committeeVotingPage = new CommitteeVotingPage(voters, this);
+            NavigationService?.Navigate(committeeVotingPage);
         }
 
         private void AvailableSpeakers_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)

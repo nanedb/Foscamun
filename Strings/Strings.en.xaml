@@ -41,7 +41,7 @@
     <sys:String x:Key="CommitteeRollCallPlaceholder">This page will display the roll call for the selected committee.</sys:String>
     <sys:String x:Key="ICJRollCallTitle">ICJ Roll Call</sys:String>
     <sys:String x:Key="ICJRollCallPlaceholder">This page will display the roll call for the International Court of Justice.</sys:String>
-    <sys:String x:Key="TopicLbl">Topic:</sys:String>
+    <sys:String x:Key="TopicLbl">Case:</sys:String>
     <sys:String x:Key="SessionLbl">Session:</sys:String>
     <sys:String x:Key="PresidentLbl">President:</sys:String>
     <sys:String x:Key="VicePresidentLbl">Vice President:</sys:String>
@@ -52,6 +52,7 @@
     <sys:String x:Key="MarkPresentLbl">Click to mark as Present</sys:String>
     <sys:String x:Key="MarkAbsentLbl">Click to mark as Absent</sys:String>
     <sys:String x:Key="ProceedBtn">Proceed</sys:String>
+    <sys:String x:Key="MarkAllPresentBtn">Mark All Present</sys:String>
 
     <!-- Session Page -->
     <sys:String x:Key="AvailableSpeakersLbl">Available Speakers</sys:String>

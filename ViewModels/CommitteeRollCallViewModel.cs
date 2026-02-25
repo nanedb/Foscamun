@@ -47,6 +47,7 @@ namespace Foscamun2026.ViewModels
         public string CommitteeLogoPath => $"pack://application:,,,/Resources/Committee Logo/{CommitteeName}.svg";
 
         public IRelayCommand ProceedCommand { get; }
+        public IRelayCommand MarkAllPresentCommand { get; }
 
         public CommitteeRollCallViewModel(Committee committee, SqliteDataAccess db, Action<Committee, string, int, List<Country>> navigateToSession)
         {
@@ -77,6 +78,7 @@ namespace Foscamun2026.ViewModels
             App.LanguageChanged += OnLanguageChanged;
 
             ProceedCommand = new RelayCommand(Proceed, CanProceed);
+            MarkAllPresentCommand = new RelayCommand(MarkAllPresent, CanMarkAllPresent);
 
             _ = LoadCountriesAsync();
         }
@@ -108,6 +110,7 @@ namespace Foscamun2026.ViewModels
             AvailableCountries.Remove(country);
             PresentCountries.Add(country);
             ProceedCommand.NotifyCanExecuteChanged();
+            MarkAllPresentCommand.NotifyCanExecuteChanged();
         }
 
         public void PresentCountriesClicked(Country country)
@@ -115,6 +118,24 @@ namespace Foscamun2026.ViewModels
             PresentCountries.Remove(country);
             AvailableCountries.Add(country);
             ProceedCommand.NotifyCanExecuteChanged();
+            MarkAllPresentCommand.NotifyCanExecuteChanged();
+        }
+
+        private bool CanMarkAllPresent()
+        {
+            return AvailableCountries.Count > 0;
+        }
+
+        private void MarkAllPresent()
+        {
+            var countriesToMove = AvailableCountries.ToList();
+            foreach (var country in countriesToMove)
+            {
+                AvailableCountries.Remove(country);
+                PresentCountries.Add(country);
+            }
+            ProceedCommand.NotifyCanExecuteChanged();
+            MarkAllPresentCommand.NotifyCanExecuteChanged();
         }
 
         private bool CanProceed()

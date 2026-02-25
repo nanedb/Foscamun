@@ -4,14 +4,15 @@ using System.Windows.Controls;
 
 namespace Foscamun2026.Views
 {
-    public partial class FinalResultPage : Page
+    public partial class ICJResultPage : Page
     {
-        private readonly List<Country> _voters;
+        private readonly List<ICJRollCallMember> _voters;
         private readonly List<int> _inFavorIndices;
         private readonly List<int> _againstIndices;
-        private readonly CommitteeSessionPage? _sessionPage;
+        private readonly ICJSessionPage? _sessionPage;
+        private readonly bool _tieInRound3;
 
-        public FinalResultPage(List<Country> voters, List<int> inFavorIndices, List<int> againstIndices, CommitteeSessionPage? sessionPage = null)
+        public ICJResultPage(List<ICJRollCallMember> voters, List<int> inFavorIndices, List<int> againstIndices, ICJSessionPage? sessionPage = null, bool tieInRound3 = false)
         {
             InitializeComponent();
 
@@ -19,6 +20,7 @@ namespace Foscamun2026.Views
             _inFavorIndices = inFavorIndices;
             _againstIndices = againstIndices;
             _sessionPage = sessionPage;
+            _tieInRound3 = tieInRound3;
 
             DisplayResults();
         }
@@ -30,17 +32,27 @@ namespace Foscamun2026.Views
 
             foreach (var index in _inFavorIndices)
             {
-                InFavorList.Items.Add(_voters[index]);
+                InFavorList.Items.Add(_voters[index].DisplayName);
             }
 
             foreach (var index in _againstIndices)
             {
-                AgainstList.Items.Add(_voters[index]);
+                AgainstList.Items.Add(_voters[index].DisplayName);
             }
 
             string outcome;
-            // Simple majority: in case of tie, against wins
-            if (_inFavorIndices.Count > _againstIndices.Count)
+            
+            // Se c'è parità nel terzo round, vincono gli Against
+            if (_tieInRound3)
+            {
+                outcome = Properties.Settings.Default.Lang switch
+                {
+                    "fr" => "La motion est REJETÉE (Égalité au 3ème tour)",
+                    "es" => "La moción es RECHAZADA (Empate en la 3ª ronda)",
+                    _ => "The motion FAILS (Tie in Round 3)"
+                };
+            }
+            else if (_inFavorIndices.Count > _againstIndices.Count)
             {
                 outcome = Properties.Settings.Default.Lang switch
                 {
@@ -51,7 +63,6 @@ namespace Foscamun2026.Views
             }
             else
             {
-                // Against wins if count is greater OR equal (tie)
                 outcome = Properties.Settings.Default.Lang switch
                 {
                     "fr" => "La motion est REJETÉE",
@@ -71,14 +82,13 @@ namespace Foscamun2026.Views
             }
             else if (NavigationService != null && NavigationService.CanGoBack)
             {
-                // Fallback: torna indietro come prima
                 bool sessionPageFound = false;
 
                 while (NavigationService.CanGoBack && !sessionPageFound)
                 {
                     NavigationService.GoBack();
 
-                    if (NavigationService.Content is CommitteeSessionPage)
+                    if (NavigationService.Content is ICJSessionPage)
                     {
                         sessionPageFound = true;
                     }

@@ -1,4 +1,4 @@
-﻿using Foscamun2026.Data;
+using Foscamun2026.Data;
 using Foscamun2026.Models;
 using Foscamun2026.ViewModels;
 using System.Windows;
@@ -7,17 +7,17 @@ using System.Windows.Input;
 
 namespace Foscamun2026.Views
 {
-    public partial class EditCommitteePage : Page
+    public partial class CommitteeEditPage : Page
     {
         private AddCommitteeViewModel VM => (AddCommitteeViewModel)DataContext;
 
-        public EditCommitteePage(SqliteDataAccess db)
+        public CommitteeEditPage(SqliteDataAccess db)
         {
             InitializeComponent();
             DataContext = new AddCommitteeViewModel(db);
         }
 
-        public EditCommitteePage(SqliteDataAccess db, Committee committee)
+        public CommitteeEditPage(SqliteDataAccess db, Committee committee)
         {
             InitializeComponent();
             DataContext = new AddCommitteeViewModel(db, committee);

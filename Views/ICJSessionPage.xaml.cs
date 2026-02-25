@@ -14,8 +14,15 @@ namespace Foscamun2026.Views
         {
             InitializeComponent();
 
-            _viewModel = new ICJSessionViewModel(judge, viceJudge1, viceJudge2, topic, session, presentMembers, dataAccess);
+            _viewModel = new ICJSessionViewModel(judge, viceJudge1, viceJudge2, topic, session, presentMembers, NavigateToVoting, dataAccess);
             DataContext = _viewModel;
+        }
+
+        private void NavigateToVoting(List<ICJRollCallMember> voters)
+        {
+            ICJVotingPage.Round = 1;
+            var votingPage = new ICJVotingPage(voters, this);
+            NavigationService?.Navigate(votingPage);
         }
 
         private void AvailableSpeakers_Click(object sender, MouseButtonEventArgs e)

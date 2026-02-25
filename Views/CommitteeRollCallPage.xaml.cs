@@ -37,7 +37,7 @@ namespace Foscamun2026.Views
 
         private void NavigateToSession(Committee committee, string topic, int session, List<Country> presentCountries)
         {
-            var sessionPage = new SessionPage(committee, topic, session, presentCountries, _db);
+            var sessionPage = new CommitteeSessionPage(committee, topic, session, presentCountries, _db);
             NavigationService?.Navigate(sessionPage);
         }
     }

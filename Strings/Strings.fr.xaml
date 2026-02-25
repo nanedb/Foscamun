@@ -5,12 +5,12 @@
     <!-- Titres -->
     <sys:String x:Key="WelcomeMessage">Bienvenue à Foscamun </sys:String>
     <sys:String x:Key="ConfigurationTitle">Configuration</sys:String>
-    <sys:String x:Key="SelCommittee">Comité sélectionné:</sys:String>
+    <sys:String x:Key="SelCommittee">Commission sélectionnée:</sys:String>
     <sys:String x:Key="YearLbl">Sélectionner l'année:</sys:String>
     <sys:String x:Key="LanguageLbl">Choisir la langue:</sys:String>
-    <sys:String x:Key="CommitteeLbl">Choisir le comité:</sys:String>
-    <sys:String x:Key="AddCommittee">Ajouter un comité</sys:String>
-    <sys:String x:Key="EditCommittee">Modifier le comité</sys:String>
+    <sys:String x:Key="CommitteeLbl">Choisir la commission:</sys:String>
+    <sys:String x:Key="AddCommittee">Ajouter une commission</sys:String>
+    <sys:String x:Key="EditCommittee">Modifier la commission</sys:String>
 
     <!-- Boutons -->
     <sys:String x:Key="HomeBtn">Home</sys:String>
@@ -33,15 +33,15 @@
 
 
     <!--Strings-->
-    <sys:String x:Key="HintStr1">Le comité sélectionné est</sys:String>
-    <sys:String x:Key="HintStr2">Pour le modifier, éditez‑le; pour ajouter ou supprimer un comité, cliquez sur</sys:String>
+    <sys:String x:Key="HintStr1">La commission sélectionnée est</sys:String>
+    <sys:String x:Key="HintStr2">Pour la modifier, éditez‑la; pour ajouter ou supprimer une commission, cliquez sur</sys:String>
 
     <!-- Pages Appel -->
     <sys:String x:Key="CommitteeRollCallTitle">Appel</sys:String>
-    <sys:String x:Key="CommitteeRollCallPlaceholder">Cette page affichera l'appel pour le comité sélectionné.</sys:String>
+    <sys:String x:Key="CommitteeRollCallPlaceholder">Cette page affichera l'appel pour la commission sélectionnée.</sys:String>
     <sys:String x:Key="ICJRollCallTitle">Appel de la CIJ</sys:String>
     <sys:String x:Key="ICJRollCallPlaceholder">Cette page affichera l'appel pour la Cour internationale de justice.</sys:String>
-    <sys:String x:Key="TopicLbl">Thème:</sys:String>
+    <sys:String x:Key="TopicLbl">Affaire:</sys:String>
     <sys:String x:Key="SessionLbl">Session:</sys:String>
     <sys:String x:Key="PresidentLbl">Président:</sys:String>
     <sys:String x:Key="VicePresidentLbl">Vice-président:</sys:String>
@@ -52,6 +52,7 @@
     <sys:String x:Key="MarkPresentLbl">Cliquez pour marquer comme présent</sys:String>
     <sys:String x:Key="MarkAbsentLbl">Cliquez pour marquer comme absent</sys:String>
     <sys:String x:Key="ProceedBtn">Continuer</sys:String>
+    <sys:String x:Key="MarkAllPresentBtn">Marquer tous présents</sys:String>
 
     <!-- Page Session -->
     <sys:String x:Key="AvailableSpeakersLbl">Orateurs disponibles</sys:String>

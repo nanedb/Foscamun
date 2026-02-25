@@ -368,6 +368,7 @@
             <Grid Grid.Row="1" Margin="0,0,0,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
@@ -385,7 +386,7 @@
                            TextWrapping="Wrap"
                            Margin="0,7,5,2"/>
 
-                <TextBlock Grid.Column="1" Grid.Row="0"
+                <TextBlock Grid.Column="2" Grid.Row="0"
                            Text="{DynamicResource MarkAbsentLbl}"
                            Style="{StaticResource Caption}"
                            HorizontalAlignment="Center"
@@ -393,7 +394,7 @@
                            Margin="5,7,0,2"/>
 
                 <!-- Session in alto a destra -->
-                <StackPanel Grid.Column="3" Grid.Row="0"
+                <StackPanel Grid.Column="4" Grid.Row="0"
                             Orientation="Horizontal"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Top"
@@ -428,11 +429,25 @@
                           Background="{StaticResource InputBackgroundBrush}"
                           BorderBrush="{StaticResource SurfaceBorderBrush}"
                           BorderThickness="1"
-                          Margin="0,0,10,0"
+                          Margin="0,0,5,0"
                           Padding="4"/>
 
+                <!-- Pulsante Mark All Present -->
+                <Button Grid.Column="1" Grid.Row="1"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Style="{StaticResource MenuButton}"
+                        Command="{Binding MarkAllPresentCommand}"
+                        Padding="8"
+                        Margin="5,0,5,0"
+                        ToolTip="{DynamicResource MarkAllPresentBtn}">
+                    <svgc:SvgViewbox Width="24" Height="24"
+                                     Source="pack://application:,,,/Resources/Icons/next.svg"
+                                     Stretch="Uniform"/>
+                </Button>
+
                 <!-- Lista paesi presenti (Present) -->
-                <ListView Grid.Column="1" Grid.Row="1"
+                <ListView Grid.Column="2" Grid.Row="1"
                           ItemsSource="{Binding PresentCountries}"
                           ItemTemplate="{StaticResource CountryTemplateList}"
                           SelectedItem="{Binding SelectedCountry, Mode=OneWayToSource}"
@@ -440,11 +455,11 @@
                           Background="{StaticResource InputBackgroundBrush}"
                           BorderBrush="{StaticResource SurfaceBorderBrush}"
                           BorderThickness="1"
-                          Margin="10,0,0,0"
+                          Margin="5,0,0,0"
                           Padding="4"/>
 
                 <!-- Colonna pulsante Proceed -->
-                <Grid Grid.Column="3" Grid.Row="1"
+                <Grid Grid.Column="4" Grid.Row="1"
                       Margin="20,0,0,0"
                       VerticalAlignment="Bottom">
                     <Button Style="{StaticResource IconRightButton}"

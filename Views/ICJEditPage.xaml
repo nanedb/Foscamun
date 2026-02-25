@@ -1,4 +1,4 @@
-﻿<Page x:Class="Foscamun2026.Views.EditICJPage"
+<Page x:Class="Foscamun2026.Views.ICJEditPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -62,7 +62,7 @@
                              Margin="5 0 0 5"/>
                     <TextBox Grid.Row="4" Text="{Binding ViceJudge2, UpdateSourceTrigger=PropertyChanged}"
                              Margin="5 0 0 20"/>
-                    <TextBlock Grid.Row="5" Text="Topic" Style="{StaticResource Caption}"
+                    <TextBlock Grid.Row="5" Text="{DynamicResource TopicLbl}" Style="{StaticResource Caption}"
                                Margin="0 0 0 10"/>
                     <TextBox Grid.Row="6" Text="{Binding Topic, UpdateSourceTrigger=PropertyChanged}"
                              Margin="5 0 0 0" TextWrapping="Wrap"/>
@@ -136,7 +136,7 @@
                                   SelectedItem="{Binding SelectedJuror}">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding}" Foreground="Black"/>
+                                    <TextBlock Text="{Binding}" Foreground="Black" FontSize="14"/>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>

@@ -349,6 +349,7 @@
 			<Grid Grid.Row="1" Margin="0,0,0,10">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="3*"/>
+					<ColumnDefinition Width="Auto"/>
 					<ColumnDefinition Width="3*"/>
 					<ColumnDefinition Width="Auto"/>
 				</Grid.ColumnDefinitions>
@@ -365,7 +366,7 @@
 						   TextWrapping="Wrap"
 						   Margin="0,8,0,2"/>
 
-				<TextBlock Grid.Column="1" Grid.Row="0"
+				<TextBlock Grid.Column="2" Grid.Row="0"
 						   Text="{DynamicResource MarkAbsentLbl}"
 						   Style="{StaticResource Caption}"
 						   HorizontalAlignment="Center"
@@ -373,7 +374,7 @@
 						   Margin="5,8,0,2"/>
 
 				<!-- Session in alto a destra -->
-				<StackPanel Grid.Column="2" Grid.Row="0"
+				<StackPanel Grid.Column="3" Grid.Row="0"
 							Orientation="Horizontal"
 							HorizontalAlignment="Right"
 							VerticalAlignment="Top"
@@ -408,12 +409,26 @@
 						  Background="{StaticResource InputBackgroundBrush}"
 						  BorderBrush="{StaticResource SurfaceBorderBrush}"
 						  BorderThickness="1"
-						  Margin="0,0,5,0"
+						  Margin="0,0,3,0"
 						  Padding="8"
 						  ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
 
+				<!-- Pulsante Mark All Present -->
+				<Button Grid.Column="1" Grid.Row="1"
+						VerticalAlignment="Center"
+						HorizontalAlignment="Center"
+						Style="{StaticResource MenuButton}"
+						Command="{Binding MarkAllPresentCommand}"
+						Padding="8"
+						Margin="3,0,3,0"
+						ToolTip="{DynamicResource MarkAllPresentBtn}">
+					<svgc:SvgViewbox Width="24" Height="24"
+									 Source="pack://application:,,,/Resources/Icons/next.svg"
+									 Stretch="Uniform"/>
+				</Button>
+
 				<!-- Lista membri presenti (Present) -->
-				<ListView Grid.Column="1" Grid.Row="1"
+				<ListView Grid.Column="2" Grid.Row="1"
 						  ItemsSource="{Binding PresentMembers}"
 						  ItemTemplate="{StaticResource MemberTemplateList}"
 						  SelectedItem="{Binding SelectedMember, Mode=OneWayToSource}"
@@ -421,12 +436,12 @@
 						  Background="{StaticResource InputBackgroundBrush}"
 						  BorderBrush="{StaticResource SurfaceBorderBrush}"
 						  BorderThickness="1"
-						  Margin="5,0,0,0"
+						  Margin="3,0,0,0"
 						  Padding="8"
 						  ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
 
 				<!-- Colonna pulsante Proceed -->
-				<Grid Grid.Column="2" Grid.Row="1"
+				<Grid Grid.Column="3" Grid.Row="1"
 					  Margin="15,0,0,0"
 					  VerticalAlignment="Bottom">
 					<Button Style="{StaticResource IconRightButton}"

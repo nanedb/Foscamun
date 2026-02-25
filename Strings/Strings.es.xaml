@@ -41,7 +41,7 @@
     <sys:String x:Key="CommitteeRollCallPlaceholder">Esta página mostrará la lista del comité seleccionado.</sys:String>
     <sys:String x:Key="ICJRollCallTitle">Lista de la CIJ</sys:String>
     <sys:String x:Key="ICJRollCallPlaceholder">Esta página mostrará la lista de la Corte Internacional de Justicia.</sys:String>
-    <sys:String x:Key="TopicLbl">Tema:</sys:String>
+    <sys:String x:Key="TopicLbl">Caso:</sys:String>
     <sys:String x:Key="SessionLbl">Sesión:</sys:String>
     <sys:String x:Key="PresidentLbl">Presidente:</sys:String>
     <sys:String x:Key="VicePresidentLbl">Vicepresidente:</sys:String>
@@ -52,6 +52,7 @@
     <sys:String x:Key="MarkPresentLbl">Haz clic para marcar como presente</sys:String>
     <sys:String x:Key="MarkAbsentLbl">Haz clic para marcar como ausente</sys:String>
     <sys:String x:Key="ProceedBtn">Continuar</sys:String>
+    <sys:String x:Key="MarkAllPresentBtn">Marcar todos presentes</sys:String>
 
     <!-- Página de Sesión -->
     <sys:String x:Key="AvailableSpeakersLbl">Oradores disponibles</sys:String>

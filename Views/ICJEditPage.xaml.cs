@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -14,11 +14,11 @@ using System.Windows.Shapes;
 namespace Foscamun2026.Views
 {
     /// <summary>
-    /// Logica di interazione per EditICJPage.xaml
+    /// Logica di interazione per ICJEditPage.xaml
     /// </summary>
-    public partial class EditICJPage : Page
+    public partial class ICJEditPage : Page
     {
-        public EditICJPage()
+        public ICJEditPage()
         {
             InitializeComponent();
         }

@@ -13,6 +13,7 @@ namespace Foscamun2026.ViewModels
     {
         private readonly SqliteDataAccess _dataAccess;
         private readonly List<ICJRollCallMember> _presentMembers; // Lista immutabile dei presenti
+        private readonly Action<List<ICJRollCallMember>> _navigateToVoting;
 
         [ObservableProperty]
         private string judge = string.Empty;
@@ -55,10 +56,11 @@ namespace Foscamun2026.ViewModels
         public IRelayCommand OpenTimerCommand { get; }
         public IRelayCommand OpenVotingCommand { get; }
 
-        public ICJSessionViewModel(string judge, string viceJudge1, string viceJudge2, string topic, int session, List<ICJRollCallMember> presentMembers, SqliteDataAccess dataAccess)
+        public ICJSessionViewModel(string judge, string viceJudge1, string viceJudge2, string topic, int session, List<ICJRollCallMember> presentMembers, Action<List<ICJRollCallMember>> navigateToVoting, SqliteDataAccess dataAccess)
         {
             _dataAccess = dataAccess;
             _presentMembers = presentMembers;
+            _navigateToVoting = navigateToVoting;
 
             this.judge = judge;
             this.viceJudge1 = viceJudge1;
@@ -167,10 +169,14 @@ namespace Foscamun2026.ViewModels
                 WarnedList.Add(CurrentSpeaker);
 
                 // Salva nel database
-                await _dataAccess.UpdateICJMemberWarningsAsync(
-                    CurrentSpeaker.Member.Name, 
-                    CurrentSpeaker.Member.Kind, 
-                    CurrentSpeaker.Warnings);
+                if (!string.IsNullOrEmpty(CurrentSpeaker.Member.Name) && 
+                    !string.IsNullOrEmpty(CurrentSpeaker.Member.Kind))
+                {
+                    await _dataAccess.UpdateICJMemberWarningsAsync(
+                        CurrentSpeaker.Member.Name, 
+                        CurrentSpeaker.Member.Kind, 
+                        CurrentSpeaker.Warnings);
+                }
 
                 // Refresh della visualizzazione
                 CollectionViewSource.GetDefaultView(WarnedList).Refresh();
@@ -186,10 +192,14 @@ namespace Foscamun2026.ViewModels
                     member.Warnings--;
 
                     // Salva nel database
-                    await _dataAccess.UpdateICJMemberWarningsAsync(
-                        member.Member.Name, 
-                        member.Member.Kind, 
-                        member.Warnings);
+                    if (!string.IsNullOrEmpty(member.Member.Name) && 
+                        !string.IsNullOrEmpty(member.Member.Kind))
+                    {
+                        await _dataAccess.UpdateICJMemberWarningsAsync(
+                            member.Member.Name, 
+                            member.Member.Kind, 
+                            member.Warnings);
+                    }
                 }
 
                 if (member.Warnings == 0)
@@ -212,31 +222,33 @@ namespace Foscamun2026.ViewModels
 
         private void OpenVoting()
         {
-            // TODO: Implement ICJ voting logic (different from committee voting)
-            var voters = _presentMembers;
-            
+            // Solo i Jurors possono votare nell'ICJ
+            var voters = _presentMembers
+                .Where(m => m.Member.Kind != null && m.Member.Kind.Equals("juror", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
             if (voters.Count == 0)
             {
                 MessageBox.Show(
                     Properties.Settings.Default.Lang switch
                     {
-                        "fr" => "Aucun membre disponible pour voter.",
-                        "es" => "No hay miembros disponibles para votar.",
-                        _ => "No members available to vote."
+                        "fr" => "Aucun juré disponible pour voter.",
+                        "es" => "No hay jurados disponibles para votar.",
+                        _ => "No jurors available to vote."
                     },
                     Properties.Settings.Default.Lang switch
                     {
-                        "fr" => "Aucun votant",
-                        "es" => "Sin votantes",
-                        _ => "No Voters"
+                        "fr" => "Aucun juré",
+                        "es" => "Sin jurados",
+                        _ => "No Jurors"
                     },
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);
                 return;
             }
 
-            // TODO: Navigate to ICJ-specific voting page
-            System.Diagnostics.Debug.WriteLine($"Opening voting for {voters.Count} ICJ members");
+            // Navigate to ICJ-specific voting page
+            _navigateToVoting(voters);
         }
     }
 }

@@ -41,6 +41,7 @@ namespace Foscamun2026.ViewModels
         public string CommitteeLogoPath => "pack://application:,,,/Resources/Committee Logo/ICJ.svg";
 
         public IRelayCommand ProceedCommand { get; }
+        public IRelayCommand MarkAllPresentCommand { get; }
 
         public ICJRollCallViewModel(SqliteDataAccess db, Action<string, string, string, string, int, List<ICJRollCallMember>> navigateToSession)
         {
@@ -62,6 +63,7 @@ namespace Foscamun2026.ViewModels
                 new SortDescription(nameof(ICJRollCallMember.DisplayName), ListSortDirection.Ascending));
 
             ProceedCommand = new RelayCommand(Proceed, CanProceed);
+            MarkAllPresentCommand = new RelayCommand(MarkAllPresent, CanMarkAllPresent);
 
             _ = LoadICJDataAsync();
         }
@@ -100,6 +102,7 @@ namespace Foscamun2026.ViewModels
             AvailableMembers.Remove(member);
             PresentMembers.Add(member);
             ProceedCommand.NotifyCanExecuteChanged();
+            MarkAllPresentCommand.NotifyCanExecuteChanged();
         }
 
         public void PresentMembersClicked(ICJRollCallMember member)
@@ -107,6 +110,24 @@ namespace Foscamun2026.ViewModels
             PresentMembers.Remove(member);
             AvailableMembers.Add(member);
             ProceedCommand.NotifyCanExecuteChanged();
+            MarkAllPresentCommand.NotifyCanExecuteChanged();
+        }
+
+        private bool CanMarkAllPresent()
+        {
+            return AvailableMembers.Count > 0;
+        }
+
+        private void MarkAllPresent()
+        {
+            var membersToMove = AvailableMembers.ToList();
+            foreach (var member in membersToMove)
+            {
+                AvailableMembers.Remove(member);
+                PresentMembers.Add(member);
+            }
+            ProceedCommand.NotifyCanExecuteChanged();
+            MarkAllPresentCommand.NotifyCanExecuteChanged();
         }
 
         private bool CanProceed()

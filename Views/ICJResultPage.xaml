@@ -1,0 +1,128 @@
+<Page x:Class="Foscamun2026.Views.ICJResultPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      Background="{DynamicResource PrimaryBrush}"
+      Foreground="{DynamicResource TextPrimaryBrush}"
+      mc:Ignorable="d"
+      d:DesignWidth="900"
+      d:DesignHeight="600"
+      Title="Final Results">
+
+    <Page.Resources>
+        <DataTemplate x:Key="JurorResultTemplate">
+            <TextBlock Text="{Binding}"
+                       Margin="5"
+                       FontSize="14"
+                       Foreground="{StaticResource TextInputBrush}"/>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,10,0,15">
+            <TextBlock Text="{DynamicResource FinalResultsLbl}" 
+                       Style="{StaticResource H2}"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,10"/>
+            <TextBlock x:Name="OutcomeTextBlock"
+                       Style="{StaticResource H3}"
+                       HorizontalAlignment="Center"
+                       TextWrapping="Wrap"
+                       Margin="0,0,0,5"/>
+        </StackPanel>
+
+        <!-- Results Grid -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- In Favor -->
+            <Grid Grid.Column="0" Margin="0,0,10,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0"
+                        Background="{StaticResource SurfaceBrush}"
+                        BorderBrush="{StaticResource SurfaceBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="{StaticResource CornerRadiusMedium}"
+                        Padding="10"
+                        Margin="0,0,0,5">
+                    <TextBlock x:Name="InFavorCount"
+                               Style="{StaticResource H2}"
+                               HorizontalAlignment="Center"/>
+                </Border>
+                <TextBlock Grid.Row="1"
+                           Text="{DynamicResource InFavorLbl}"
+                           Style="{StaticResource Body}"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,5"/>
+                <ListView Grid.Row="2"
+                          x:Name="InFavorList"
+                          Background="{StaticResource InputBackgroundBrush}"
+                          BorderBrush="{StaticResource SurfaceBorderBrush}"
+                          BorderThickness="1"
+                          Padding="4"
+                          ItemTemplate="{StaticResource JurorResultTemplate}"/>
+            </Grid>
+
+            <!-- Against -->
+            <Grid Grid.Column="1" Margin="10,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0"
+                        Background="{StaticResource SurfaceBrush}"
+                        BorderBrush="{StaticResource SurfaceBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="{StaticResource CornerRadiusMedium}"
+                        Padding="10"
+                        Margin="0,0,0,5">
+                    <TextBlock x:Name="AgainstCount"
+                               Style="{StaticResource H2}"
+                               HorizontalAlignment="Center"/>
+                </Border>
+                <TextBlock Grid.Row="1"
+                           Text="{DynamicResource AgainstLbl}"
+                           Style="{StaticResource Body}"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,5"/>
+                <ListView Grid.Row="2"
+                          x:Name="AgainstList"
+                          Background="{StaticResource InputBackgroundBrush}"
+                          BorderBrush="{StaticResource SurfaceBorderBrush}"
+                          BorderThickness="1"
+                          Padding="4"
+                          ItemTemplate="{StaticResource JurorResultTemplate}"/>
+            </Grid>
+        </Grid>
+
+        <!-- Back Button -->
+        <Button Grid.Row="2"
+                x:Name="BackBtn"
+                Click="BackBtn_Click"
+                Style="{StaticResource MenuButton}"
+                HorizontalAlignment="Center"
+                Margin="0,15,0,0"
+                Padding="40,15">
+            <TextBlock Text="{DynamicResource BackBtn}"
+                       FontSize="18"/>
+        </Button>
+    </Grid>
+</Page>

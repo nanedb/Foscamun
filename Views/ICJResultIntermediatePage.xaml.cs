@@ -4,15 +4,15 @@ using System.Windows.Controls;
 
 namespace Foscamun2026.Views
 {
-    public partial class ResultPage : Page
+    public partial class ICJResultIntermediatePage : Page
     {
-        private readonly List<Country> _voters;
+        private readonly List<ICJRollCallMember> _voters;
         private readonly List<int> _inFavorIndices;
         private readonly List<int> _abstainedIndices;
         private readonly List<int> _againstIndices;
-        private readonly CommitteeSessionPage? _sessionPage;
+        private readonly ICJSessionPage? _sessionPage;
 
-        public ResultPage(List<Country> voters, List<int> inFavorIndices, List<int> abstainedIndices, List<int> againstIndices, CommitteeSessionPage? sessionPage = null)
+        public ICJResultIntermediatePage(List<ICJRollCallMember> voters, List<int> inFavorIndices, List<int> abstainedIndices, List<int> againstIndices, ICJSessionPage? sessionPage = null)
         {
             InitializeComponent();
 
@@ -30,39 +30,47 @@ namespace Foscamun2026.Views
         {
             RoundTextBlock.Text = Properties.Settings.Default.Lang switch
             {
-                "fr" => $"Tour: {CommitteeVotingPage.Round}",
-                "es" => $"Ronda: {CommitteeVotingPage.Round}",
-                _ => $"Round: {CommitteeVotingPage.Round}"
+                "fr" => $"Tour: {ICJVotingPage.Round}",
+                "es" => $"Ronda: {ICJVotingPage.Round}",
+                _ => $"Round: {ICJVotingPage.Round}"
             };
         }
 
         private void DisplayResults()
         {
             InFavorCount.Text = _inFavorIndices.Count.ToString();
-            AbstainedCount.Text = _abstainedIndices.Count.ToString();
             AgainstCount.Text = _againstIndices.Count.ToString();
 
             foreach (var index in _inFavorIndices)
             {
-                InFavorList.Items.Add(_voters[index]);
-            }
-
-            foreach (var index in _abstainedIndices)
-            {
-                AbstainedList.Items.Add(_voters[index]);
+                InFavorList.Items.Add(_voters[index].Member.Name);
             }
 
             foreach (var index in _againstIndices)
             {
-                AgainstList.Items.Add(_voters[index]);
+                AgainstList.Items.Add(_voters[index].Member.Name);
+            }
+
+            // Se siamo nel Round 2 o 3, nascondi la colonna Abstained
+            if (ICJVotingPage.Round >= 2)
+            {
+                AbstainedGrid.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                AbstainedCount.Text = _abstainedIndices.Count.ToString();
+                foreach (var index in _abstainedIndices)
+                {
+                    AbstainedList.Items.Add(_voters[index].Member.Name);
+                }
             }
         }
 
         private void NewRoundBtn_Click(object sender, RoutedEventArgs e)
         {
-            CommitteeVotingPage.Round++;
-            var committeeVotingPage = new CommitteeVotingPage(_voters, _sessionPage);
-            NavigationService?.Navigate(committeeVotingPage);
+            ICJVotingPage.Round++;
+            var votingPage = new ICJVotingPage(_voters, _sessionPage);
+            NavigationService?.Navigate(votingPage);
         }
 
         private void BackBtn_Click(object sender, RoutedEventArgs e)
@@ -85,6 +93,9 @@ namespace Foscamun2026.Views
 
             if (result == MessageBoxResult.Yes)
             {
+                // Reset Round to 1 when going back
+                ICJVotingPage.Round = 1;
+                
                 if (_sessionPage != null && NavigationService != null)
                 {
                     NavigationService.Navigate(_sessionPage);
