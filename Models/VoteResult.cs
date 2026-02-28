@@ -1,5 +1,8 @@
-﻿namespace Foscamun2026.Models
+namespace Foscamun.Models
 {
+    /// <summary>
+    /// Represents the result of a committee vote.
+    /// </summary>
     public class VoteResult
     {
         public int Id { get; set; }

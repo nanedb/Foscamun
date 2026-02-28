@@ -1,4 +1,8 @@
-﻿public class ICJ
+/// <summary>
+/// Represents the International Court of Justice (ICJ) configuration.
+/// Includes judges, advocates (plaintiff/defense), jurors, and case topic.
+/// </summary>
+public class ICJ
 {
     public string Judge { get; set; } = "";
     public string ViceJudge1 { get; set; } = "";
@@ -16,9 +20,19 @@
     public Country? DCountry { get; set; }
 
     public List<string> Jurors { get; set; } = new();
-    
-    // Nuovi campi per warnings
+
+    /// <summary>
+    /// Warnings for each plaintiff advocate (3 advocates).
+    /// </summary>
     public List<int> PlaintiffWarnings { get; set; } = new() { 0, 0, 0 };
+
+    /// <summary>
+    /// Warnings for each defense advocate (3 advocates).
+    /// </summary>
     public List<int> DefenseWarnings { get; set; } = new() { 0, 0, 0 };
+
+    /// <summary>
+    /// Warnings for each juror.
+    /// </summary>
     public List<int> JurorsWarnings { get; set; } = new();
 }

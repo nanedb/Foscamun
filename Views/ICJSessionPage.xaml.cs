@@ -1,19 +1,21 @@
-using Foscamun2026.Data;
-using Foscamun2026.Models;
-using Foscamun2026.ViewModels;
+using Foscamun.Data;
+using Foscamun.Models;
+using Foscamun.ViewModels;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace Foscamun2026.Views
+namespace Foscamun.Views
 {
     public partial class ICJSessionPage : Page
     {
         private ICJSessionViewModel _viewModel = null!;
+        private readonly SqliteDataAccess _dataAccess;
 
         public ICJSessionPage(string judge, string viceJudge1, string viceJudge2, string topic, int session, List<ICJRollCallMember> presentMembers, SqliteDataAccess dataAccess)
         {
             InitializeComponent();
 
+            _dataAccess = dataAccess;
             _viewModel = new ICJSessionViewModel(judge, viceJudge1, viceJudge2, topic, session, presentMembers, NavigateToVoting, dataAccess);
             DataContext = _viewModel;
         }
@@ -35,9 +37,11 @@ namespace Foscamun2026.Views
 
         private void BackButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (NavigationService.CanGoBack)
+            if (NavigationService != null)
             {
-                NavigationService.GoBack();
+                // Torna alla ICJRollCallPage
+                var rollCallPage = new ICJRollCallPage(_dataAccess);
+                NavigationService.Navigate(rollCallPage);
             }
         }
     }

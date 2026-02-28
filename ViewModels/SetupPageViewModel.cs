@@ -1,8 +1,8 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Foscamun2026.Data;
-using Foscamun2026.Models;
-using Foscamun2026.Views;
+using Foscamun.Data;
+using Foscamun.Models;
+using Foscamun.Views;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -11,14 +11,14 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Foscamun2026.ViewModels
+namespace Foscamun.ViewModels
 {
     public partial class SetupPageViewModel : ObservableObject
     {
         private readonly SqliteDataAccess _db;
 
         // -------------------------
-        //  PROPRIETÀ
+        //  PROPRIET�
         // -------------------------
 
         [ObservableProperty]
@@ -111,7 +111,7 @@ namespace Foscamun2026.ViewModels
             var countries = _db.CountryRepository.GetAll();
 
             // Crea il ViewModel
-            var vm = new EditICJViewModel(icj, countries, _db.ICJRepository, MainWindow.Instance);
+            var vm = new ICJEditViewModel(icj, countries, _db.ICJRepository, MainWindow.Instance);
 
             // Crea la pagina e assegna il DataContext
             var page = new ICJEditPage

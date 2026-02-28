@@ -1,5 +1,8 @@
-﻿using Foscamun2026.Properties;
+using Foscamun.Properties;
 
+/// <summary>
+/// Represents a country with multilingual names and flag resources.
+/// </summary>
 public class Country
 {
     public string IsoCode { get; set; } = "";
@@ -7,8 +10,14 @@ public class Country
     public string FrenchName { get; set; } = "";
     public string SpanishName { get; set; } = "";
 
+    /// <summary>
+    /// Number of warnings issued to this country during a session.
+    /// </summary>
     public int Warnings { get; set; }
 
+    /// <summary>
+    /// Gets the country name in the current language.
+    /// </summary>
     public string Name
     {
         get
@@ -23,11 +32,14 @@ public class Country
         }
     }
 
-    //public string SmallFlagPath => $"/Resources/24/{IsoCode}.png";
-    //public string LargeFlagPath => $"/Resources/large/{IsoCode}.png";
+    /// <summary>
+    /// Gets the pack URI path to the country's SVG flag.
+    /// </summary>
     public string FlagPath => $"pack://application:,,,/Resources/flags/{IsoCode.ToLower()}.svg";
 
-    // Override Equals per confrontare per IsoCode
+    /// <summary>
+    /// Compares countries by IsoCode.
+    /// </summary>
     public override bool Equals(object? obj)
     {
         if (obj is Country other)
@@ -37,7 +49,6 @@ public class Country
         return false;
     }
 
-    // Override GetHashCode per coerenza con Equals
     public override int GetHashCode()
     {
         return IsoCode?.GetHashCode() ?? 0;

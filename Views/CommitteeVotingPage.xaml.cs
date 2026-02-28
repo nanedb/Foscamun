@@ -1,8 +1,8 @@
-using Foscamun2026.Models;
+using Foscamun.Models;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Foscamun2026.Views
+namespace Foscamun.Views
 {
     public partial class CommitteeVotingPage : Page
     {
@@ -96,14 +96,14 @@ namespace Foscamun2026.Views
                 // Round 1: Check for unanimity (all in favor OR all against)
                 if (inFavorCount == totalVoters || againstCount == totalVoters)
                 {
-                    // Unanimity: go directly to FinalResultPage
-                    var finalResultPage = new FinalResultPage(_voters, _inFavorIndices, _againstIndices, _sessionPage);
+                    // Unanimity: go directly to CommitteeFinalResultPage
+                    var finalResultPage = new CommitteeFinalResultPage(_voters, _inFavorIndices, _againstIndices, _sessionPage);
                     NavigationService?.Navigate(finalResultPage);
                 }
                 else
                 {
                     // No unanimity: show results and allow round 2
-                    var resultPage = new ResultPage(_voters, _inFavorIndices, _abstainedIndices, _againstIndices, _sessionPage);
+                    var resultPage = new CommitteeResultPage(_voters, _inFavorIndices, _abstainedIndices, _againstIndices, _sessionPage);
                     NavigationService?.Navigate(resultPage);
                 }
             }
@@ -115,21 +115,21 @@ namespace Foscamun2026.Views
 
                 if (inFavorCount >= twoThirds || againstCount >= twoThirds)
                 {
-                    // 2/3 majority achieved: go to FinalResultPage
-                    var finalResultPage = new FinalResultPage(_voters, _inFavorIndices, _againstIndices, _sessionPage);
+                    // 2/3 majority achieved: go to CommitteeFinalResultPage
+                    var finalResultPage = new CommitteeFinalResultPage(_voters, _inFavorIndices, _againstIndices, _sessionPage);
                     NavigationService?.Navigate(finalResultPage);
                 }
                 else
                 {
                     // No 2/3 majority: show results and allow round 3
-                    var resultPage = new ResultPage(_voters, _inFavorIndices, _abstainedIndices, _againstIndices, _sessionPage);
+                    var resultPage = new CommitteeResultPage(_voters, _inFavorIndices, _abstainedIndices, _againstIndices, _sessionPage);
                     NavigationService?.Navigate(resultPage);
                 }
             }
             else // Round == 3
             {
-                // Round 3: Always go to FinalResultPage (simple majority, ties go against)
-                var finalResultPage = new FinalResultPage(_voters, _inFavorIndices, _againstIndices, _sessionPage);
+                // Round 3: Always go to CommitteeFinalResultPage (simple majority, ties go against)
+                var finalResultPage = new CommitteeFinalResultPage(_voters, _inFavorIndices, _againstIndices, _sessionPage);
                 NavigationService?.Navigate(finalResultPage);
             }
         }

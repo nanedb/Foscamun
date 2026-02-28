@@ -1,20 +1,24 @@
-using Foscamun2026.Data;
-using Foscamun2026.Models;
-using Foscamun2026.ViewModels;
+using Foscamun.Data;
+using Foscamun.Models;
+using Foscamun.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Foscamun2026.Views
+namespace Foscamun.Views
 {
     public partial class CommitteeSessionPage : Page
     {
-        private SessionViewModel _viewModel = null!;
+        private CommitteeSessionViewModel _viewModel = null!;
+        private readonly Committee _committee;
+        private readonly SqliteDataAccess _dataAccess;
 
         public CommitteeSessionPage(Committee committee, string topic, int session, List<Country> presentCountries, SqliteDataAccess dataAccess)
         {
             InitializeComponent();
 
-            _viewModel = new SessionViewModel(committee, topic, session, presentCountries, NavigateToVoting, dataAccess);
+            _committee = committee;
+            _dataAccess = dataAccess;
+            _viewModel = new CommitteeSessionViewModel(committee, topic, session, presentCountries, NavigateToVoting, dataAccess);
             DataContext = _viewModel;
         }
 
@@ -37,9 +41,11 @@ namespace Foscamun2026.Views
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            if (NavigationService != null && NavigationService.CanGoBack)
+            if (NavigationService != null)
             {
-                NavigationService.GoBack();
+                // Torna alla RollCallPage
+                var rollCallPage = new CommitteeRollCallPage(_committee, _dataAccess);
+                NavigationService.Navigate(rollCallPage);
             }
         }
     }

@@ -1,22 +1,40 @@
-using Foscamun2026.Data;
-using Foscamun2026.Models;
-using Foscamun2026.ViewModels;
+using Foscamun.Data;
+using Foscamun.Models;
+using Foscamun.ViewModels;
+using System.Windows;
 using System.Windows.Controls;
 
-namespace Foscamun2026.Views
+namespace Foscamun.Views
 {
     public partial class CommitteeRollCallPage : Page
     {
         private readonly CommitteeRollCallViewModel _viewModel;
         private readonly SqliteDataAccess _db;
+        private readonly Committee _committee;
 
         public CommitteeRollCallPage(Committee committee, SqliteDataAccess db)
         {
             InitializeComponent();
 
             _db = db;
+            _committee = committee;
             _viewModel = new CommitteeRollCallViewModel(committee, db, NavigateToSession);
             DataContext = _viewModel;
+
+            // Mostra il messaggio dopo che la pagina è caricata
+            Loaded += CommitteeRollCallPage_Loaded;
+        }
+
+        private async void CommitteeRollCallPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Rimuovi l'evento per evitare che venga chiamato più volte
+            Loaded -= CommitteeRollCallPage_Loaded;
+
+            // Aspetta un breve momento per permettere il rendering della pagina
+            await System.Threading.Tasks.Task.Delay(100);
+
+            // Verifica e mostra il messaggio se necessario
+            _ = SqliteDataAccess.GetCommitteeLogoPath(_committee.Name, showWarning: true);
         }
 
         private void AvailableCountries_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)

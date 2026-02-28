@@ -1,9 +1,9 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 
-namespace Foscamun2026.Views
+namespace Foscamun.Views
 {
     public partial class HomePage : Page
     {
@@ -15,7 +15,7 @@ namespace Foscamun2026.Views
 
         private void Home_Loaded(object sender, RoutedEventArgs e)
         {
-            // Accessibilità
+            // Accessibilit�
             MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
 
             // Avvia il parallax del banner

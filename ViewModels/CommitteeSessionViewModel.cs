@@ -1,20 +1,25 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Foscamun2026.Data;
-using Foscamun2026.Models;
+using Foscamun.Data;
+using Foscamun.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Foscamun2026.ViewModels
+namespace Foscamun.ViewModels
 {
-    public partial class SessionViewModel : ObservableObject
+    /// <summary>
+    /// ViewModel for managing a committee session.
+    /// Handles speakers list, warnings, and voting navigation.
+    /// </summary>
+    public partial class CommitteeSessionViewModel : ObservableObject
     {
         private readonly Committee _committee;
         private readonly Action<List<Country>> _navigateToVoting;
         private readonly SqliteDataAccess _dataAccess;
-        private readonly List<Country> _presentCountries; // ✅ Lista immutabile dei presenti
+        private readonly List<Country> _presentCountries; // Immutable list of present countries
 
         [ObservableProperty]
         private string committeeName = string.Empty;
@@ -51,7 +56,18 @@ namespace Foscamun2026.ViewModels
 
         public ObservableCollection<Country> WarnedList { get; } = new();
 
-        public string CommitteeLogoPath => $"pack://application:,,,/Resources/Committee Logo/{_committee.Name}.svg";
+        public string CommitteeLogoPath
+        {
+            get
+            {
+                string logoPath = Path.Combine(SqliteDataAccess.CommitteeLogoFolder, $"{_committee.Name}.svg");
+                if (File.Exists(logoPath))
+                {
+                    return logoPath;
+                }
+                return Path.Combine(SqliteDataAccess.CommitteeLogoFolder, "Generic.svg");
+            }
+        }
 
         public IRelayCommand<Country> AddSpeakerCommand { get; }
         public IRelayCommand RemoveCurrentSpeakerCommand { get; }
@@ -60,12 +76,12 @@ namespace Foscamun2026.ViewModels
         public IRelayCommand OpenTimerCommand { get; }
         public IRelayCommand OpenVotingCommand { get; }
 
-        public SessionViewModel(Committee committee, string topic, int session, List<Country> presentCountries, Action<List<Country>> navigateToVoting, SqliteDataAccess dataAccess)
+        public CommitteeSessionViewModel(Committee committee, string topic, int session, List<Country> presentCountries, Action<List<Country>> navigateToVoting, SqliteDataAccess dataAccess)
         {
             _committee = committee;
             _navigateToVoting = navigateToVoting;
             _dataAccess = dataAccess;
-            _presentCountries = presentCountries; // ✅ Salva la lista originale
+            _presentCountries = presentCountries;
 
             CommitteeName = committee.Name;
             President = committee.President;
@@ -74,18 +90,18 @@ namespace Foscamun2026.ViewModels
             Topic = topic;
             Session = session;
 
-            // Aggiungi i paesi presenti alla lista degli speakers disponibili
+            // Add present countries to available speakers list
             foreach (var country in presentCountries.OrderBy(c => c.Name))
             {
                 AvailableSpeakers.Add(country);
             }
 
-            // Sorting per AvailableSpeakers
+            // Enable sorting by country name
             var viewAvailable = CollectionViewSource.GetDefaultView(AvailableSpeakers);
             viewAvailable.SortDescriptions.Add(
                 new SortDescription(nameof(Country.Name), ListSortDirection.Ascending));
 
-            // Cambio lingua
+            // Refresh country names when language changes
             App.LanguageChanged += OnLanguageChanged;
 
             AddSpeakerCommand = new RelayCommand<Country>(AddSpeaker);
@@ -95,10 +111,13 @@ namespace Foscamun2026.ViewModels
             OpenTimerCommand = new RelayCommand(OpenTimer);
             OpenVotingCommand = new RelayCommand(OpenVoting);
 
-            // Carica tutti i paesi con warnings dal database
+            // Load existing warnings from database
             _ = LoadWarningsAsync();
         }
 
+        /// <summary>
+        /// Loads countries with existing warnings from the database.
+        /// </summary>
         private async Task LoadWarningsAsync()
         {
             try
@@ -107,17 +126,16 @@ namespace Foscamun2026.ViewModels
 
                 foreach (var country in warnedCountries)
                 {
-                    // Cerca se il paese è già nella lista present countries per usare la stessa istanza
+                    // Find if country is in available speakers to use the same instance
                     var existingCountry = AvailableSpeakers.FirstOrDefault(c => c.IsoCode == country.IsoCode);
                     if (existingCountry != null)
                     {
-                        // Aggiorna i warnings dell'istanza esistente
                         existingCountry.Warnings = country.Warnings;
                         WarnedList.Add(existingCountry);
                     }
                     else
                     {
-                        // Il paese non è presente ma ha warnings, aggiungilo comunque alla warned list
+                        // Country is not present but has warnings, add anyway
                         WarnedList.Add(country);
                     }
                 }
@@ -174,7 +192,7 @@ namespace Foscamun2026.ViewModels
             {
                 CurrentSpeaker.Warnings++;
 
-                // Aggiorna o aggiungi alla lista warned
+                // Update or add to warned list
                 var existing = WarnedList.FirstOrDefault(c => c.IsoCode == CurrentSpeaker.IsoCode);
                 if (existing != null)
                 {
@@ -182,10 +200,9 @@ namespace Foscamun2026.ViewModels
                 }
                 WarnedList.Add(CurrentSpeaker);
 
-                // Aggiorna nel database
+                // Save to database
                 await _dataAccess.UpdateCountryWarningsAsync(_committee.CommID, CurrentSpeaker.IsoCode, CurrentSpeaker.Warnings);
 
-                // Refresh della visualizzazione
                 CollectionViewSource.GetDefaultView(WarnedList).Refresh();
             }
         }
@@ -198,7 +215,7 @@ namespace Foscamun2026.ViewModels
                 {
                     country.Warnings--;
 
-                    // Aggiorna nel database
+                    // Update in database
                     await _dataAccess.UpdateCountryWarningsAsync(_committee.CommID, country.IsoCode, country.Warnings);
                 }
 
@@ -207,24 +224,25 @@ namespace Foscamun2026.ViewModels
                     WarnedList.Remove(country);
                 }
 
-                // Refresh della visualizzazione
                 CollectionViewSource.GetDefaultView(WarnedList).Refresh();
             }
         }
 
         private void OpenTimer()
         {
-            // Open non-modal timer window
             var timer = new Views.TimerWindow();
             timer.Owner = Application.Current.MainWindow;
             timer.Show();
         }
 
+        /// <summary>
+        /// Opens voting page with the original list of present countries.
+        /// All present countries can vote, regardless of speakers list.
+        /// </summary>
         private void OpenVoting()
         {
-            // ✅ Usa la lista originale dei presenti, non le liste speakers
             var voters = _presentCountries;
-            
+
             if (voters.Count == 0)
             {
                 System.Windows.MessageBox.Show(

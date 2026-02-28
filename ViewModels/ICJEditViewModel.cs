@@ -1,20 +1,24 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using Foscamun2026.Models;
-using Foscamun2026.Repositories;
-using Foscamun2026.ViewModels;
-using Foscamun2026.Views;
+using CommunityToolkit.Mvvm.Input;
+using Foscamun.Models;
+using Foscamun.Repositories;
+using Foscamun.ViewModels;
+using Foscamun.Views;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
-namespace Foscamun2026.ViewModels
+namespace Foscamun.ViewModels
 {
-    public class EditICJViewModel : BaseViewModel
+    /// <summary>
+    /// ViewModel for editing ICJ (International Court of Justice) configuration.
+    /// Manages judges, advocates, jurors, and case details.
+    /// </summary>
+    public class ICJEditViewModel : BaseViewModel
     {
         private readonly ICJRepository _repository;
         private readonly MainWindow _mainWindow;
         private string? _selectedJuror;
         private string _newJurorName = "";
-        
+
         private string _judge = "";
         private string _viceJudge1 = "";
         private string _viceJudge2 = "";
@@ -28,7 +32,10 @@ namespace Foscamun2026.ViewModels
         private string _defense3 = "";
         private Country? _dCountry;
 
-    public EditICJViewModel(ICJ model,
+    /// <summary>
+    /// Initializes the ViewModel with ICJ data and available countries.
+    /// </summary>
+    public ICJEditViewModel(ICJ model,
                             IEnumerable<Country> countries,
                             ICJRepository repository,
                             MainWindow mainWindow)
@@ -38,7 +45,7 @@ namespace Foscamun2026.ViewModels
 
         Countries = new ObservableCollection<Country>(countries);
 
-        // Usa i backing field direttamente per evitare notifiche durante la costruzione
+        // Use backing fields directly to avoid property change notifications during construction
         _judge = model.Judge;
         _viceJudge1 = model.ViceJudge1;
         _viceJudge2 = model.ViceJudge2;
@@ -48,7 +55,7 @@ namespace Foscamun2026.ViewModels
         _plaintiff2 = model.Plaintiff2;
         _plaintiff3 = model.Plaintiff3;
 
-        // Find the full Country object from the collection based on IsoCode
+        // Find plaintiff country in collection by IsoCode
         if (model.PCountry != null && !string.IsNullOrEmpty(model.PCountry.IsoCode))
         {
             _pCountry = Countries.FirstOrDefault(c => c.IsoCode == model.PCountry.IsoCode);
@@ -58,7 +65,7 @@ namespace Foscamun2026.ViewModels
         _defense2 = model.Defense2;
         _defense3 = model.Defense3;
 
-        // Find the full Country object from the collection based on IsoCode
+        // Find defense country in collection by IsoCode
         if (model.DCountry != null && !string.IsNullOrEmpty(model.DCountry.IsoCode))
         {
             _dCountry = Countries.FirstOrDefault(c => c.IsoCode == model.DCountry.IsoCode);
@@ -71,9 +78,6 @@ namespace Foscamun2026.ViewModels
         SaveCommand = new RelayCommand(Save, CanSave);
         CancelCommand = new RelayCommand(Cancel);
     }
-    // -------------------------
-    // PROPRIETÀ BINDATE
-    // -------------------------
 
     public string Judge
     {
@@ -275,18 +279,10 @@ namespace Foscamun2026.ViewModels
 
     public ObservableCollection<Country> Countries { get; }
 
-    // -------------------------
-    // COMANDI
-    // -------------------------
-
     public ICommand AddJurorCommand { get; }
     public ICommand RemoveJurorCommand { get; }
     public ICommand SaveCommand { get; }
     public ICommand CancelCommand { get; }
-
-    // -------------------------
-    // METODI DEI COMANDI
-    // -------------------------
 
     private bool CanAddJuror() => !string.IsNullOrWhiteSpace(NewJurorName);
 
@@ -295,7 +291,7 @@ namespace Foscamun2026.ViewModels
         if (!string.IsNullOrWhiteSpace(NewJurorName))
         {
             Jurors.Add(NewJurorName);
-            NewJurorName = ""; // Pulisce la TextBox dopo l'aggiunta
+            NewJurorName = ""; // Clear TextBox after adding
             (SaveCommand as RelayCommand)?.NotifyCanExecuteChanged();
         }
     }
@@ -311,6 +307,9 @@ namespace Foscamun2026.ViewModels
         }
     }
 
+    /// <summary>
+    /// Validates that all required fields are filled and at least one juror is added.
+    /// </summary>
     private bool CanSave() =>
         !string.IsNullOrWhiteSpace(Judge) &&
         !string.IsNullOrWhiteSpace(ViceJudge1) &&
@@ -324,8 +323,11 @@ namespace Foscamun2026.ViewModels
         !string.IsNullOrWhiteSpace(Defense2) &&
         !string.IsNullOrWhiteSpace(Defense3) &&
         DCountry != null &&
-        Jurors.Count > 0; // At least one juror is required
+        Jurors.Count > 0;
 
+    /// <summary>
+    /// Saves ICJ configuration to database and navigates back to setup page.
+    /// </summary>
     private void Save()
     {
         var model = new ICJ

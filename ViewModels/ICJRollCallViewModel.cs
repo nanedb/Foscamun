@@ -1,14 +1,19 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Foscamun2026.Data;
-using Foscamun2026.Models;
+using Foscamun.Data;
+using Foscamun.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Windows.Data;
 
-namespace Foscamun2026.ViewModels
+namespace Foscamun.ViewModels
 {
+    /// <summary>
+    /// ViewModel for ICJ roll call page.
+    /// Manages present/absent members selection (advocates and jurors) before starting a session.
+    /// </summary>
     public partial class ICJRollCallViewModel : ObservableObject
     {
         private readonly SqliteDataAccess _db;
@@ -38,7 +43,24 @@ namespace Foscamun2026.ViewModels
 
         public ObservableCollection<ICJRollCallMember> PresentMembers { get; } = new();
 
-        public string CommitteeLogoPath => "pack://application:,,,/Resources/Committee Logo/ICJ.svg";
+        /// <summary>
+        /// Gets the logo path for ICJ.
+        /// Returns custom logo if exists, otherwise generic fallback.
+        /// </summary>
+        public string CommitteeLogoPath
+        {
+            get
+            {
+                string logoPath = Path.Combine(SqliteDataAccess.CommitteeLogoFolder, "ICJ.svg");
+
+                if (File.Exists(logoPath))
+                {
+                    return logoPath;
+                }
+
+                return Path.Combine(SqliteDataAccess.CommitteeLogoFolder, "Generic.svg");
+            }
+        }
 
         public IRelayCommand ProceedCommand { get; }
         public IRelayCommand MarkAllPresentCommand { get; }
@@ -53,7 +75,7 @@ namespace Foscamun2026.ViewModels
                 Sessions.Add(i);
             }
 
-            // Sorting per entrambe le liste
+            // Enable sorting by display name for both lists
             var viewAvailable = CollectionViewSource.GetDefaultView(AvailableMembers);
             viewAvailable.SortDescriptions.Add(
                 new SortDescription(nameof(ICJRollCallMember.DisplayName), ListSortDirection.Ascending));
@@ -68,6 +90,9 @@ namespace Foscamun2026.ViewModels
             _ = LoadICJDataAsync();
         }
 
+        /// <summary>
+        /// Loads ICJ configuration and all members (advocates and jurors) from database.
+        /// </summary>
         private async Task LoadICJDataAsync()
         {
             try
@@ -82,7 +107,6 @@ namespace Foscamun2026.ViewModels
                     Topic = icj.Topic;
                 }
 
-                // Carica tutti i membri ICJ (Advocates e Jurors)
                 var members = await _db.LoadICJMembersAsync();
 
                 AvailableMembers.Clear();

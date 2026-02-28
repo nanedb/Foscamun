@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Foscamun2026.Views
+namespace Foscamun.Views
 {
     /// <summary>
     /// Logica di interazione per ICJEditPage.xaml

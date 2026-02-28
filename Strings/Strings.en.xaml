@@ -1,7 +1,7 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib"
-                    xmlns:properties="clr-namespace:Foscamun2026.Properties">
+                    xmlns:properties="clr-namespace:Foscamun.Properties">
 
     <!-- Titoli -->
     <sys:String x:Key="WelcomeMessage">Welcome to Foscamun</sys:String>
@@ -91,9 +91,13 @@
     <sys:String x:Key="TimerRunningTitle">Timer Running</sys:String>
     <sys:String x:Key="TimerRunningMsg">Stop the timer before setting a new time.</sys:String>
     <sys:String x:Key="InvalidInputTitle">Invalid Input</sys:String>
-    <sys:String x:Key="InvalidValuesMsg">Please enter valid values (Minutes ≥ 0, Seconds 0-59).</sys:String>
+    <sys:String x:Key="InvalidValuesMsg">Please enter valid values (Minutes = 0, Seconds 0-59).</sys:String>
     <sys:String x:Key="InvalidNumbersMsg">Please enter valid numbers.</sys:String>
     <sys:String x:Key="NoTimeSetTitle">No Time Set</sys:String>
     <sys:String x:Key="NoTimeSetMsg">Please set a time first using the Set button.</sys:String>
+
+    <!-- Exit Confirmation -->
+    <sys:String x:Key="ExitConfirmTitle">Exit Confirmation</sys:String>
+    <sys:String x:Key="ExitConfirmMessage">Are you sure you want to exit?</sys:String>
 
 </ResourceDictionary>

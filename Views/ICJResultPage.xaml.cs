@@ -1,10 +1,10 @@
-using Foscamun2026.Models;
+using Foscamun.Models;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Foscamun2026.Views
+namespace Foscamun.Views
 {
-    public partial class ICJResultIntermediatePage : Page
+    public partial class ICJResultPage : Page
     {
         private readonly List<ICJRollCallMember> _voters;
         private readonly List<int> _inFavorIndices;
@@ -12,7 +12,7 @@ namespace Foscamun2026.Views
         private readonly List<int> _againstIndices;
         private readonly ICJSessionPage? _sessionPage;
 
-        public ICJResultIntermediatePage(List<ICJRollCallMember> voters, List<int> inFavorIndices, List<int> abstainedIndices, List<int> againstIndices, ICJSessionPage? sessionPage = null)
+        public ICJResultPage(List<ICJRollCallMember> voters, List<int> inFavorIndices, List<int> abstainedIndices, List<int> againstIndices, ICJSessionPage? sessionPage = null)
         {
             InitializeComponent();
 

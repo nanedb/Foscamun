@@ -1,6 +1,6 @@
-﻿using Foscamun2026.Data;
-using Foscamun2026.Properties;
-using Foscamun2026.ViewModels;
+using Foscamun.Data;
+using Foscamun.Properties;
+using Foscamun.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -9,7 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using System.Windows.Navigation;
 
-namespace Foscamun2026.Views
+namespace Foscamun.Views
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
@@ -25,7 +25,7 @@ namespace Foscamun2026.Views
             }
         }
 
-        // ⭐ NUOVA PROPRIETÀ
+        // ? NUOVA PROPRIET�
         public bool IsRollCallEnabled => !string.IsNullOrWhiteSpace(Settings.Default.SelCommName);
 
         public SqliteDataAccess Db { get; }
@@ -45,11 +45,11 @@ namespace Foscamun2026.Views
             // Prima pagina
             RightFrame.Navigate(new HomePage());
 
-            // ⭐ Monitora i cambiamenti delle impostazioni
+            // ? Monitora i cambiamenti delle impostazioni
             Settings.Default.PropertyChanged += Settings_PropertyChanged;
         }
 
-        // ⭐ NUOVO METODO
+        // ? NUOVO METODO
         private void Settings_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(Settings.Default.SelCommName))
@@ -102,7 +102,7 @@ namespace Foscamun2026.Views
             _isNavigating = false;
         }
 
-        // ⭐ NUOVO METODO per Roll Call
+        // ? NUOVO METODO per Roll Call
         private void RollCallBtn_Click(object sender, RoutedEventArgs e)
         {
             var selectedCommitteeName = Settings.Default.SelCommName;
@@ -138,7 +138,10 @@ namespace Foscamun2026.Views
 
         private void ExitBtn_Click(object sender, RoutedEventArgs e)
         {
-            var result = MessageBox.Show("Sei sicuro di voler uscire?", "Conferma uscita",
+            var message = (string)Application.Current.FindResource("ExitConfirmMessage");
+            var title = (string)Application.Current.FindResource("ExitConfirmTitle");
+
+            var result = MessageBox.Show(message, title,
                 MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (result == MessageBoxResult.Yes)
@@ -180,7 +183,7 @@ namespace Foscamun2026.Views
         protected void OnPropertyChanged(string name) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-        // ⭐ CLEANUP
+        // ? CLEANUP
         protected override void OnClosed(EventArgs e)
         {
             Settings.Default.PropertyChanged -= Settings_PropertyChanged;

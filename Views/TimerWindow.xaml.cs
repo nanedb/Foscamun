@@ -5,7 +5,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 
-namespace Foscamun2026.Views
+namespace Foscamun.Views
 {
     public partial class TimerWindow : Window
     {

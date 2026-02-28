@@ -361,3 +361,12 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Foscamun specific
+# Publish output directory
+Publish/
+*.zip
+
+# Local database changes (keep the template)
+# Uncomment if you want to ignore local database modifications
+# Foscamun.db

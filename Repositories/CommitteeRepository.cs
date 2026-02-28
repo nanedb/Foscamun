@@ -1,8 +1,11 @@
-﻿using Microsoft.Data.Sqlite;
-using Foscamun2026.Models;
+using Microsoft.Data.Sqlite;
+using Foscamun.Models;
 
-namespace Foscamun2026.Repositories
+namespace Foscamun.Repositories
 {
+    /// <summary>
+    /// Repository for managing committee data in the database.
+    /// </summary>
     public class CommitteeRepository
     {
         private readonly string _connectionString;
@@ -12,6 +15,9 @@ namespace Foscamun2026.Repositories
             _connectionString = connectionString;
         }
 
+        /// <summary>
+        /// Retrieves all committees from the database.
+        /// </summary>
         public List<Committee> GetAll()
         {
             var list = new List<Committee>();
@@ -39,6 +45,10 @@ namespace Foscamun2026.Repositories
             return list;
         }
 
+        /// <summary>
+        /// Saves a committee to the database.
+        /// Inserts if new (CommID == 0), otherwise updates existing record.
+        /// </summary>
         public void Save(Committee c)
         {
             using var conn = new SqliteConnection(_connectionString);

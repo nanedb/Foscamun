@@ -1,11 +1,11 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Foscamun2026.Data;
-using Foscamun2026.Models;
+using Foscamun.Data;
+using Foscamun.Models;
 
-namespace Foscamun2026.ViewModels
+namespace Foscamun.ViewModels
 {
     public partial class CommitteeListViewModel : ObservableObject
     {

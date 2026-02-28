@@ -1,26 +1,26 @@
-using Foscamun2026.Data;
-using Foscamun2026.Models;
-using Foscamun2026.ViewModels;
+using Foscamun.Data;
+using Foscamun.Models;
+using Foscamun.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace Foscamun2026.Views
+namespace Foscamun.Views
 {
     public partial class CommitteeEditPage : Page
     {
-        private AddCommitteeViewModel VM => (AddCommitteeViewModel)DataContext;
+        private CommitteeEditViewModel VM => (CommitteeEditViewModel)DataContext;
 
         public CommitteeEditPage(SqliteDataAccess db)
         {
             InitializeComponent();
-            DataContext = new AddCommitteeViewModel(db);
+            DataContext = new CommitteeEditViewModel(db);
         }
 
         public CommitteeEditPage(SqliteDataAccess db, Committee committee)
         {
             InitializeComponent();
-            DataContext = new AddCommitteeViewModel(db, committee);
+            DataContext = new CommitteeEditViewModel(db, committee);
         }
 
         private void AllCountries_Click(object sender, MouseButtonEventArgs e)

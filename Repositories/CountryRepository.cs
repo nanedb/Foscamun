@@ -1,8 +1,11 @@
-﻿using Microsoft.Data.Sqlite;
-using Foscamun2026.Models;
+using Microsoft.Data.Sqlite;
+using Foscamun.Models;
 
-namespace Foscamun2026.Repositories
+namespace Foscamun.Repositories
 {
+    /// <summary>
+    /// Repository for managing country data in the database.
+    /// </summary>
     public class CountryRepository
     {
         private readonly string _connectionString;
@@ -12,6 +15,9 @@ namespace Foscamun2026.Repositories
             _connectionString = connectionString;
         }
 
+        /// <summary>
+        /// Retrieves all countries from the database, ordered by English name.
+        /// </summary>
         public List<Country> GetAll()
         {
             var list = new List<Country>();
@@ -21,10 +27,9 @@ namespace Foscamun2026.Repositories
 
             using var cmd = conn.CreateCommand();
             cmd.CommandText = @"
-        SELECT IsoCode, EnglishName, FrenchName, SpanishName
-        FROM Countries
-        ORDER BY EnglishName
-    ";
+                SELECT IsoCode, EnglishName, FrenchName, SpanishName
+                FROM Countries
+                ORDER BY EnglishName";
 
             using var reader = cmd.ExecuteReader();
             while (reader.Read())

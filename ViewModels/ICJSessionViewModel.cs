@@ -1,18 +1,23 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Foscamun2026.Data;
-using Foscamun2026.Models;
+using Foscamun.Data;
+using Foscamun.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Foscamun2026.ViewModels
+namespace Foscamun.ViewModels
 {
+    /// <summary>
+    /// ViewModel for managing an ICJ session.
+    /// Handles speakers list, warnings for advocates/jurors, and voting navigation.
+    /// </summary>
     public partial class ICJSessionViewModel : ObservableObject
     {
         private readonly SqliteDataAccess _dataAccess;
-        private readonly List<ICJRollCallMember> _presentMembers; // Lista immutabile dei presenti
+        private readonly List<ICJRollCallMember> _presentMembers; // Immutable list of present members
         private readonly Action<List<ICJRollCallMember>> _navigateToVoting;
 
         [ObservableProperty]
@@ -47,7 +52,18 @@ namespace Foscamun2026.ViewModels
 
         public ObservableCollection<ICJRollCallMember> WarnedList { get; } = new();
 
-        public string CommitteeLogoPath => "pack://application:,,,/Resources/Committee Logo/ICJ.svg";
+        public string CommitteeLogoPath
+        {
+            get
+            {
+                string logoPath = Path.Combine(SqliteDataAccess.CommitteeLogoFolder, "ICJ.svg");
+                if (File.Exists(logoPath))
+                {
+                    return logoPath;
+                }
+                return Path.Combine(SqliteDataAccess.CommitteeLogoFolder, "Generic.svg");
+            }
+        }
 
         public IRelayCommand<ICJRollCallMember> AddSpeakerCommand { get; }
         public IRelayCommand RemoveCurrentSpeakerCommand { get; }

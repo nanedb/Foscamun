@@ -1,8 +1,11 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Foscamun2026.Models
+namespace Foscamun.Models
 {
+    /// <summary>
+    /// Represents a committee with its board members (president, vice-president, moderator).
+    /// </summary>
     public class Committee : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -44,6 +47,9 @@ namespace Foscamun2026.Models
             set { _moderator = value; OnPropertyChanged(); }
         }
 
+        /// <summary>
+        /// Committee unique identifier in the database.
+        /// </summary>
         public int CommID { get; set; }
     }
 }

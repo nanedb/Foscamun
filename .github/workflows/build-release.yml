@@ -1,0 +1,112 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Trigger on version tags like v1.0.0
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+      
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal
+      continue-on-error: true  # Continue even if tests fail
+      
+    - name: Publish Windows x64
+      run: |
+        dotnet publish -c Release -r win-x64 --self-contained true `
+          -p:PublishSingleFile=true `
+          -p:IncludeNativeLibrariesForSelfExtract=true `
+          -p:EnableCompressionInSingleFile=true `
+          -p:PublishReadyToRun=true `
+          -o ./publish/win-x64
+          
+    - name: Publish Windows x86
+      run: |
+        dotnet publish -c Release -r win-x86 --self-contained true `
+          -p:PublishSingleFile=true `
+          -p:IncludeNativeLibrariesForSelfExtract=true `
+          -p:EnableCompressionInSingleFile=true `
+          -p:PublishReadyToRun=true `
+          -o ./publish/win-x86
+          
+    - name: Publish Windows ARM64
+      run: |
+        dotnet publish -c Release -r win-arm64 --self-contained true `
+          -p:PublishSingleFile=true `
+          -p:IncludeNativeLibrariesForSelfExtract=true `
+          -p:EnableCompressionInSingleFile=true `
+          -p:PublishReadyToRun=true `
+          -o ./publish/win-arm64
+          
+    - name: Create README files
+      shell: pwsh
+      run: |
+        $version = "${{ github.ref_name }}"
+        $readmeContent = @"
+Foscamun $version
+
+INSTALLAZIONE:
+1. Estrai tutti i file in una cartella
+2. Esegui Foscamun.exe
+
+REQUISITI:
+- Windows 10 o superiore
+
+Repository: https://github.com/nanedb/Foscamun2026
+"@
+        
+        Set-Content -Path "./publish/win-x64/README.txt" -Value $readmeContent
+        Set-Content -Path "./publish/win-x86/README.txt" -Value $readmeContent
+        Set-Content -Path "./publish/win-arm64/README.txt" -Value $readmeContent
+        
+    - name: Create Archives
+      shell: pwsh
+      run: |
+        $version = "${{ github.ref_name }}"
+        Compress-Archive -Path "./publish/win-x64/*" -DestinationPath "./Foscamun-win-x64-$version.zip"
+        Compress-Archive -Path "./publish/win-x86/*" -DestinationPath "./Foscamun-win-x86-$version.zip"
+        Compress-Archive -Path "./publish/win-arm64/*" -DestinationPath "./Foscamun-win-arm64-$version.zip"
+        
+    - name: Calculate Checksums
+      shell: pwsh
+      run: |
+        $files = Get-ChildItem -Filter "Foscamun-*.zip"
+        $checksums = @("# SHA256 Checksums", "")
+        foreach ($file in $files) {
+          $hash = (Get-FileHash -Path $file.FullName -Algorithm SHA256).Hash
+          $checksums += "$hash  $($file.Name)"
+        }
+        $checksums | Out-File -FilePath "SHA256SUMS.txt" -Encoding UTF8
+        
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: |
+          Foscamun-win-x64-*.zip
+          Foscamun-win-x86-*.zip
+          Foscamun-win-arm64-*.zip
+          SHA256SUMS.txt
+        body_path: RELEASE_NOTES_TEMPLATE.md
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

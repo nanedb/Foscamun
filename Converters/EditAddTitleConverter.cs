@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Foscamun2026.Converters
+namespace Foscamun.Converters
 {
     public class EditAddTitleConverter : IValueConverter
     {

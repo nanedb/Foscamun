@@ -1,4 +1,4 @@
-<Page x:Class="Foscamun2026.Views.CommitteeSessionPage"
+<Page x:Class="Foscamun.Views.CommitteeSessionPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -154,13 +154,9 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <!-- Available Speakers -->
-                <ColumnDefinition Width="0.9*"/>
-                <!-- Speakers List -->
-                <ColumnDefinition Width="0.9*"/>
-                <!-- Current Speaker & Warnings -->
-                <ColumnDefinition Width="1.3*"/>
-                <!-- Action Buttons -->
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 

@@ -1,6 +1,6 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 
-namespace Foscamun2026.Properties
+namespace Foscamun.Properties
 {
     internal sealed partial class Settings
     {

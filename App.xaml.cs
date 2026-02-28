@@ -1,12 +1,13 @@
-﻿using System;
+using System;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
-using Foscamun2026.Data;
-using Foscamun2026.ViewModels;
-using Foscamun2026.Views;
-using Foscamun2026.Properties;
+using Foscamun.Data;
+using Foscamun.Helpers;
+using Foscamun.ViewModels;
+using Foscamun.Views;
+using Foscamun.Properties;
 
-namespace Foscamun2026
+namespace Foscamun
 {
     public partial class App : Application
     {
@@ -17,6 +18,12 @@ namespace Foscamun2026
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            // Inizializza il database (crea le cartelle e il file .db se non esistono)
+            var db = new SqliteDataAccess();
+
+            // Copia i loghi delle commissioni se non esistono
+            LogoInstaller.EnsureLogosInstalled(SqliteDataAccess.CommitteeLogoFolder);
 
             var lang = Settings.Default.Lang;
             if (string.IsNullOrEmpty(lang))
@@ -33,18 +40,12 @@ namespace Foscamun2026
             Services = services.BuildServiceProvider();
 
             // Correzione: Accesso a Properties.Settings.Default.Year
-            Application.Current.Resources["YearResource"] = Foscamun2026.Properties.Settings.Default.Year;
+            Application.Current.Resources["YearResource"] = Settings.Default.Year;
 
-            Foscamun2026.Properties.Settings.Default.PropertyChanged += (s, ev) =>
+            Settings.Default.PropertyChanged += (s, ev) =>
             {
                 if (ev.PropertyName == "Year")
-                    Application.Current.Resources["YearResource"] = Foscamun2026.Properties.Settings.Default.Year;
-            };
-
-            Foscamun2026.Properties.Settings.Default.PropertyChanged += (s, ev) =>
-            {
-                if (ev.PropertyName == "Year")
-                    Application.Current.Resources["YearResource"] = Foscamun2026.Properties.Settings.Default.Year;
+                    Application.Current.Resources["YearResource"] = Settings.Default.Year;
             };
 
             // Mostra MainWindow come prima finestra
@@ -54,6 +55,10 @@ namespace Foscamun2026
 
         public static void ChangeLanguage(string langCode)
         {
+            // Normalizza il codice lingua (es. "en-US" -> "en")
+            if (langCode.Contains("-"))
+                langCode = langCode.Split('-')[0];
+
             // Carica il nuovo dizionario
             var dict = new ResourceDictionary
             {
@@ -74,7 +79,7 @@ namespace Foscamun2026
             Settings.Default.Lang = langCode;
             Settings.Default.Save();
 
-            // 🔥 Notifica globale
+            // ?? Notifica globale
             LanguageChanged?.Invoke();
         }
     }

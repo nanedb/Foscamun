@@ -1,17 +1,17 @@
-using Foscamun2026.Models;
+using Foscamun.Models;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Foscamun2026.Views
+namespace Foscamun.Views
 {
-    public partial class FinalResultPage : Page
+    public partial class CommitteeFinalResultPage : Page
     {
         private readonly List<Country> _voters;
         private readonly List<int> _inFavorIndices;
         private readonly List<int> _againstIndices;
         private readonly CommitteeSessionPage? _sessionPage;
 
-        public FinalResultPage(List<Country> voters, List<int> inFavorIndices, List<int> againstIndices, CommitteeSessionPage? sessionPage = null)
+        public CommitteeFinalResultPage(List<Country> voters, List<int> inFavorIndices, List<int> againstIndices, CommitteeSessionPage? sessionPage = null)
         {
             InitializeComponent();
 

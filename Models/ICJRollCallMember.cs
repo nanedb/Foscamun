@@ -1,6 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace Foscamun2026.Models
+namespace Foscamun.Models
 {
     /// <summary>
     /// Wrapper class for ICJMember to display in Roll Call with formatted names

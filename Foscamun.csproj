@@ -7,6 +7,25 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>Resources\Foscamun.ico</ApplicationIcon>
+    <AssemblyName>Foscamun</AssemblyName>
+    <RootNamespace>Foscamun</RootNamespace>
+
+    <!-- Assembly Info -->
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Company>Foscamun</Company>
+    <Product>Foscamun</Product>
+    <Copyright>Copyright © 2025</Copyright>
+    <Description>Foscamun MUN Conference Management Application</Description>
+
+    <!-- Publish Settings -->
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
   </PropertyGroup>
 
   <!-- Risorse -->
@@ -17,18 +36,6 @@
 
 	<!-- PNG e icone -->
 	<Resource Include="Resources\**\*.png" />
-	<Resource Include="Resources\Committee Logo\DISEC.svg" />
-	<Resource Include="Resources\Committee Logo\ECOSOC.svg" />
-	<Resource Include="Resources\Committee Logo\FAO.svg" />
-	<Resource Include="Resources\Committee Logo\ICJ.svg" />
-	<Resource Include="Resources\Committee Logo\UNEP.svg" />
-	<Resource Include="Resources\Committee Logo\UNESCO.svg" />
-	<Resource Include="Resources\Committee Logo\UNHCR.svg" />
-	<Resource Include="Resources\Committee Logo\UNICEF.svg" />
-	<Resource Include="Resources\Committee Logo\UNODC.svg" />
-	<Resource Include="Resources\Committee Logo\UNWOMEN.svg" />
-	<Resource Include="Resources\Committee Logo\UNWTO.svg" />
-	<Resource Include="Resources\Committee Logo\WHO.svg" />
 	<Resource Include="Resources\Foscamun.ico" />
 	<Resource Include="Resources\Icons\Foscamun.ico" />
 
@@ -39,26 +46,25 @@
 	<None Include="Resources\Sounds\**\*.wav">
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</None>
+
+	<!-- Committee Logos: copied to output directory only -->
+	<None Include="Resources\CommitteeLogo\*.svg">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
   </ItemGroup>
+  
   <ItemGroup>
     <None Remove="Foscamun.db" />
-    <None Remove="Resources\Committee Logo\DISEC.svg" />
-    <None Remove="Resources\Committee Logo\ECOSOC.svg" />
-    <None Remove="Resources\Committee Logo\FAO.svg" />
-    <None Remove="Resources\Committee Logo\ICJ.svg" />
-    <None Remove="Resources\Committee Logo\UNEP.svg" />
-    <None Remove="Resources\Committee Logo\UNESCO.svg" />
-    <None Remove="Resources\Committee Logo\UNHCR.svg" />
-    <None Remove="Resources\Committee Logo\UNICEF.svg" />
-    <None Remove="Resources\Committee Logo\UNODC.svg" />
-    <None Remove="Resources\Committee Logo\UNWOMEN.svg" />
-    <None Remove="Resources\Committee Logo\UNWTO.svg" />
-    <None Remove="Resources\Committee Logo\WHO.svg" />
   </ItemGroup>
+  
+  <!-- Database: copiato nella cartella di output -->
   <ItemGroup>
     <Content Include="Foscamun.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".github\workflows\build-release.yml" />
   </ItemGroup>
 
   <!-- Pacchetti NuGet -->
@@ -70,6 +76,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="SharpVectors.Wpf" Version="1.8.5" />
   </ItemGroup>
+  
   <ItemGroup>
     <Compile Update="Properties\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -77,6 +84,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
   </ItemGroup>
+  
   <ItemGroup>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

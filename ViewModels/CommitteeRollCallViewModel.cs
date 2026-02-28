@@ -1,14 +1,19 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Foscamun2026.Data;
-using Foscamun2026.Models;
+using Foscamun.Data;
+using Foscamun.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Windows.Data;
 
-namespace Foscamun2026.ViewModels
+namespace Foscamun.ViewModels
 {
+    /// <summary>
+    /// ViewModel for committee roll call page.
+    /// Manages present/absent countries selection before starting a session.
+    /// </summary>
     public partial class CommitteeRollCallViewModel : ObservableObject
     {
         private readonly SqliteDataAccess _db;
@@ -44,7 +49,24 @@ namespace Foscamun2026.ViewModels
 
         public ObservableCollection<Country> PresentCountries { get; } = new();
 
-        public string CommitteeLogoPath => $"pack://application:,,,/Resources/Committee Logo/{CommitteeName}.svg";
+        /// <summary>
+        /// Gets the logo path for the committee.
+        /// Returns custom logo if exists, otherwise generic fallback.
+        /// </summary>
+        public string CommitteeLogoPath
+        {
+            get
+            {
+                string logoPath = Path.Combine(SqliteDataAccess.CommitteeLogoFolder, $"{CommitteeName}.svg");
+
+                if (File.Exists(logoPath))
+                {
+                    return logoPath;
+                }
+
+                return Path.Combine(SqliteDataAccess.CommitteeLogoFolder, "Generic.svg");
+            }
+        }
 
         public IRelayCommand ProceedCommand { get; }
         public IRelayCommand MarkAllPresentCommand { get; }
@@ -65,7 +87,7 @@ namespace Foscamun2026.ViewModels
                 Sessions.Add(i);
             }
 
-            // Sorting per entrambe le liste
+            // Enable sorting by country name for both lists
             var viewAvailable = CollectionViewSource.GetDefaultView(AvailableCountries);
             viewAvailable.SortDescriptions.Add(
                 new SortDescription(nameof(Country.Name), ListSortDirection.Ascending));
@@ -74,7 +96,7 @@ namespace Foscamun2026.ViewModels
             viewPresent.SortDescriptions.Add(
                 new SortDescription(nameof(Country.Name), ListSortDirection.Ascending));
 
-            // Cambio lingua
+            // Refresh country names when language changes
             App.LanguageChanged += OnLanguageChanged;
 
             ProceedCommand = new RelayCommand(Proceed, CanProceed);

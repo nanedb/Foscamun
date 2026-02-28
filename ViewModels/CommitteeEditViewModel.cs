@@ -1,7 +1,7 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using Foscamun2026.Data;
-using Foscamun2026.Models;
-using Foscamun2026.Views;
+using CommunityToolkit.Mvvm.Input;
+using Foscamun.Data;
+using Foscamun.Models;
+using Foscamun.Views;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -10,9 +10,13 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 
-namespace Foscamun2026.ViewModels
+namespace Foscamun.ViewModels
 {
-    public class AddCommitteeViewModel : INotifyPropertyChanged
+    /// <summary>
+    /// ViewModel for creating and editing committees.
+    /// Supports both Add (new committee) and Edit (existing committee) modes.
+    /// </summary>
+    public class CommitteeEditViewModel : INotifyPropertyChanged
     {
         private readonly SqliteDataAccess _db;
 
@@ -20,10 +24,9 @@ namespace Foscamun2026.ViewModels
         private void OnPropertyChanged([CallerMemberName] string propertyName = "")
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        // -------------------------
-        //  PROPRIETÀ
-        // -------------------------
-
+        /// <summary>
+        /// Indicates whether the ViewModel is in Edit mode (true) or Add mode (false).
+        /// </summary>
         public bool IsEditMode { get; private set; }
 
         public Country? SelectedCountry { get; set; }
@@ -34,6 +37,9 @@ namespace Foscamun2026.ViewModels
         public Committee Committee { get; set; }
 
         private bool _canSave;
+        /// <summary>
+        /// Determines if the Save button should be enabled based on validation.
+        /// </summary>
         public bool CanSave
         {
             get => _canSave;
@@ -48,21 +54,13 @@ namespace Foscamun2026.ViewModels
             }
         }
 
-        // -------------------------
-        //  COMANDI
-        // -------------------------
-
         public IRelayCommand SaveCommand { get; private set; } = null!;
-
         public IRelayCommand CancelCommand { get; private set; } = null!;
 
-
-        // -------------------------
-        //  COSTRUTTORI
-        // -------------------------
-
-        // Modalità ADD
-        public AddCommitteeViewModel(SqliteDataAccess db)
+        /// <summary>
+        /// Constructor for Add mode - creates a new committee.
+        /// </summary>
+        public CommitteeEditViewModel(SqliteDataAccess db)
         {
             _db = db;
             Committee = new Committee();
@@ -72,8 +70,10 @@ namespace Foscamun2026.ViewModels
             _ = LoadCountriesAsync();
         }
 
-        // Modalità EDIT
-        public AddCommitteeViewModel(SqliteDataAccess db, Committee committeeToEdit)
+        /// <summary>
+        /// Constructor for Edit mode - edits an existing committee.
+        /// </summary>
+        public CommitteeEditViewModel(SqliteDataAccess db, Committee committeeToEdit)
         {
             _db = db;
             Committee = committeeToEdit;
@@ -83,13 +83,12 @@ namespace Foscamun2026.ViewModels
             _ = LoadCountriesForEditAsync();
         }
 
-        // -------------------------
-        //  INIZIALIZZAZIONE COMUNE
-        // -------------------------
-
+        /// <summary>
+        /// Sets up event handlers, commands, and sorting for country lists.
+        /// </summary>
         private void HookEventsAndCommands()
         {
-            // Sorting
+            // Enable sorting by country name for both lists
             var viewAll = CollectionViewSource.GetDefaultView(AllCountries);
             viewAll.SortDescriptions.Add(
                 new SortDescription(nameof(Country.Name), ListSortDirection.Ascending));
@@ -98,20 +97,15 @@ namespace Foscamun2026.ViewModels
             viewSel.SortDescriptions.Add(
                 new SortDescription(nameof(Country.Name), ListSortDirection.Ascending));
 
-            // Cambio lingua
+            // Refresh country names when language changes
             App.LanguageChanged += OnLanguageChanged;
 
-            // Comandi
             SaveCommand = new RelayCommand(SaveCommittee, () => CanSave);
             CancelCommand = new RelayCommand(Cancel);
 
-            // Validazione automatica
+            // Validate whenever committee properties change
             Committee.PropertyChanged += (_, __) => Validate();
         }
-
-        // -------------------------
-        //  CAMBIO LINGUA
-        // -------------------------
 
         private void OnLanguageChanged()
         {
@@ -119,10 +113,9 @@ namespace Foscamun2026.ViewModels
             CollectionViewSource.GetDefaultView(SelectedCountries).Refresh();
         }
 
-        // -------------------------
-        //  CARICAMENTO PAESI (ADD)
-        // -------------------------
-
+        /// <summary>
+        /// Loads all countries for Add mode (new committee).
+        /// </summary>
         private async Task LoadCountriesAsync()
         {
             try
@@ -139,10 +132,9 @@ namespace Foscamun2026.ViewModels
             }
         }
 
-        // -------------------------
-        //  CARICAMENTO PAESI (EDIT)
-        // -------------------------
-
+        /// <summary>
+        /// Loads countries for Edit mode, splitting them into selected and available lists.
+        /// </summary>
         private async Task LoadCountriesForEditAsync()
         {
             try
@@ -153,6 +145,7 @@ namespace Foscamun2026.ViewModels
                 AllCountries.Clear();
                 SelectedCountries.Clear();
 
+                // Split countries into selected (already in committee) and available (not in committee)
                 foreach (var c in all)
                 {
                     if (selected.Any(s => s.IsoCode == c.IsoCode))
@@ -169,10 +162,9 @@ namespace Foscamun2026.ViewModels
             }
         }
 
-        // -------------------------
-        //  CLICK LISTE
-        // -------------------------
-
+        /// <summary>
+        /// Moves a country from available list to selected list.
+        /// </summary>
         public void AllCountriesClicked(Country country)
         {
             AllCountries.Remove(country);
@@ -180,6 +172,9 @@ namespace Foscamun2026.ViewModels
             Validate();
         }
 
+        /// <summary>
+        /// Moves a country from selected list back to available list.
+        /// </summary>
         public void SelectedCountriesClicked(Country country)
         {
             SelectedCountries.Remove(country);
@@ -187,10 +182,9 @@ namespace Foscamun2026.ViewModels
             Validate();
         }
 
-        // -------------------------
-        //  VALIDAZIONE
-        // -------------------------
-
+        /// <summary>
+        /// Validates that all required fields are filled and at least one country is selected.
+        /// </summary>
         private void Validate()
         {
             CanSave =
@@ -202,10 +196,9 @@ namespace Foscamun2026.ViewModels
                 SelectedCountries.Count > 0;
         }
 
-        // -------------------------
-        //  SALVATAGGIO
-        // -------------------------
-
+        /// <summary>
+        /// Saves the committee (creates new or updates existing) and associated countries.
+        /// </summary>
         private async void SaveCommittee()
         {
             if (!CanSave)
@@ -216,14 +209,17 @@ namespace Foscamun2026.ViewModels
 
             if (IsEditMode)
             {
+                // Update existing committee and replace country associations
                 await _db.UpdateCommitteeAsync(Committee);
                 await _db.DeleteCountriesForCommitteeAsync(Committee.CommID);
             }
             else
             {
+                // Create new committee
                 await _db.AddCommitteeAsync(Committee);
             }
 
+            // Insert all selected countries for this committee
             foreach (var c in SelectedCountries)
                 await _db.InsertSelectedCountryAsync(Committee.CommID, c.IsoCode);
 
@@ -232,18 +228,10 @@ namespace Foscamun2026.ViewModels
             NavigateBack();
         }
 
-        // -------------------------
-        //  CANCEL
-        // -------------------------
-
         private void Cancel()
         {
             NavigateBack();
         }
-
-        // -------------------------
-        //  NAVIGAZIONE
-        // -------------------------
 
         private void NavigateBack()
         {

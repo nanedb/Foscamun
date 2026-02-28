@@ -1,4 +1,4 @@
-﻿<Window x:Class="Foscamun2026.Views.MainWindow"
+<Window x:Class="Foscamun.Views.MainWindow"
         x:Name="Root"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -9,7 +9,7 @@
         Title="Foscamun"
         Height="600" Width="1000"
         WindowStartupLocation="CenterScreen"
-        Icon="/Foscamun2026;component/Resources/Foscamun.ico"
+        Icon="/Foscamun;component/Resources/Foscamun.ico"
         Background="{StaticResource WhiteBrush}">
 
     <Window.Resources>
@@ -83,83 +83,122 @@
                 </LinearGradientBrush>
             </Border.Background>
 
-            <StackPanel Orientation="Vertical" VerticalAlignment="Top" Cursor="">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-                <!-- Hamburger + icona a destra, dentro lo stesso StackPanel dei MenuButton -->
-                <Grid Margin="0,0,0,6" VerticalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <!-- Colonna principale: occupa tutto lo spazio disponibile -->
-                        <ColumnDefinition Width="*" />
-                        <!-- Colonna auto per l'icona a destra -->
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+                <StackPanel Grid.Row="0" Orientation="Vertical" VerticalAlignment="Top" Cursor="">
 
-                    <!--Hamburger button-->
-                    <Button Style="{StaticResource MenuButton}"
-                            VerticalAlignment="Center"
-                            Click="HamburgerBtn_Click"
-                            ToolTip="{DynamicResource HamburgerBtn}" Cursor="Hand">
-                            <svgc:SvgViewbox Width="20" Height="20"
-                                             VerticalAlignment="Center"
-                                             Source="pack://application:,,,/Resources/Icons/hamburger.svg"
-                                             Stretch="Uniform"
-                                             Margin="0,5,0,0"/>
-                    </Button>
+                    <!-- Hamburger + icona a destra, dentro lo stesso StackPanel dei MenuButton -->
+                    <Grid Margin="0,0,0,6" VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <!-- Colonna principale: occupa tutto lo spazio disponibile -->
+                            <ColumnDefinition Width="*" />
+                            <!-- Colonna auto per l'icona a destra -->
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-                    <!-- Icona a destra dell'hamburger: visibile solo quando il pannello è aperto -->
-                    <svgc:SvgViewbox Grid.Column="1"
-                                     Width="30" Height="30"
-                                     VerticalAlignment="Center"
-                                     HorizontalAlignment="Right"
-                                     Margin="0,0,10,0"
-                                     Source="pack://application:,,,/Resources/Icons/icon.svg"
+                        <!--Hamburger button-->
+                        <Button Style="{StaticResource MenuButton}"
+                                VerticalAlignment="Center"
+                                Click="HamburgerBtn_Click"
+                                ToolTip="{DynamicResource HamburgerBtn}" Cursor="Hand">
+                                <svgc:SvgViewbox Width="20" Height="20"
+                                                 VerticalAlignment="Center"
+                                                 Source="pack://application:,,,/Resources/Icons/hamburger.svg"
+                                                 Stretch="Uniform"
+                                                 Margin="0,5,0,0"/>
+                        </Button>
+
+                        <!-- Icona a destra dell'hamburger: visibile solo quando il pannello e aperto -->
+                        <svgc:SvgViewbox Grid.Column="1"
+                                         Width="30" Height="30"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Right"
+                                         Margin="0,0,10,0"
+                                         Source="pack://application:,,,/Resources/Icons/icon.svg"
+                                         Stretch="Uniform"
+                                         SnapsToDevicePixels="True"
+                                         UseLayoutRounding="True"
+                                         AutomationProperties.Name="Foscamun logo" Cursor="">
+                            <svgc:SvgViewbox.Style>
+                                <Style TargetType="svgc:SvgViewbox">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Style.Triggers>
+                                        <!-- Nasconde l'icona quando il pannello e collassato -->
+                                        <DataTrigger Binding="{Binding IsPaneCollapsed, ElementName=Root}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </svgc:SvgViewbox.Style>
+                        </svgc:SvgViewbox>
+                    </Grid>
+
+                    <!-- Pulsanti principali: MenuButton (usa lo stile MenuButton definito) -->
+                    <!-- Ogni Button mostra icona + testo; il testo viene nascosto quando IsPaneCollapsed == true -->
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Top">
+
+                        <!-- Home -->
+                        <Button x:Name="HomeBtn" Style="{StaticResource IconTooltipWhenCollapsed}"
+                                Margin="0,0,0,8"
+                                Click="HomeBtn_Click"
+                                Tag="{DynamicResource HomeBtn}">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <svgc:SvgViewbox Width="18" Height="18"
+                                     Source="pack://application:,,,/Resources/Icons/house.svg"
                                      Stretch="Uniform"
-                                     SnapsToDevicePixels="True"
-                                     UseLayoutRounding="True"
-                                     AutomationProperties.Name="Foscamun logo" Cursor="">
-                        <svgc:SvgViewbox.Style>
-                            <Style TargetType="svgc:SvgViewbox">
-                                <Setter Property="Visibility" Value="Visible"/>
-                                <Style.Triggers>
-                                    <!-- Nasconde l'icona quando il pannello è collassato -->
-                                    <DataTrigger Binding="{Binding IsPaneCollapsed, ElementName=Root}" Value="True">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </svgc:SvgViewbox.Style>
-                    </svgc:SvgViewbox>
-                </Grid>
-                
-                <!-- Pulsanti principali: MenuButton (usa lo stile MenuButton definito) -->
-                <!-- Ogni Button mostra icona + testo; il testo viene nascosto quando IsPaneCollapsed == true -->
-                <StackPanel Orientation="Vertical" VerticalAlignment="Top">
+                                     Margin="0,0,10,0"/>
+                                <TextBlock Text="{DynamicResource HomeBtn}"
+                                           VerticalAlignment="Center"
+                                           Foreground="{DynamicResource TextPrimaryBrush}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsPaneCollapsed, ElementName=Root}" Value="True">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </StackPanel>
+                        </Button>
 
-                    <!-- Home -->
-                    <Button x:Name="HomeBtn" Style="{StaticResource IconTooltipWhenCollapsed}"
-                            Margin="0,0,0,8"
-                            Click="HomeBtn_Click"
-                            Tag="{DynamicResource HomeBtn}">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <svgc:SvgViewbox Width="18" Height="18"
-                                 Source="pack://application:,,,/Resources/Icons/house.svg"
-                                 Stretch="Uniform"
-                                 Margin="0,0,10,0"/>
-                            <TextBlock Text="{DynamicResource HomeBtn}"
-                                       VerticalAlignment="Center"
-                                       Foreground="{DynamicResource TextPrimaryBrush}">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsPaneCollapsed, ElementName=Root}" Value="True">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-                        </StackPanel>
-                    </Button>
+                        <!-- Roll call -->
+                        <Button x:Name="RollCallBtn" Style="{StaticResource IconTooltipWhenCollapsed}"
+                                Margin="0,0,0,8"
+                                IsEnabled="{Binding IsRollCallEnabled}"
+                                Click="RollCallBtn_Click"
+                                Tag="{DynamicResource RollCallBtn}">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <svgc:SvgViewbox Width="18" Height="18"
+                                     Source="pack://application:,,,/Resources/Icons/next.svg"
+                                     Stretch="Uniform"
+                                     Margin="0,0,10,0"/>
+                                <TextBlock Text="{DynamicResource RollCallBtn}"
+                                           VerticalAlignment="Center"
+                                           Foreground="{DynamicResource TextPrimaryBrush}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsPaneCollapsed, ElementName=Root}" Value="True">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Pulsanti in basso -->
+                <StackPanel Grid.Row="2" Orientation="Vertical" VerticalAlignment="Bottom">
 
                     <!-- Configure -->
                     <Button x:Name="ConfigureBtn" Style="{StaticResource IconTooltipWhenCollapsed}"
@@ -175,33 +214,6 @@
                                        TextWrapping="Wrap"
                                        VerticalAlignment="Center"
                                        Foreground="{DynamicResource TextPrimaryBrush}" MaxWidth="130">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsPaneCollapsed, ElementName=Root}" Value="True">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-                        </StackPanel>
-                    </Button>
-
-                    <!-- Roll call -->
-                    <Button x:Name="RollCallBtn" Style="{StaticResource IconTooltipWhenCollapsed}"
-                            Margin="0,0,0,8"
-                            IsEnabled="{Binding IsRollCallEnabled}"
-                            Click="RollCallBtn_Click"
-                            Tag="{DynamicResource RollCallBtn}">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <svgc:SvgViewbox Width="18" Height="18"
-                                 Source="pack://application:,,,/Resources/Icons/next.svg"
-                                 Stretch="Uniform"
-                                 Margin="0,0,10,0"/>
-                            <TextBlock Text="{DynamicResource RollCallBtn}"
-                                       VerticalAlignment="Center"
-                                       Foreground="{DynamicResource TextPrimaryBrush}">
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
                                         <Style.Triggers>
@@ -241,7 +253,7 @@
                         </StackPanel>
                     </Button>
                 </StackPanel>
-            </StackPanel>
+            </Grid>
         </Border>
                     
         <!-- Area destra con header e Frame -->

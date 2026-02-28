@@ -1,7 +1,7 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Foscamun2026.ViewModels
+namespace Foscamun.ViewModels
 {
     public abstract class BaseViewModel : INotifyPropertyChanged
     {

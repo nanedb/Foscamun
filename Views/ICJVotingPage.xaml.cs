@@ -1,8 +1,8 @@
-using Foscamun2026.Models;
+using Foscamun.Models;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Foscamun2026.Views
+namespace Foscamun.Views
 {
     public partial class ICJVotingPage : Page
     {
@@ -90,23 +90,25 @@ namespace Foscamun2026.Views
         {
             int inFavorCount = _inFavorIndices.Count;
             int againstCount = _againstIndices.Count;
+            int abstainedCount = _abstainedIndices.Count;
             int totalVoters = _numVoters;
 
             if (Round == 1)
             {
-                // Round 1: Serve il 50% + 1 per passare
-                int requiredVotes = (totalVoters / 2) + 1;
+                // Round 1: Gli Abstained non contano, la maggioranza si calcola sui voti validi
+                int validVotes = inFavorCount + againstCount; // Esclusi gli astensioni
+                int requiredVotes = (validVotes / 2) + 1;
 
                 if (inFavorCount >= requiredVotes || againstCount >= requiredVotes)
                 {
-                    // Maggioranza raggiunta: vai a ICJResultPage
-                    var resultPage = new ICJResultPage(_voters, _inFavorIndices, _againstIndices, _sessionPage);
+                    // Maggioranza raggiunta: vai a ICJFinalResultPage
+                    var resultPage = new ICJFinalResultPage(_voters, _inFavorIndices, _againstIndices, _sessionPage);
                     NavigationService?.Navigate(resultPage);
                 }
                 else
                 {
                     // Nessuna maggioranza o parità: mostra risultati intermedi
-                    var intermediatePage = new ICJResultIntermediatePage(_voters, _inFavorIndices, _abstainedIndices, _againstIndices, _sessionPage);
+                    var intermediatePage = new ICJResultPage(_voters, _inFavorIndices, _abstainedIndices, _againstIndices, _sessionPage);
                     NavigationService?.Navigate(intermediatePage);
                 }
             }
@@ -115,20 +117,20 @@ namespace Foscamun2026.Views
                 // Round 2: Controlla se c'è una maggioranza (no parità)
                 if (inFavorCount > againstCount)
                 {
-                    // Maggioranza in favore: vai a ICJResultPage
-                    var resultPage = new ICJResultPage(_voters, _inFavorIndices, _againstIndices, _sessionPage);
+                    // Maggioranza in favore: vai a ICJFinalResultPage
+                    var resultPage = new ICJFinalResultPage(_voters, _inFavorIndices, _againstIndices, _sessionPage);
                     NavigationService?.Navigate(resultPage);
                 }
                 else if (againstCount > inFavorCount)
                 {
-                    // Maggioranza contro: vai a ICJResultPage
-                    var resultPage = new ICJResultPage(_voters, _inFavorIndices, _againstIndices, _sessionPage);
+                    // Maggioranza contro: vai a ICJFinalResultPage
+                    var resultPage = new ICJFinalResultPage(_voters, _inFavorIndices, _againstIndices, _sessionPage);
                     NavigationService?.Navigate(resultPage);
                 }
                 else
                 {
                     // Parità: mostra risultati intermedi prima del Round 3
-                    var intermediatePage = new ICJResultIntermediatePage(_voters, _inFavorIndices, _abstainedIndices, _againstIndices, _sessionPage);
+                    var intermediatePage = new ICJResultPage(_voters, _inFavorIndices, _abstainedIndices, _againstIndices, _sessionPage);
                     NavigationService?.Navigate(intermediatePage);
                 }
             }
@@ -136,7 +138,7 @@ namespace Foscamun2026.Views
             {
                 // Round 3: Se c'è parità, vincono gli Against
                 bool tieInRound3 = inFavorCount == againstCount;
-                var resultPage = new ICJResultPage(_voters, _inFavorIndices, _againstIndices, _sessionPage, tieInRound3);
+                var resultPage = new ICJFinalResultPage(_voters, _inFavorIndices, _againstIndices, _sessionPage, tieInRound3);
                 NavigationService?.Navigate(resultPage);
             }
         }

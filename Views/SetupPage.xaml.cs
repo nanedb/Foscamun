@@ -1,13 +1,13 @@
-﻿using Foscamun2026.Data;
-using Foscamun2026.Models;
-using Foscamun2026.ViewModels;
+using Foscamun.Data;
+using Foscamun.Models;
+using Foscamun.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 
-namespace Foscamun2026.Views
+namespace Foscamun.Views
 {
     public partial class SetupPage : Page
     {

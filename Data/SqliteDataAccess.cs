@@ -1,16 +1,19 @@
-Ôªøusing Foscamun2026.Models;
-using Foscamun2026.Repositories;
+using Foscamun.Models;
+using Foscamun.Repositories;
 using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows;
 
-namespace Foscamun2026.Data
+namespace Foscamun.Data
 {
     public class SqliteDataAccess
     {
         private readonly string _connectionString;
+        public static string AppDataFolder { get; private set; } = "";
+        public static string CommitteeLogoFolder { get; private set; } = "";
 
         public CommitteeRepository CommitteeRepository { get; init; }
         public CountryRepository CountryRepository { get; init; }
@@ -22,21 +25,157 @@ namespace Foscamun2026.Data
         /// </summary>
         public SqliteDataAccess()
         {
-            string folder = Path.Combine(
+            // Cartella principale: %LocalAppData%\Foscamun\
+            AppDataFolder = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "Foscamun2026"
+                "Foscamun"
             );
 
-            Directory.CreateDirectory(folder);
+            // Cartella loghi: %LocalAppData%\Foscamun\CommitteeLogo\
+            CommitteeLogoFolder = Path.Combine(AppDataFolder, "CommitteeLogo");
 
-            string dbPath = Path.Combine(folder, "Foscamun.db");
+            // Crea le cartelle se non esistono
+            Directory.CreateDirectory(AppDataFolder);
+            Directory.CreateDirectory(CommitteeLogoFolder);
+
+            // Percorso del database: %LocalAppData%\Foscamun\Foscamun.db
+            string dbPath = Path.Combine(AppDataFolder, "Foscamun.db");
+            
+            // Se il database non esiste, copialo dalla root della solution
+            if (!File.Exists(dbPath))
+            {
+                CopyDatabaseFromSolution(dbPath);
+            }
+
+            // Copia i loghi di default se la cartella Ë vuota
+            CopyDefaultLogosIfNeeded();
+            
             _connectionString = $"Data Source={dbPath}";
+            
             CommitteeRepository = new CommitteeRepository(_connectionString);
             CountryRepository = new CountryRepository(_connectionString);
             ICJRepository = new ICJRepository(_connectionString);
 
             // Ensure ICJMemberWarnings table exists
             EnsureICJMemberWarningsTableExists();
+        }
+
+        /// <summary>
+        /// Copies the database file from the solution root to AppData folder.
+        /// </summary>
+        private void CopyDatabaseFromSolution(string destinationPath)
+        {
+            // Ottieni il percorso della directory dell'eseguibile
+            string? exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            
+            // Cerca Foscamun.db nella directory dell'eseguibile
+            string sourcePath = Path.Combine(exeDirectory, "Foscamun.db");
+
+            if (File.Exists(sourcePath))
+            {
+                File.Copy(sourcePath, destinationPath, overwrite: false);
+            }
+            else
+            {
+                throw new FileNotFoundException(
+                    $"Database file not found. Expected location: {sourcePath}\n" +
+                    "Please ensure Foscamun.db is present in the solution root and set to 'Copy to Output Directory'."
+                );
+            }
+        }
+
+        /// <summary>
+        /// Copies default committee logos from Resources to AppData folder if needed.
+        /// </summary>
+        private void CopyDefaultLogosIfNeeded()
+        {
+            try
+            {
+                string exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                string sourceLogoFolder = Path.Combine(exeDirectory, "Resources", "CommitteeLogo");
+
+                // Se la cartella sorgente non esiste, non fare nulla
+                if (!Directory.Exists(sourceLogoFolder))
+                {
+                    return;
+                }
+
+                // Lista dei loghi da copiare
+                string[] logoFiles = Directory.GetFiles(sourceLogoFolder, "*.svg");
+
+                foreach (string sourceFile in logoFiles)
+                {
+                    string fileName = Path.GetFileName(sourceFile);
+                    string destFile = Path.Combine(CommitteeLogoFolder, fileName);
+
+                    // Copia solo se non esiste gi‡
+                    if (!File.Exists(destFile))
+                    {
+                        File.Copy(sourceFile, destFile, overwrite: false);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log dell'errore, ma non bloccare l'avvio dell'app
+                System.Diagnostics.Debug.WriteLine($"Error copying default logos: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Gets the path to a committee logo. Returns the custom logo if it exists,
+        /// otherwise returns the generic fallback logo.
+        /// Shows a warning message if the logo is missing.
+        /// </summary>
+        public static string GetCommitteeLogoPath(string committeeName, bool showWarning = false)
+        {
+            string logoPath = Path.Combine(CommitteeLogoFolder, $"{committeeName}.svg");
+
+            if (File.Exists(logoPath))
+            {
+                return logoPath;
+            }
+
+            // Logo mancante, mostra avviso se richiesto
+            if (showWarning)
+            {
+                string message = $"Logo for committee '{committeeName}' not found.\n\n" +
+                                 $"To add a custom logo:\n" +
+                                 $"1. Create an SVG file with white logo on transparent background\n" +
+                                 $"2. Name it '{committeeName}.svg'\n" +
+                                 $"3. Place it in: {CommitteeLogoFolder}\n\n" +
+                                 $"A generic logo will be used as '{committeeName}.svg' for now.";
+
+                MessageBox.Show(message, "Logo Missing", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                // Copia il logo generico come logo della commissione
+                CopyGenericLogoAs(committeeName);
+            }
+
+            // Ritorna il logo generico di fallback
+            return Path.Combine(CommitteeLogoFolder, "Generic.svg");
+        }
+
+        /// <summary>
+        /// Copies the Generic.svg logo and renames it to the committee name.
+        /// This ensures the warning message appears only once.
+        /// </summary>
+        private static void CopyGenericLogoAs(string committeeName)
+        {
+            try
+            {
+                string genericLogoPath = Path.Combine(CommitteeLogoFolder, "Generic.svg");
+                string newLogoPath = Path.Combine(CommitteeLogoFolder, $"{committeeName}.svg");
+
+                if (File.Exists(genericLogoPath) && !File.Exists(newLogoPath))
+                {
+                    File.Copy(genericLogoPath, newLogoPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error copying generic logo: {ex.Message}");
+            }
         }
 
         /// <summary>
@@ -411,7 +550,7 @@ namespace Foscamun2026.Data
         }
 
         // ============================================================
-        //  ICJ ‚Äî MAIN INFO (Topic, President, Moderator)
+        //  ICJ ó MAIN INFO (Topic, President, Moderator)
         // ============================================================
 
         /// <summary>
@@ -475,7 +614,7 @@ namespace Foscamun2026.Data
             await cmd.ExecuteNonQueryAsync();
         }
         // ============================================================
-        //  ICJ ‚Äî MEMBERS
+        //  ICJ ó MEMBERS
         // ============================================================
 
         /// <summary>
@@ -520,7 +659,7 @@ namespace Foscamun2026.Data
         }
 
         // ============================================================
-        //  ICJ ‚Äî COUNTRIES (CommID = -1)
+        //  ICJ ó COUNTRIES (CommID = -1)
         // ============================================================
 
         /// <summary>
@@ -567,7 +706,7 @@ namespace Foscamun2026.Data
             using var connection = new SqliteConnection(_connectionString);
             await connection.OpenAsync();
 
-            // ‚≠ê Cancella tutte le righe associate all'ICJ
+            // ? Cancella tutte le righe associate all'ICJ
             string sqlDelete = @"
                     DELETE FROM CountryLists
                     WHERE CommID = (SELECT CommID FROM Committees WHERE Name = 'ICJ');
@@ -576,7 +715,7 @@ namespace Foscamun2026.Data
             using (var cmd = new SqliteCommand(sqlDelete, connection))
                 await cmd.ExecuteNonQueryAsync();
 
-            // ‚≠ê Inserisci le nuove righe
+            // ? Inserisci le nuove righe
             foreach (var c in countries)
             {
                 string sqlInsert = @"
@@ -591,7 +730,7 @@ namespace Foscamun2026.Data
         }
 
         // ============================================================
-        //  ICJ ‚Äî MEMBER WARNINGS
+        //  ICJ ó MEMBER WARNINGS
         // ============================================================
 
         /// <summary>

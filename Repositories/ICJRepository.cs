@@ -1,9 +1,12 @@
-﻿using Microsoft.Data.Sqlite;
+using Microsoft.Data.Sqlite;
 using System.Text.Json;
-using Foscamun2026.Models;
+using Foscamun.Models;
 
-namespace Foscamun2026.Repositories
+namespace Foscamun.Repositories
 {
+    /// <summary>
+    /// Repository for managing ICJ (International Court of Justice) data in the database.
+    /// </summary>
     public class ICJRepository
     {
         private readonly string _connectionString;
@@ -13,9 +16,10 @@ namespace Foscamun2026.Repositories
             _connectionString = connectionString;
         }
 
-        // -------------------------
-        // LOAD
-        // -------------------------
+        /// <summary>
+        /// Loads the ICJ configuration from the database.
+        /// Returns a new empty ICJ instance if no data exists.
+        /// </summary>
         public ICJ Load()
         {
             using var conn = new SqliteConnection(_connectionString);
@@ -29,11 +33,11 @@ namespace Foscamun2026.Repositories
             if (!reader.Read())
                 return new ICJ();
 
-            // Lettura sicura delle stringhe
+            // Safe string reading helper
             string GetString(string column) =>
                 reader[column] as string ?? "";
 
-            // Lettura sicura della lista giurati
+            // Safe jurors list reading from JSON
             List<string> GetJurors()
             {
                 var json = reader["JurorsJson"] as string ?? "[]";
@@ -63,9 +67,10 @@ namespace Foscamun2026.Repositories
             };
         }
 
-        // -------------------------
-        // SAVE
-        // -------------------------
+        /// <summary>
+        /// Saves the ICJ configuration to the database.
+        /// Deletes any existing ICJ data and inserts the new configuration.
+        /// </summary>
         public void Save(ICJ icj)
         {
             using var conn = new SqliteConnection(_connectionString);
@@ -108,9 +113,9 @@ namespace Foscamun2026.Repositories
             cmd.ExecuteNonQuery();
         }
 
-        // -------------------------
-        // HAS DATA
-        // -------------------------
+        /// <summary>
+        /// Checks if ICJ data exists in the database.
+        /// </summary>
         public bool HasData()
         {
             using var conn = new SqliteConnection(_connectionString);

@@ -1,9 +1,9 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Windows;
-using Foscamun2026.Data;
+using Foscamun.Data;
 
-namespace Foscamun2026.ViewModels
+namespace Foscamun.ViewModels
 {
     public partial class MainViewModel : ObservableObject
     {
