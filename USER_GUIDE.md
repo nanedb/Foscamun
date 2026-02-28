@@ -1,177 +1,177 @@
-# 📖 Foscamun - Guida Rapida Utente
+# 📖 Foscamun - Quick User Guide
 
-## 🚀 Primo Avvio
+## 🚀 First Launch
 
-1. **Estrai** tutti i file dall'archivio ZIP
-2. **Esegui** `Foscamun.exe`
-3. Al primo avvio, il database verrà creato automaticamente
+1. **Extract** all files from the ZIP archive
+2. **Run** `Foscamun.exe`
+3. On first launch, the database will be created automatically
 
-## ⚙️ Configurazione Iniziale
+## ⚙️ Initial Setup
 
-### 1. Seleziona la Lingua
-- Scegli tra Inglese, Francese o Spagnolo
-- La lingua può essere cambiata in qualsiasi momento
+### 1. Select Language
+- Choose between English, French, or Spanish
+- Language can be changed at any time
 
-### 2. Imposta l'Anno
-- Inserisci l'anno della conferenza MUN
+### 2. Set the Year
+- Enter the year of the MUN conference
 
-### 3. Aggiungi una Commissione
-1. Clicca su **"Aggiungi Commissione"**
-2. Inserisci:
-   - Nome commissione
-   - Presidente
-   - Vice-presidente
-   - Moderatore
-   - Tema
-3. Clicca **"OK"**
+### 3. Add a Committee
+1. Click **"Add Committee"**
+2. Enter:
+   - Committee name
+   - President
+   - Vice-president
+   - Moderator
+   - Topic
+3. Click **"OK"**
 
-### 4. Aggiungi Paesi alla Commissione
-1. Seleziona la commissione
-2. Clicca **"Modifica Commissione"**
-3. Aggiungi i paesi partecipanti
-4. Clicca **"Salva"**
+### 4. Add Countries to Committee
+1. Select the committee
+2. Click **"Edit Committee"**
+3. Add participating countries
+4. Click **"Save"**
 
-## 📋 Gestire una Sessione
+## 📋 Managing a Session
 
-### Fase 1: Appello (Roll Call)
+### Phase 1: Roll Call
 
-1. **Dal menu principale**, clicca su **"Appello"**
-2. Seleziona:
-   - Tema (già impostato nella commissione)
-   - Numero di sessione
-3. **Segna i presenti**:
-   - Clicca su un paese nella lista "Disponibili"
-   - Il paese si sposterà nella lista "Presenti"
-   - Oppure usa **"Segna tutti presenti"**
-4. Clicca **"Continua"** per iniziare la sessione
+1. **From the main menu**, click **"Roll Call"**
+2. Select:
+   - Topic (already set in the committee)
+   - Session number
+3. **Mark present delegates**:
+   - Click on a country in the "Available" list
+   - The country will move to the "Present" list
+   - Or use **"Mark all present"**
+4. Click **"Proceed"** to start the session
 
-### Fase 2: Sessione
+### Phase 2: Session
 
-1. **Lista Oratori**:
-   - Clicca su un paese in "Oratori Disponibili"
-   - Il paese viene aggiunto alla "Lista Oratori"
-   - L'ordine può essere gestito
+1. **Speakers List**:
+   - Click on a country in "Available Speakers"
+   - The country is added to the "Speakers List"
+   - Order can be managed
 
-2. **Oratore Corrente**:
-   - Il primo nella lista diventa l'oratore corrente
-   - Usa il **Timer** per gestire il tempo di intervento
+2. **Current Speaker**:
+   - The first in the list becomes the current speaker
+   - Use the **Timer** to manage speaking time
 
-3. **Gestione Oratore**:
-   - **Rimuovi**: Toglie l'oratore dalla lista
-   - **Avvisa**: Aggiunge un avviso all'oratore
-   - **Rimuovi Avviso**: Toglie un avviso
+3. **Speaker Management**:
+   - **Remove**: Removes the speaker from the list
+   - **Warn**: Adds a warning to the speaker
+   - **Remove Warning**: Removes a warning
 
-4. **Quando serve votare**:
-   - Clicca su **"Votazione"**
+4. **When voting is needed**:
+   - Click **"Voting"**
 
-### Fase 3: Votazione
+### Phase 3: Voting
 
-1. **Prima del voto**:
-   - Tutti i paesi presenti sono disponibili per votare
+1. **Before voting**:
+   - All present countries are available to vote
 
-2. **Durante il voto**, per ogni paese clicca:
-   - **Approva** - Voto a favore
-   - **Astieni** - Astensione
-   - **Rifiuta** - Voto contro
+2. **During voting**, for each country click:
+   - **Approve** - Vote in favor
+   - **Abstain** - Abstention
+   - **Reject** - Vote against
 
-3. **Risultati**:
-   - Vengono mostrati i risultati del round
-   - Clicca **"Nuovo Round"** per un altro giro di voti
-   - Oppure **"Indietro"** per tornare alla sessione
+3. **Results**:
+   - Round results are shown
+   - Click **"New Round"** for another voting round
+   - Or **"Back"** to return to session
 
-4. **Risultati Finali**:
-   - Mostra il risultato complessivo di tutti i round
-   - Indica se la mozione è approvata o respinta
+4. **Final Results**:
+   - Shows the overall result of all rounds
+   - Indicates if the motion is approved or rejected
 
-## 🏛️ CIJ (Corte Internazionale di Giustizia)
+## 🏛️ ICJ (International Court of Justice)
 
-La CIJ funziona in modo simile ma con alcune differenze:
+ICJ works similarly but with some differences:
 
-### Configurazione CIJ
-1. Clicca **"Modifica CIJ"** dalla configurazione
-2. Inserisci:
-   - Giudice principale
-   - Vice-giudice 1
-   - Vice-giudice 2
-   - Tema del caso
-3. Aggiungi:
-   - Avvocati
-   - Giurati
+### ICJ Configuration
+1. Click **"Edit ICJ"** from configuration
+2. Enter:
+   - Main judge
+   - Vice-judge 1
+   - Vice-judge 2
+   - Case topic
+3. Add:
+   - Advocates
+   - Jurors
 
-### Sessione CIJ
-- L'appello include avvocati e giurati
-- La sessione funziona come per le commissioni normali
-- Il sistema di votazione è lo stesso
+### ICJ Session
+- Roll call includes advocates and jurors
+- Session works like regular committees
+- Voting system is the same
 
-## ⌨️ Scorciatoie da Tastiera
+## ⌨️ Keyboard Shortcuts
 
-- **Home** → Torna alla pagina principale
-- **Esc** → Torna indietro (dove disponibile)
+- **Home** → Return to main page
+- **Esc** → Go back (where available)
 
-## 💾 Dati e Backup
+## 💾 Data and Backup
 
-### Dove sono salvati i dati?
-- Database: `Foscamun.db` (nella cartella dell'applicazione)
-- Impostazioni: Salvate automaticamente
+### Where is data saved?
+- Database: `Foscamun.db` (in application folder)
+- Settings: Saved automatically
 
-### Come fare un backup?
-1. Chiudi l'applicazione
-2. Copia il file `Foscamun.db`
-3. Conserva la copia in un luogo sicuro
+### How to backup?
+1. Close the application
+2. Copy the file `Foscamun.db`
+3. Store the copy in a safe place
 
-### Come ripristinare un backup?
-1. Chiudi l'applicazione
-2. Sostituisci `Foscamun.db` con la copia di backup
-3. Riavvia l'applicazione
+### How to restore a backup?
+1. Close the application
+2. Replace `Foscamun.db` with the backup copy
+3. Restart the application
 
-## 🎨 Personalizzazione
+## 🎨 Customization
 
-### Loghi Commissioni
-I loghi si trovano in: `Resources\CommitteeLogo\`
+### Committee Logos
+Logos are located in: `Resources\CommitteeLogo\`
 
-**Per aggiungere un logo personalizzato:**
-1. Crea un file SVG con il nome della commissione (es. `ECOSOC.svg`)
-2. Posizionalo in `Resources\CommitteeLogo\`
-3. Riavvia l'applicazione
+**To add a custom logo:**
+1. Create an SVG file with the committee name (e.g., `ECOSOC.svg`)
+2. Place it in `Resources\CommitteeLogo\`
+3. Restart the application
 
-**Logo generico:** Se non c'è un logo specifico, viene usato `Generic.svg`
+**Generic logo:** If there's no specific logo, `Generic.svg` is used
 
-### Suoni
-I file audio si trovano in: `Resources\Sounds\`
-- Formato supportato: WAV
-- Usati per notifiche e timer
+### Sounds
+Audio files are in: `Resources\Sounds\`
+- Supported format: WAV
+- Used for notifications and timer
 
-## ❓ Problemi Comuni
+## ❓ Common Issues
 
-### L'applicazione non si avvia
-- Verifica di avere Windows 10 o superiore
-- Prova a eseguire come amministratore (click destro → "Esegui come amministratore")
+### Application won't start
+- Verify you have Windows 10 or higher
+- Try running as administrator (right-click → "Run as administrator")
 
-### Database non trovato
-- Verifica che `Foscamun.db` sia nella stessa cartella di `Foscamun.exe`
-- Se mancante, l'applicazione lo ricreerà automaticamente (vuoto)
+### Database not found
+- Verify `Foscamun.db` is in the same folder as `Foscamun.exe`
+- If missing, the application will recreate it automatically (empty)
 
-### I loghi non si vedono
-- Verifica che la cartella `Resources\CommitteeLogo\` esista
-- Verifica che i file SVG siano validi
-- Usa `Generic.svg` come fallback
+### Logos not showing
+- Verify the folder `Resources\CommitteeLogo\` exists
+- Verify SVG files are valid
+- Use `Generic.svg` as fallback
 
-### Lingua non cambia
-- Riavvia l'applicazione dopo aver cambiato la lingua
+### Language doesn't change
+- Restart the application after changing language
 
-## 📧 Supporto
+## 📧 Support
 
-- **Bug o problemi?** Apri una issue su: https://github.com/nanedb/Foscamun2026/issues
-- **Domande?** Usa le discussioni: https://github.com/nanedb/Foscamun2026/discussions
+- **Bugs or issues?** Open an issue at: https://github.com/nanedb/Foscamun2026/issues
+- **Questions?** Use discussions: https://github.com/nanedb/Foscamun2026/discussions
 
-## 📚 Risorse Aggiuntive
+## 📚 Additional Resources
 
-- **Documentazione completa**: [README.md](README.md)
-- **Guida deployment**: [DEPLOYMENT.md](DEPLOYMENT.md)
+- **Complete documentation**: [README.md](README.md)
+- **Deployment guide**: [DEPLOYMENT.md](DEPLOYMENT.md)
 - **Release notes**: [RELEASE_NOTES_TEMPLATE.md](RELEASE_NOTES_TEMPLATE.md)
 
 ---
 
-**Versione**: 1.0.0  
-**Ultimo aggiornamento**: 2025  
+**Version**: 1.0.0  
+**Last updated**: 2025  
 **Repository**: https://github.com/nanedb/Foscamun2026

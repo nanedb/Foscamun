@@ -1,111 +1,111 @@
 # Foscamun v1.0.0
 
-**Data di rilascio**: [Data]
+**Release Date**: [Date]
 
-## 🎉 Novità
+## 🎉 What's New
 
-- Sistema di gestione commissioni MUN completo
-- Supporto per CIJ (Corte Internazionale di Giustizia)
-- Sistema di appello (Roll Call) per delegati
-- Gestione sessioni con lista oratori
-- Sistema di votazione con round multipli
-- Timer integrato per gli interventi
-- Supporto multilingua (Inglese, Francese, Spagnolo)
-- Database SQLite per persistenza dati
-- Loghi personalizzabili per commissioni
+- Complete MUN committee management system
+- ICJ (International Court of Justice) support
+- Roll call system for delegates
+- Session management with speakers list
+- Multi-round voting system
+- Integrated timer for speeches
+- Multi-language support (English, French, Spanish)
+- SQLite database for data persistence
+- Customizable committee logos
 
-## 📋 Funzionalità
+## 📋 Features
 
-### Gestione Commissioni
-- Creazione e modifica commissioni
-- Assegnazione presidente, vice-presidente e moderatore
-- Gestione paesi partecipanti
-- Temi e sessioni
+### Committee Management
+- Create and edit committees
+- Assign president, vice-president, and moderator
+- Manage participating countries
+- Topics and sessions
 
-### Sistema di Sessione
-- Lista oratori dinamica
-- Timer per interventi
-- Sistema di avvisi
-- Rimozione oratori
+### Session System
+- Dynamic speakers list
+- Timer for speeches
+- Warning system
+- Remove speakers
 
-### Sistema di Voto
-- Votazione per approvazione/astensione/reiezione
-- Round multipli di votazione
-- Risultati finali con statistiche
+### Voting System
+- Voting for approval/abstention/rejection
+- Multiple voting rounds
+- Final results with statistics
 
-### CIJ Speciale
-- Gestione giudici (principale e vice)
-- Gestione avvocati e giurati
-- Sistema di votazione personalizzato
+### Special ICJ
+- Manage judges (main and vice)
+- Manage advocates and jurors
+- Custom voting system
 
 ## 💾 Download
 
-Scegli la versione appropriata per il tuo sistema:
+Choose the appropriate version for your system:
 
-### Windows 64-bit (Consigliato)
-**Foscamun-win-x64-v1.0.0.zip** (~150 MB)
-- Per la maggior parte dei PC moderni
+### Windows 64-bit (Recommended)
+**Foscamun-win-x64-v1.0.0.zip** (~68 MB)
+- For most modern PCs
 - Windows 10/11 64-bit
 
 ### Windows 32-bit
-**Foscamun-win-x86-v1.0.0.zip** (~130 MB)
-- Per PC più vecchi
+**Foscamun-win-x86-v1.0.0.zip** (~63 MB)
+- For older PCs
 - Windows 10/11 32-bit
 
 ### Windows ARM64
-**Foscamun-win-arm64-v1.0.0.zip** (~140 MB)
-- Per dispositivi Windows ARM (es. Surface Pro X)
+**Foscamun-win-arm64-v1.0.0.zip** (~64 MB)
+- For Windows ARM devices (e.g., Surface Pro X)
 
-## 📥 Installazione
+## 📥 Installation
 
-1. Scarica il file ZIP appropriato
-2. Estrai il contenuto in una cartella
-3. Esegui `Foscamun.exe`
-4. Nessuna installazione richiesta - l'applicazione è self-contained
+1. Download the appropriate ZIP file
+2. Extract contents to a folder
+3. Run `Foscamun.exe`
+4. No installation required - application is self-contained
 
-## ⚙️ Requisiti di Sistema
+## ⚙️ System Requirements
 
-- **Sistema Operativo**: Windows 10 o superiore
-- **Memoria RAM**: 4 GB minimo (8 GB consigliato)
-- **Spazio su disco**: 500 MB liberi
-- **Risoluzione**: 1024x768 minimo (1920x1080 consigliato)
+- **Operating System**: Windows 10 or higher
+- **RAM**: 4 GB minimum (8 GB recommended)
+- **Disk Space**: 500 MB free
+- **Resolution**: 1024x768 minimum (1920x1080 recommended)
 
-## 🐛 Problemi Risolti
+## 🐛 Bug Fixes
 
-- Risolti errori di codifica XML con caratteri speciali
-- Corretta navigazione Back da SessionPage a RollCallPage
-- Normalizzazione codici lingua (en-US → en)
-- Ottimizzazione gestione risorse
+- Fixed XML encoding errors with special characters
+- Fixed Back navigation from SessionPage to RollCallPage
+- Normalized language codes (en-US → en)
+- Optimized resource management
 
-## 📚 Documentazione
+## 📚 Documentation
 
-Per maggiori informazioni consulta:
-- [DEPLOYMENT.md](DEPLOYMENT.md) - Guida al deployment
-- [README.md](README.md) - Documentazione principale
+For more information see:
+- [DEPLOYMENT.md](DEPLOYMENT.md) - Deployment guide
+- [README.md](README.md) - Main documentation
 
-## 🔄 Aggiornamento da Versioni Precedenti
+## 🔄 Upgrading from Previous Versions
 
-Prima installazione - nessun aggiornamento necessario.
+First installation - no upgrade needed.
 
-## 🆘 Supporto
+## 🆘 Support
 
 - **Issues**: https://github.com/nanedb/Foscamun2026/issues
-- **Discussioni**: https://github.com/nanedb/Foscamun2026/discussions
+- **Discussions**: https://github.com/nanedb/Foscamun2026/discussions
 
-## 📝 Note
+## 📝 Notes
 
-- Il database `Foscamun.db` viene creato automaticamente al primo avvio
-- Le impostazioni sono salvate automaticamente
-- I loghi delle commissioni possono essere personalizzati in `Resources\CommitteeLogo\`
+- Database `Foscamun.db` is created automatically on first launch
+- Settings are saved automatically
+- Committee logos can be customized in `Resources\CommitteeLogo\`
 
 ---
 
-**Checksum SHA256** (per verifica integrità):
+**SHA256 Checksums** (for integrity verification):
 ```
-Foscamun-win-x64-v1.0.0.zip:   [Da calcolare]
-Foscamun-win-x86-v1.0.0.zip:   [Da calcolare]
-Foscamun-win-arm64-v1.0.0.zip: [Da calcolare]
+Foscamun-win-x64-v1.0.0.zip:   [To be calculated]
+Foscamun-win-x86-v1.0.0.zip:   [To be calculated]
+Foscamun-win-arm64-v1.0.0.zip: [To be calculated]
 ```
 
 **Repository**: https://github.com/nanedb/Foscamun2026  
-**Licenza**: [La tua licenza]
+**License**: [Your license]
