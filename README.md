@@ -68,9 +68,6 @@ A modern, feature-rich desktop application for managing Model United Nations (MU
 
 ## 🖥️ Screenshots
 
-> *Add screenshots here to showcase your application*
-
-
 ![Home Screen](docs/screenshots/home.png)
 ![Committee Setup](docs/screenshots/setup.png)
 ![Roll Call](docs/screenshots/rollcall.png)
