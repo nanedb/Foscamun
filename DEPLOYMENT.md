@@ -92,10 +92,14 @@ Verify these are present:
 **Self-Contained:**
 - Windows 10 or higher
 - 64-bit, 32-bit, or ARM64 (depending on version)
+- ✅ **No administrator privileges required**
+- ✅ **No installation needed** - Extract and run
+- Recommended: Extract to user folders (Desktop, Documents) not system folders
 
 **Framework-Dependent:**
 - Windows 10 or higher
 - .NET 10 Desktop Runtime
+- ⚠️ Runtime installation requires administrator
 
 ## 🔧 Troubleshooting
 
@@ -106,6 +110,11 @@ Verify these are present:
 ### "Error starting the application"
 - Verify `Foscamun.db` is present
 - Verify read/write permissions in folder
+- ⚠️ If extracted to `C:\Program Files\`, move to a user folder
+
+### "Access Denied" errors
+- **Solution**: Extract to a user folder (Desktop, Documents, `C:\Users\YourName\`)
+- Avoid system-protected folders like `C:\Program Files\` or `C:\Windows\`
 
 ### Single File doesn't work
 Remove `-p:PublishSingleFile=true` from publish command

@@ -2,8 +2,11 @@
 
 ## 🚀 First Launch
 
-1. **Extract** all files from the ZIP archive
+1. **Extract** all files from the ZIP archive to a user folder (e.g., Desktop, Documents)
+   - ⚠️ Avoid protected folders like `C:\Program Files\`
 2. **Run** `Foscamun.exe`
+   - ✅ No administrator privileges required
+   - ✅ No installation needed
 3. On first launch, the database will be created automatically
 
 ## ⚙️ Initial Setup

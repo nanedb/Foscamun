@@ -59,9 +59,12 @@ Choose the appropriate version for your system:
 ## 📥 Installation
 
 1. Download the appropriate ZIP file
-2. Extract contents to a folder
+2. Extract contents to a user folder (Desktop, Documents, etc.)
+   - ⚠️ Avoid protected folders like `C:\Program Files\`
 3. Run `Foscamun.exe`
-4. No installation required - application is self-contained
+   - ✅ **No administrator privileges required**
+   - ✅ **No installation needed** - Application is portable and self-contained
+4. Database will be created automatically on first launch
 
 ## ⚙️ System Requirements
 
