@@ -7,7 +7,7 @@
 
 A modern, feature-rich desktop application for managing Model United Nations (MUN) conferences. Built with WPF and .NET 10, Foscamun streamlines committee sessions, roll calls, speaker management, and voting processes.
 
-![Foscamun Banner](Resources/Foscamun Logo vettoriale.svg)
+![Foscamun Logo](Resources/FoscamunLogo.svg)
 
 ---
 
