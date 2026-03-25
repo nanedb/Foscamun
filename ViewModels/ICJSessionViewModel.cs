@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Foscamun.Data;
 using Foscamun.Models;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -90,10 +91,10 @@ namespace Foscamun.ViewModels
                 AvailableSpeakers.Add(member);
             }
 
-            // Sorting per AvailableSpeakers
-            var viewAvailable = CollectionViewSource.GetDefaultView(AvailableSpeakers);
-            viewAvailable.SortDescriptions.Add(
-                new SortDescription(nameof(ICJRollCallMember.DisplayName), ListSortDirection.Ascending));
+            // Custom sorting: first by role (Defense, Plaintiff, Juror), then by last name
+            var viewAvailable = (ListCollectionView)CollectionViewSource.GetDefaultView(AvailableSpeakers);
+            viewAvailable.SortDescriptions.Clear();
+            viewAvailable.CustomSort = new ICJMemberComparer();
 
             AddSpeakerCommand = new RelayCommand<ICJRollCallMember>(AddSpeaker);
             RemoveCurrentSpeakerCommand = new RelayCommand(RemoveCurrentSpeaker, CanRemoveCurrentSpeaker);
@@ -268,3 +269,4 @@ namespace Foscamun.ViewModels
         }
     }
 }
+

@@ -20,7 +20,8 @@ namespace Foscamun.Views
         {
             InitializeComponent();
 
-            _voters = new List<ICJRollCallMember>(voters);
+            // Sort voters by last name
+            _voters = voters.OrderBy(v => GetLastName(v.Member.Name)).ToList();
             _numVoters = _voters.Count;
             _currentVoterIndex = 0;
             _sessionPage = sessionPage;
@@ -142,5 +143,19 @@ namespace Foscamun.Views
                 NavigationService?.Navigate(resultPage);
             }
         }
+
+        /// <summary>
+        /// Extracts the last name from a full name.
+        /// Assumes format "FirstName LastName" or "FirstName MiddleName LastName".
+        /// </summary>
+        private static string GetLastName(string? fullName)
+        {
+            if (string.IsNullOrWhiteSpace(fullName))
+                return "";
+
+            var parts = fullName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            return parts.Length > 0 ? parts[^1] : "";
+        }
     }
 }
+
