@@ -370,3 +370,6 @@ Publish/
 # Local database changes (keep the template)
 # Uncomment if you want to ignore local database modifications
 # Foscamun.db
+
+# JetBrains IDE (Rider/IntelliJ)
+.idea/
