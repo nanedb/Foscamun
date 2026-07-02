@@ -17,5 +17,8 @@
     <Setting Name="Year" Type="System.String" Scope="User">
       <Value Profile="(Default)">2026</Value>
     </Setting>
+    <Setting Name="SettingsUpgraded" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

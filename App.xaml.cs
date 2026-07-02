@@ -19,6 +19,15 @@ namespace Foscamun
         {
             base.OnStartup(e);
 
+            // Le impostazioni utente sono salvate per versione assembly: dopo un
+            // aggiornamento vanno migrate dalla versione precedente.
+            if (!Settings.Default.SettingsUpgraded)
+            {
+                Settings.Default.Upgrade();
+                Settings.Default.SettingsUpgraded = true;
+                Settings.Default.Save();
+            }
+
             // Inizializza il database (crea le cartelle e il file .db se non esistono)
             var db = new SqliteDataAccess();
 

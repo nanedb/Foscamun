@@ -66,7 +66,7 @@ NOTE:
 - I suoni sono nella cartella Resources\Sounds
 
 SUPPORTO:
-Repository GitHub: https://github.com/nanedb/Foscamun2026
+Repository GitHub: https://github.com/nanedb/Foscamun
 "@
         
         Set-Content -Path "$outputPath\README.txt" -Value $readmeContent

@@ -11,9 +11,9 @@
     <RootNamespace>Foscamun</RootNamespace>
 
     <!-- Assembly Info -->
-    <Version>1.1.0</Version>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
+    <Version>1.2.0</Version>
+    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <FileVersion>1.2.0.0</FileVersion>
     <Company>Foscamun</Company>
     <Product>Foscamun</Product>
     <Copyright>Copyright © 2025</Copyright>
@@ -70,7 +70,10 @@
   <!-- Pacchetti NuGet -->
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.66" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.1" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.9" />
+    <!-- Direct reference to lift the transitive SQLitePCLRaw 2.1.11
+         (vulnerable, GHSA-2m69-gcr7-jv3q) to the patched 3.x line -->
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.3" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.1" />
