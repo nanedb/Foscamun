@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Foscamun.Data;
 using Foscamun.Models;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -75,14 +76,14 @@ namespace Foscamun.ViewModels
                 Sessions.Add(i);
             }
 
-            // Enable sorting by display name for both lists
-            var viewAvailable = CollectionViewSource.GetDefaultView(AvailableMembers);
-            viewAvailable.SortDescriptions.Add(
-                new SortDescription(nameof(ICJRollCallMember.DisplayName), ListSortDirection.Ascending));
+            // Enable custom sorting: first by role (Defense, Plaintiff, Juror), then by last name
+            var viewAvailable = (ListCollectionView)CollectionViewSource.GetDefaultView(AvailableMembers);
+            viewAvailable.SortDescriptions.Clear();
+            viewAvailable.CustomSort = new ICJMemberComparer();
 
-            var viewPresent = CollectionViewSource.GetDefaultView(PresentMembers);
-            viewPresent.SortDescriptions.Add(
-                new SortDescription(nameof(ICJRollCallMember.DisplayName), ListSortDirection.Ascending));
+            var viewPresent = (ListCollectionView)CollectionViewSource.GetDefaultView(PresentMembers);
+            viewPresent.SortDescriptions.Clear();
+            viewPresent.CustomSort = new ICJMemberComparer();
 
             ProceedCommand = new RelayCommand(Proceed, CanProceed);
             MarkAllPresentCommand = new RelayCommand(MarkAllPresent, CanMarkAllPresent);
@@ -166,3 +167,4 @@ namespace Foscamun.ViewModels
         }
     }
 }
+
