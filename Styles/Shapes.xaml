@@ -2,17 +2,21 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
-    <!-- CornerRadius -->
-    <CornerRadius x:Key="CornerRadiusSmall">4</CornerRadius>
-    <CornerRadius x:Key="CornerRadiusMedium">6</CornerRadius>
-    <CornerRadius x:Key="CornerRadiusLarge">10</CornerRadius>
+    <!-- Corner radii: generous rounding for a modern, soft look -->
+    <CornerRadius x:Key="CornerRadiusSmall">6</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusMedium">10</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusLarge">16</CornerRadius>
 
     <!-- Padding -->
-    <Thickness x:Key="InputPadding">6</Thickness>
+    <Thickness x:Key="InputPadding">8,6</Thickness>
     <Thickness x:Key="ButtonPadding">14,0</Thickness>
 
-    <!-- Heights -->
+    <!-- Control heights -->
     <sys:Double x:Key="InputHeight">36</sys:Double>
     <sys:Double x:Key="ButtonHeight">48</sys:Double>
+
+    <!-- Elevation shadows (neutral black, shared by cards / popups / panels) -->
+    <DropShadowEffect x:Key="ShadowSoft" BlurRadius="14" ShadowDepth="2" Direction="270" Opacity="0.25" Color="Black"/>
+    <DropShadowEffect x:Key="ShadowElevated" BlurRadius="22" ShadowDepth="4" Direction="270" Opacity="0.35" Color="Black"/>
 
 </ResourceDictionary>

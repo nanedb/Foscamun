@@ -44,6 +44,7 @@ namespace Foscamun.ViewModels
         private ICJRollCallMember? currentSpeaker;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(RemoveWarningCommand))]
         private ICJRollCallMember? selectedWarnedMember;
 
         public ObservableCollection<ICJRollCallMember> AvailableSpeakers { get; } = new();
@@ -98,7 +99,7 @@ namespace Foscamun.ViewModels
             AddSpeakerCommand = new RelayCommand<ICJRollCallMember>(AddSpeaker);
             RemoveCurrentSpeakerCommand = new RelayCommand(RemoveCurrentSpeaker, CanRemoveCurrentSpeaker);
             WarnCurrentSpeakerCommand = new RelayCommand(WarnCurrentSpeaker, CanWarnCurrentSpeaker);
-            RemoveWarningCommand = new RelayCommand<ICJRollCallMember>(RemoveWarning);
+            RemoveWarningCommand = new RelayCommand<ICJRollCallMember>(RemoveWarning, CanRemoveWarning);
             OpenTimerCommand = new RelayCommand(OpenTimer);
             OpenVotingCommand = new RelayCommand(OpenVoting);
 
@@ -198,6 +199,8 @@ namespace Foscamun.ViewModels
                 CollectionViewSource.GetDefaultView(WarnedList).Refresh();
             }
         }
+
+        private bool CanRemoveWarning(ICJRollCallMember? member) => member != null;
 
         private async void RemoveWarning(ICJRollCallMember? member)
         {

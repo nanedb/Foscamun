@@ -160,18 +160,12 @@
                    Foreground="{StaticResource TextInputBrush}"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
+            <!-- Global rounded item style + bold when selected -->
             <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="Background" Value="{StaticResource InputBackgroundBrush}"/>
-                    <Setter Property="Foreground" Value="{StaticResource TextInputBrush}"/>
-                    <Setter Property="Padding" Value="5"/>
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    <Setter Property="Focusable" Value="True"/>
-
+                <Style TargetType="ListViewItem" BasedOn="{StaticResource {x:Type ListViewItem}}">
                     <Style.Triggers>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="FontWeight" Value="Bold"/>
-                            <Setter Property="Background" Value="#22000000"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>

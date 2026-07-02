@@ -13,75 +13,74 @@
         Background="{StaticResource WhiteBrush}">
 
     <Window.Resources>
+
+        <!-- Sidebar label: hidden when the pane is collapsed -->
+        <Style x:Key="SidebarLabel" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsPaneCollapsed, ElementName=Root}" Value="True">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Sidebar icon: fixed size, gap before the label -->
+        <Style x:Key="SidebarIcon" TargetType="svgc:SvgViewbox">
+            <Setter Property="Width" Value="18"/>
+            <Setter Property="Height" Value="18"/>
+            <Setter Property="Stretch" Value="Uniform"/>
+            <Setter Property="Margin" Value="0,0,10,0"/>
+        </Style>
+
+        <!-- Page transitions: slide + fade + blur -->
         <Storyboard x:Key="RightFrameSlideIn">
-            <!-- Movimento con overshoot -->
             <DoubleAnimation Storyboard.TargetName="RightFrame"
-                     Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                     From="300" To="0"
-                     Duration="0:0:0.38">
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                             From="300" To="0" Duration="0:0:0.38">
                 <DoubleAnimation.EasingFunction>
                     <BackEase Amplitude="0.35" EasingMode="EaseOut"/>
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
-
-            <!-- Fade -->
+            <DoubleAnimation Storyboard.TargetName="RightFrame" Storyboard.TargetProperty="Opacity"
+                             From="0" To="1" Duration="0:0:0.38"/>
             <DoubleAnimation Storyboard.TargetName="RightFrame"
-                     Storyboard.TargetProperty="Opacity"
-                     From="0" To="1"
-                     Duration="0:0:0.38"/>
-
-            <!-- Blur dinamico -->
-            <DoubleAnimation Storyboard.TargetName="RightFrame"
-                     Storyboard.TargetProperty="(UIElement.Effect).(BlurEffect.Radius)"
-                     From="12" To="0"
-                     Duration="0:0:0.38"/>
+                             Storyboard.TargetProperty="(UIElement.Effect).(BlurEffect.Radius)"
+                             From="12" To="0" Duration="0:0:0.38"/>
         </Storyboard>
 
         <Storyboard x:Key="RightFrameSlideOut">
-            <!-- Movimento con overshoot inverso -->
             <DoubleAnimation Storyboard.TargetName="RightFrame"
-                     Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                     From="0" To="300"
-                     Duration="0:0:0.32">
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                             From="0" To="300" Duration="0:0:0.32">
                 <DoubleAnimation.EasingFunction>
                     <BackEase Amplitude="0.25" EasingMode="EaseIn"/>
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
-
-            <!-- Fade -->
+            <DoubleAnimation Storyboard.TargetName="RightFrame" Storyboard.TargetProperty="Opacity"
+                             From="1" To="0" Duration="0:0:0.28"/>
             <DoubleAnimation Storyboard.TargetName="RightFrame"
-                     Storyboard.TargetProperty="Opacity"
-                     From="1" To="0"
-                     Duration="0:0:0.28"/>
-
-            <!-- Blur dinamico -->
-            <DoubleAnimation Storyboard.TargetName="RightFrame"
-                     Storyboard.TargetProperty="(UIElement.Effect).(BlurEffect.Radius)"
-                     From="0" To="10"
-                     Duration="0:0:0.28"/>
+                             Storyboard.TargetProperty="(UIElement.Effect).(BlurEffect.Radius)"
+                             From="0" To="10" Duration="0:0:0.28"/>
         </Storyboard>
     </Window.Resources>
 
     <Grid x:Name="MainGrid">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition x:Name="LeftColumn" Width="180"/>
+            <ColumnDefinition x:Name="LeftColumn" Width="56"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Pannello sinistro con gradiente e header hamburger -->
+        <!-- ======================= SIDEBAR ======================= -->
         <Border Grid.Column="0" x:Name="Sidebar"
-                Padding="5"
-                BorderBrush="{DynamicResource TextPrimaryBrush}"
-                BorderThickness="0,0,1,0"
-                Margin="0 0 -2 0"
+                Padding="6"
+                Panel.ZIndex="1"
+                Background="{DynamicResource SidebarGradientBrush}"
                 DataContext="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
-            
-            <Border.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                    <GradientStop Color="{StaticResource PrimaryDarkColor}" Offset="0" />
-                    <GradientStop Color="{StaticResource PrimaryColor}" Offset="1" />
-                </LinearGradientBrush>
-            </Border.Background>
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="12" ShadowDepth="3" Direction="0" Opacity="0.3" Color="Black"/>
+            </Border.Effect>
 
             <Grid>
                 <Grid.RowDefinitions>
@@ -90,45 +89,33 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <StackPanel Grid.Row="0" Orientation="Vertical" VerticalAlignment="Top" Cursor="">
+                <!-- Top: hamburger + logo, then navigation -->
+                <StackPanel Grid.Row="0">
 
-                    <!-- Hamburger + icona a destra, dentro lo stesso StackPanel dei MenuButton -->
-                    <Grid Margin="0,0,0,6" VerticalAlignment="Center">
+                    <Grid Margin="0,0,0,6">
                         <Grid.ColumnDefinitions>
-                            <!-- Colonna principale: occupa tutto lo spazio disponibile -->
-                            <ColumnDefinition Width="*" />
-                            <!-- Colonna auto per l'icona a destra -->
-                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <!--Hamburger button-->
                         <Button Style="{StaticResource MenuButton}"
-                                VerticalAlignment="Center"
                                 Click="HamburgerBtn_Click"
-                                ToolTip="{DynamicResource HamburgerBtn}" Cursor="Hand">
-                                <svgc:SvgViewbox Width="20" Height="20"
-                                                 VerticalAlignment="Center"
-                                                 Source="pack://application:,,,/Resources/Icons/hamburger.svg"
-                                                 Stretch="Uniform"
-                                                 Margin="0,5,0,0"/>
+                                ToolTip="{DynamicResource HamburgerBtn}">
+                            <svgc:SvgViewbox Style="{StaticResource SidebarIcon}" Margin="0,5,0,0"
+                                             Source="pack://application:,,,/Resources/Icons/hamburger.svg"/>
                         </Button>
 
-                        <!-- Icona a destra dell'hamburger: visibile solo quando il pannello e aperto -->
+                        <!-- App logo, hidden when collapsed -->
                         <svgc:SvgViewbox Grid.Column="1"
-                                         Width="30" Height="30"
-                                         VerticalAlignment="Center"
-                                         HorizontalAlignment="Right"
-                                         Margin="0,0,10,0"
+                                         Width="30" Height="30" Margin="0,0,10,0"
+                                         VerticalAlignment="Center" HorizontalAlignment="Right"
                                          Source="pack://application:,,,/Resources/Icons/icon.svg"
                                          Stretch="Uniform"
-                                         SnapsToDevicePixels="True"
-                                         UseLayoutRounding="True"
-                                         AutomationProperties.Name="Foscamun logo" Cursor="">
+                                         SnapsToDevicePixels="True" UseLayoutRounding="True"
+                                         AutomationProperties.Name="Foscamun logo">
                             <svgc:SvgViewbox.Style>
                                 <Style TargetType="svgc:SvgViewbox">
-                                    <Setter Property="Visibility" Value="Visible"/>
                                     <Style.Triggers>
-                                        <!-- Nasconde l'icona quando il pannello e collassato -->
                                         <DataTrigger Binding="{Binding IsPaneCollapsed, ElementName=Root}" Value="True">
                                             <Setter Property="Visibility" Value="Collapsed"/>
                                         </DataTrigger>
@@ -138,134 +125,64 @@
                         </svgc:SvgViewbox>
                     </Grid>
 
-                    <!-- Pulsanti principali: MenuButton (usa lo stile MenuButton definito) -->
-                    <!-- Ogni Button mostra icona + testo; il testo viene nascosto quando IsPaneCollapsed == true -->
-                    <StackPanel Orientation="Vertical" VerticalAlignment="Top">
-
-                        <!-- Home -->
-                        <Button x:Name="HomeBtn" Style="{StaticResource IconTooltipWhenCollapsed}"
-                                Margin="0,0,0,8"
-                                Click="HomeBtn_Click"
-                                Tag="{DynamicResource HomeBtn}">
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <svgc:SvgViewbox Width="18" Height="18"
-                                     Source="pack://application:,,,/Resources/Icons/house.svg"
-                                     Stretch="Uniform"
-                                     Margin="0,0,10,0"/>
-                                <TextBlock Text="{DynamicResource HomeBtn}"
-                                           VerticalAlignment="Center"
-                                           Foreground="{DynamicResource TextPrimaryBrush}">
-                                    <TextBlock.Style>
-                                        <Style TargetType="TextBlock">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsPaneCollapsed, ElementName=Root}" Value="True">
-                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBlock.Style>
-                                </TextBlock>
-                            </StackPanel>
-                        </Button>
-
-                        <!-- Roll call -->
-                        <Button x:Name="RollCallBtn" Style="{StaticResource IconTooltipWhenCollapsed}"
-                                Margin="0,0,0,8"
-                                IsEnabled="{Binding IsRollCallEnabled}"
-                                Click="RollCallBtn_Click"
-                                Tag="{DynamicResource RollCallBtn}">
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <svgc:SvgViewbox Width="18" Height="18"
-                                     Source="pack://application:,,,/Resources/Icons/next.svg"
-                                     Stretch="Uniform"
-                                     Margin="0,0,10,0"/>
-                                <TextBlock Text="{DynamicResource RollCallBtn}"
-                                           VerticalAlignment="Center"
-                                           Foreground="{DynamicResource TextPrimaryBrush}">
-                                    <TextBlock.Style>
-                                        <Style TargetType="TextBlock">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsPaneCollapsed, ElementName=Root}" Value="True">
-                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBlock.Style>
-                                </TextBlock>
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
-                </StackPanel>
-
-                <!-- Pulsanti in basso -->
-                <StackPanel Grid.Row="2" Orientation="Vertical" VerticalAlignment="Bottom">
-
-                    <!-- Configure -->
-                    <Button x:Name="ConfigureBtn" Style="{StaticResource IconTooltipWhenCollapsed}"
-                            Margin="0,0,0,8"
-                            Click="ConfigureBtn_Click"
-                            Tag="{DynamicResource ConfigureBtn}">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <svgc:SvgViewbox Width="18" Height="18"
-                                 Source="pack://application:,,,/Resources/Icons/configure.svg"
-                                 Stretch="Uniform"
-                                 Margin="0,0,10,0"/>
-                            <TextBlock Text="{DynamicResource ConfigureBtn}"
-                                       TextWrapping="Wrap"
-                                       VerticalAlignment="Center"
-                                       Foreground="{DynamicResource TextPrimaryBrush}" MaxWidth="130">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsPaneCollapsed, ElementName=Root}" Value="True">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
+                    <!-- Home -->
+                    <Button x:Name="HomeBtn" Style="{StaticResource IconTooltipWhenCollapsed}"
+                            Margin="0,0,0,6"
+                            Click="HomeBtn_Click"
+                            Tag="{DynamicResource HomeBtn}">
+                        <StackPanel Orientation="Horizontal">
+                            <svgc:SvgViewbox Style="{StaticResource SidebarIcon}"
+                                             Source="pack://application:,,,/Resources/Icons/house.svg"/>
+                            <TextBlock Style="{StaticResource SidebarLabel}" Text="{DynamicResource HomeBtn}"/>
                         </StackPanel>
                     </Button>
 
-                    <!-- Exit -->
+                    <!-- Roll call (enabled only when a committee is selected) -->
+                    <Button x:Name="RollCallBtn" Style="{StaticResource IconTooltipWhenCollapsed}"
+                            Margin="0,0,0,6"
+                            IsEnabled="{Binding IsRollCallEnabled}"
+                            Click="RollCallBtn_Click"
+                            Tag="{DynamicResource RollCallBtn}">
+                        <StackPanel Orientation="Horizontal">
+                            <svgc:SvgViewbox Style="{StaticResource SidebarIcon}"
+                                             Source="pack://application:,,,/Resources/Icons/next.svg"/>
+                            <TextBlock Style="{StaticResource SidebarLabel}" Text="{DynamicResource RollCallBtn}"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <!-- Bottom: configure + exit -->
+                <StackPanel Grid.Row="2" VerticalAlignment="Bottom">
+
+                    <Button x:Name="ConfigureBtn" Style="{StaticResource IconTooltipWhenCollapsed}"
+                            Margin="0,0,0,6"
+                            Click="ConfigureBtn_Click"
+                            Tag="{DynamicResource ConfigureBtn}">
+                        <StackPanel Orientation="Horizontal">
+                            <svgc:SvgViewbox Style="{StaticResource SidebarIcon}"
+                                             Source="pack://application:,,,/Resources/Icons/configure.svg"/>
+                            <TextBlock Style="{StaticResource SidebarLabel}" Text="{DynamicResource ConfigureBtn}"
+                                       MaxWidth="130"/>
+                        </StackPanel>
+                    </Button>
+
                     <Button x:Name="ExitBtn" Style="{StaticResource IconTooltipWhenCollapsed}"
-                            Margin="0,0,0,8"
+                            Margin="0,0,0,6"
                             Click="ExitBtn_Click"
                             Tag="{DynamicResource ExitBtn}">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <svgc:SvgViewbox Width="18" Height="18"
-                                 Source="pack://application:,,,/Resources/Icons/exit.svg"
-                                 Stretch="Uniform"
-                                 Margin="0,0,10,0"/>
-                            <TextBlock Text="{DynamicResource ExitBtn}"
-                                       VerticalAlignment="Center"
-                                       Foreground="{DynamicResource TextPrimaryBrush}">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsPaneCollapsed, ElementName=Root}" Value="True">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
+                        <StackPanel Orientation="Horizontal">
+                            <svgc:SvgViewbox Style="{StaticResource SidebarIcon}"
+                                             Source="pack://application:,,,/Resources/Icons/exit.svg"/>
+                            <TextBlock Style="{StaticResource SidebarLabel}" Text="{DynamicResource ExitBtn}"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
             </Grid>
         </Border>
-                    
-        <!-- Area destra con header e Frame -->
-        <Grid Grid.Column="1"
-              Background="{DynamicResource PrimaryBrush}"
-              ClipToBounds="True">
-            <Frame x:Name="RightFrame"
-                   NavigationUIVisibility="Hidden"
-                   Opacity="1"
-                   RenderTransformOrigin="0,0"
-                   Margin="0"
-                   Padding="0">
+
+        <!-- ====================== CONTENT AREA ====================== -->
+        <Grid Grid.Column="1" Background="{DynamicResource PrimaryBrush}" ClipToBounds="True">
+            <Frame x:Name="RightFrame" NavigationUIVisibility="Hidden" RenderTransformOrigin="0,0">
                 <Frame.RenderTransform>
                     <TranslateTransform X="0"/>
                 </Frame.RenderTransform>

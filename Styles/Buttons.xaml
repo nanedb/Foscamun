@@ -2,27 +2,25 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:svgc="http://sharpvectors.codeplex.com/svgc/">
 
-    <!-- ========================================================= -->
-    <!--                     BASE BUTTON STYLE                     -->
-    <!-- ========================================================= -->
+    <!-- ======================= BASE BUTTON ======================= -->
 
     <Style x:Key="BaseButtonStyle" TargetType="Button">
-        <Setter Property="FontFamily" Value="{DynamicResource FontPrimary}" />
-        <Setter Property="FontSize" Value="18" />
-        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
-        <Setter Property="TextElement.Foreground" Value="{DynamicResource TextPrimaryBrush}" />
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Padding" Value="{DynamicResource ButtonPadding}" />
-        <Setter Property="Height" Value="{DynamicResource ButtonHeight}" />
-        <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="HorizontalContentAlignment" Value="Center" />
-        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="FontFamily" Value="{DynamicResource FontPrimary}"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Padding" Value="{DynamicResource ButtonPadding}"/>
+        <Setter Property="Height" Value="{DynamicResource ButtonHeight}"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
     </Style>
 
-    <!-- ========================================================= -->
-    <!--                        MENU BUTTON                        -->
-    <!-- ========================================================= -->
+    <!-- ======================= MENU BUTTON ======================= -->
+    <!-- Rounded button with a dark overlay that fades in on hover and
+         deepens on press. Used across the app for all primary actions. -->
 
     <Style x:Key="MenuButton" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
@@ -30,143 +28,76 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid>
-
-                        <!-- Sfondo base -->
                         <Border x:Name="Bd"
                                 Background="{TemplateBinding Background}"
-                                CornerRadius="{DynamicResource CornerRadiusMedium}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}" />
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{DynamicResource CornerRadiusMedium}"/>
 
-                        <!-- Overlay animato -->
+                        <!-- Hover / press feedback layer -->
                         <Border x:Name="Overlay"
                                 Background="{DynamicResource PrimaryDarkBrush}"
                                 CornerRadius="{DynamicResource CornerRadiusMedium}"
-                                Opacity="0"
-                                IsHitTestVisible="False"/>
+                                Opacity="0" IsHitTestVisible="False"/>
 
-                        <!-- Contenuto -->
-                        <Grid>
-                            <ContentPresenter x:Name="contentPresenter"
-                                              HorizontalAlignment="Left"
-                                              VerticalAlignment="Center"
-                                              RecognizesAccessKey="True"
-                                              Margin="12,0,12,0">
-                                <ContentPresenter.RenderTransform>
-                                    <ScaleTransform ScaleX="1" ScaleY="1" />
-                                </ContentPresenter.RenderTransform>
-                            </ContentPresenter>
-                        </Grid>
-
+                        <ContentPresenter x:Name="Content"
+                                          Margin="12,0"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="Center"
+                                          RecognizesAccessKey="True"/>
                     </Grid>
 
                     <ControlTemplate.Triggers>
-
-                        <!-- HOVER -->
                         <Trigger Property="IsMouseOver" Value="True">
                             <Trigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="Overlay"
-                                                         Storyboard.TargetProperty="Opacity"
-                                                         To="0.12"
-                                                         Duration="0:0:0.18"/>
-
-                                        <DoubleAnimation Storyboard.TargetName="contentPresenter"
-                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
-                                                         To="1.002"
-                                                         Duration="0:0:0.18"/>
-
-                                        <DoubleAnimation Storyboard.TargetName="contentPresenter"
-                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
-                                                         To="1.002"
-                                                         Duration="0:0:0.18"/>
+                                        <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="Opacity"
+                                                         To="0.12" Duration="0:0:0.15"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.EnterActions>
-
                             <Trigger.ExitActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="Overlay"
-                                                         Storyboard.TargetProperty="Opacity"
-                                                         To="0"
-                                                         Duration="0:0:0.18"/>
-
-                                        <DoubleAnimation Storyboard.TargetName="contentPresenter"
-                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
-                                                         To="1"
-                                                         Duration="0:0:0.18"/>
-
-                                        <DoubleAnimation Storyboard.TargetName="contentPresenter"
-                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
-                                                         To="1"
-                                                         Duration="0:0:0.18"/>
+                                        <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="Opacity"
+                                                         To="0" Duration="0:0:0.2"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
                         </Trigger>
 
-                        <!-- PRESSED -->
                         <Trigger Property="IsPressed" Value="True">
                             <Trigger.EnterActions>
-                                <BeginStoryboard Name="PressedStoryboard">
+                                <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="Overlay"
-                                                         Storyboard.TargetProperty="Opacity"
-                                                         To="0.22"
-                                                         Duration="0:0:0.08"/>
-
-                                        <DoubleAnimation Storyboard.TargetName="contentPresenter"
-                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
-                                                         To="0.995"
-                                                         Duration="0:0:0.08"/>
-
-                                        <DoubleAnimation Storyboard.TargetName="contentPresenter"
-                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
-                                                         To="0.995"
-                                                         Duration="0:0:0.08"/>
+                                        <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="Opacity"
+                                                         To="0.25" Duration="0:0:0.05"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.EnterActions>
-
                             <Trigger.ExitActions>
-                                <StopStoryboard BeginStoryboardName="PressedStoryboard"/>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="Overlay"
-                                                         Storyboard.TargetProperty="Opacity"
-                                                         To="0"
-                                                         Duration="0:0:0.12"/>
-
-                                        <DoubleAnimation Storyboard.TargetName="contentPresenter"
-                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
-                                                         To="1"
-                                                         Duration="0:0:0.12"/>
-
-                                        <DoubleAnimation Storyboard.TargetName="contentPresenter"
-                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
-                                                         To="1"
-                                                         Duration="0:0:0.12"/>
+                                        <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="Opacity"
+                                                         To="0.12" Duration="0:0:0.1"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
                         </Trigger>
 
-                        <!-- DISABLED -->
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="contentPresenter" Property="Opacity" Value="0.4" />
-                            <Setter Property="Foreground" Value="#808080" />
-                            <Setter Property="Cursor" Value="Arrow" />
+                            <Setter TargetName="Content" Property="Opacity" Value="0.4"/>
+                            <Setter Property="Foreground" Value="#808080"/>
+                            <Setter Property="Cursor" Value="Arrow"/>
                         </Trigger>
-
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
-    <!-- ICON TOOLTIP WHEN COLLAPSED -->
+    <!-- Menu button that shows its Tag as tooltip when the sidebar is collapsed -->
     <Style x:Key="IconTooltipWhenCollapsed" TargetType="Button" BasedOn="{StaticResource MenuButton}">
         <Setter Property="ToolTip" Value="{x:Null}"/>
         <Style.Triggers>
@@ -176,7 +107,7 @@
         </Style.Triggers>
     </Style>
 
-    <!-- ICON BUTTON -->
+    <!-- Compact button rendering an SVG (from Tag) next to its Content -->
     <Style x:Key="IconButton" TargetType="Button" BasedOn="{StaticResource MenuButton}">
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="Padding" Value="0"/>
@@ -187,13 +118,9 @@
             <Setter.Value>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <svgc:SvgViewbox Width="18" Height="18"
-                                         Stretch="Uniform"
-                                         Margin="0,0,10,0"
+                        <svgc:SvgViewbox Width="18" Height="18" Stretch="Uniform" Margin="0,0,10,0"
                                          Source="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Tag}"/>
-
                         <ContentPresenter Content="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Content}"
-                                          Margin="0"
                                           VerticalAlignment="Center"/>
                     </StackPanel>
                 </DataTemplate>

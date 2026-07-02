@@ -49,10 +49,25 @@
     <sys:String x:Key="JudgeLbl">Judge:</sys:String>
     <sys:String x:Key="ViceJudge1Lbl">Vice Judge 1:</sys:String>
     <sys:String x:Key="ViceJudge2Lbl">Vice Judge 2:</sys:String>
+    <sys:String x:Key="NewJurorNameLbl">New Juror Name</sys:String>
     <sys:String x:Key="MarkPresentLbl">Click to mark as Present</sys:String>
     <sys:String x:Key="MarkAbsentLbl">Click to mark as Absent</sys:String>
     <sys:String x:Key="ProceedBtn">Proceed</sys:String>
     <sys:String x:Key="MarkAllPresentBtn">Mark All Present</sys:String>
+
+    <!-- ICJ Edit Page -->
+    <sys:String x:Key="ICJTitle">International Court of Justice</sys:String>
+    <sys:String x:Key="BoardLbl">Board</sys:String>
+    <sys:String x:Key="AdvocatesLbl">Advocates</sys:String>
+    <sys:String x:Key="JurorsLbl">Jurors</sys:String>
+    <sys:String x:Key="JudgeLbl2">Judge</sys:String>
+    <sys:String x:Key="ViceJudgesLbl">Vice Judges</sys:String>
+    <sys:String x:Key="PlaintiffsLbl">Plaintiffs</sys:String>
+    <sys:String x:Key="PlaintiffsCountryLbl">Plaintiffs Country</sys:String>
+    <sys:String x:Key="DefenseLbl">Defense</sys:String>
+    <sys:String x:Key="DefenseCountryLbl">Defense Country</sys:String>
+    <sys:String x:Key="AddJurorBtn">Add Juror</sys:String>
+    <sys:String x:Key="RemoveJurorBtn">Remove Juror</sys:String>
 
     <!-- Session Page -->
     <sys:String x:Key="AvailableSpeakersLbl">Available Speakers</sys:String>

@@ -48,6 +48,7 @@ namespace Foscamun.ViewModels
         private Country? currentSpeaker;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(RemoveWarningCommand))]
         private Country? selectedWarnedCountry;
 
         public ObservableCollection<Country> AvailableSpeakers { get; } = new();
@@ -107,7 +108,7 @@ namespace Foscamun.ViewModels
             AddSpeakerCommand = new RelayCommand<Country>(AddSpeaker);
             RemoveCurrentSpeakerCommand = new RelayCommand(RemoveCurrentSpeaker, CanRemoveCurrentSpeaker);
             WarnCurrentSpeakerCommand = new RelayCommand(WarnCurrentSpeaker, CanWarnCurrentSpeaker);
-            RemoveWarningCommand = new RelayCommand<Country>(RemoveWarning);
+            RemoveWarningCommand = new RelayCommand<Country>(RemoveWarning, CanRemoveWarning);
             OpenTimerCommand = new RelayCommand(OpenTimer);
             OpenVotingCommand = new RelayCommand(OpenVoting);
 
@@ -206,6 +207,8 @@ namespace Foscamun.ViewModels
                 CollectionViewSource.GetDefaultView(WarnedList).Refresh();
             }
         }
+
+        private bool CanRemoveWarning(Country? country) => country != null;
 
         private async void RemoveWarning(Country? country)
         {

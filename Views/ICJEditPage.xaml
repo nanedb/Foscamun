@@ -23,7 +23,7 @@
         </Grid.RowDefinitions>
 
         <!-- TITOLO -->
-        <TextBlock Text="International Court of Justice"
+        <TextBlock Text="{DynamicResource ICJTitle}"
                 Style="{StaticResource H3}" Margin="0"/>
 
         <!-- CONTENUTO -->
@@ -37,7 +37,7 @@
                 <ColumnDefinition Width="1.05*"/>
             </Grid.ColumnDefinitions>
 
-            <GroupBox Grid.Column="0" Header="Board"
+            <GroupBox Grid.Column="0" Header="{DynamicResource BoardLbl}"
                       Padding="4" BorderBrush="#FFCCCCCC"
                       BorderThickness="0.6" Margin="0 0 20 10">
                 <Grid>
@@ -52,11 +52,11 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Text="Judge" Style="{StaticResource Caption}"
+                    <TextBlock Grid.Row="0" Text="{DynamicResource JudgeLbl2}" Style="{StaticResource Caption}"
                                Margin="0 0 0 5"/>
                     <TextBox Grid.Row="1" Text="{Binding Judge, UpdateSourceTrigger=PropertyChanged}"
                              Margin="5 0 0 20"/>
-                    <TextBlock Grid.Row="2" Text="Vice Judges" Style="{StaticResource Caption}"
+                    <TextBlock Grid.Row="2" Text="{DynamicResource ViceJudgesLbl}" Style="{StaticResource Caption}"
                                Margin="0 0 0 10"/>
                     <TextBox Grid.Row="3" Text="{Binding ViceJudge1, UpdateSourceTrigger=PropertyChanged}"
                              Margin="5 0 0 5"/>
@@ -71,12 +71,12 @@
 
             <Grid Grid.Column="1">
                 <!-- COLONNA 2: Advocates -->
-                <GroupBox Grid.Column="0" Header="Advocates"
+                <GroupBox Grid.Column="0" Header="{DynamicResource AdvocatesLbl}"
                       Padding="5" BorderBrush="#FFCCCCCC"
                       BorderThickness="0.6" Margin="0 0 20 10">
 
                     <StackPanel>
-                        <TextBlock Text="Plaintiffs" Style="{StaticResource Caption}"
+                        <TextBlock Text="{DynamicResource PlaintiffsLbl}" Style="{StaticResource Caption}"
                                    Margin="0 0 0 5"/>
                         <TextBox Text="{Binding Plaintiff1, UpdateSourceTrigger=PropertyChanged}"
                                  Margin="5 0 0 5"/>
@@ -84,7 +84,7 @@
                                  Margin="5 0 0 5"/>
                         <TextBox Text="{Binding Plaintiff3, UpdateSourceTrigger=PropertyChanged}"
                                  Margin="5 0 0 10"/>
-                        <TextBlock Text="Plaintiffs Country" Style="{StaticResource Caption}"
+                        <TextBlock Text="{DynamicResource PlaintiffsCountryLbl}" Style="{StaticResource Caption}"
                                    Margin="0 0 0 5"/>
                         <!-- ComboBox per Plaintiffs Country -->
                         <ComboBox ItemsSource="{Binding Countries}"
@@ -94,7 +94,7 @@
                                   DisplayMemberPath="EnglishName"
                                   Margin="5 0 0 20"/>
 
-                        <TextBlock Text="Defense" Style="{StaticResource Caption}"
+                        <TextBlock Text="{DynamicResource DefenseLbl}" Style="{StaticResource Caption}"
                                    Margin="0 0 0 5"/>
                         <TextBox Text="{Binding Defense1, UpdateSourceTrigger=PropertyChanged}"
                                  Margin="5 0 0 5"/>
@@ -102,7 +102,7 @@
                                  Margin="5 0 0 5"/>
                         <TextBox Text="{Binding Defense3, UpdateSourceTrigger=PropertyChanged}"
                                  Margin="5 0 0 10"/>
-                        <TextBlock Text="Defense Country" Style="{StaticResource Caption}"
+                        <TextBlock Text="{DynamicResource DefenseCountryLbl}" Style="{StaticResource Caption}"
                                    Margin="0 0 0 5"/>
                         <!-- ComboBox per Defense Country -->
                         <ComboBox ItemsSource="{Binding Countries}"
@@ -118,7 +118,7 @@
 
             <!-- COLONNA 3: Jurors -->
             <Grid Grid.Column="2">
-                <GroupBox Header="Jurors"
+                <GroupBox Header="{DynamicResource JurorsLbl}"
                       Padding="5" BorderBrush="#FFCCCCCC"
                       BorderThickness="0.6" Margin="0 0 0 10">
                     <Grid>
@@ -127,8 +127,9 @@
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
-                        
+
                         <ListView Grid.Row="0" x:Name="JurorsList"
                                   Margin="5 10 5 10"
                                   Background="{DynamicResource InputBackgroundBrush}"
@@ -140,18 +141,21 @@
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
-                        
-                        <TextBox Grid.Row="1" x:Name="JurorBox"
+
+                        <TextBlock Grid.Row="1" Text="{DynamicResource NewJurorNameLbl}"
+                                   Style="{StaticResource Caption}"
+                                   Margin="0 0 0 5"/>
+                        <TextBox Grid.Row="2" x:Name="JurorBox"
                                  Text="{Binding NewJurorName, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="5 5 5 10"/>
-                        <Button Grid.Row="2" Style="{StaticResource IconButton}"
+                                 Margin="5 0 5 10"/>
+                        <Button Grid.Row="3" Style="{StaticResource IconButton}"
                                 Tag="pack://application:,,,/Resources/Icons/add.svg"
-                                Content="Add Juror"
+                                Content="{DynamicResource AddJurorBtn}"
                                 Command="{Binding AddJurorCommand}"
                                 HorizontalAlignment="Right"/>
-                        <Button Grid.Row="3" Style="{StaticResource IconButton}"
+                        <Button Grid.Row="4" Style="{StaticResource IconButton}"
                                 Tag="pack://application:,,,/Resources/Icons/remove.svg"
-                                Content="Remove Juror"
+                                Content="{DynamicResource RemoveJurorBtn}"
                                 Command="{Binding RemoveJurorCommand}"
                                 HorizontalAlignment="Right"/>
                         </Grid>
@@ -167,13 +171,13 @@
             <!-- CANCEL -->
             <Button Style="{StaticResource IconButton}"
                     Tag="pack://application:,,,/Resources/Icons/close.svg"
-                    Content="Cancel"
+                    Content="{DynamicResource CancelBtn}"
                     Command="{Binding CancelCommand}" Width="150"/>
 
             <!-- OK -->
             <Button Style="{StaticResource IconButton}"
                     Tag="pack://application:,,,/Resources/Icons/check.svg"
-                    Content="OK"
+                    Content="{DynamicResource OkBtn}"
                     Command="{Binding SaveCommand}" Width="150"/>
             
         </StackPanel>

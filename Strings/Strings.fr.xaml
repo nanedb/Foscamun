@@ -49,10 +49,25 @@
     <sys:String x:Key="JudgeLbl">Juge:</sys:String>
     <sys:String x:Key="ViceJudge1Lbl">Vice-juge 1:</sys:String>
     <sys:String x:Key="ViceJudge2Lbl">Vice-juge 2:</sys:String>
+    <sys:String x:Key="NewJurorNameLbl">Nom du nouveau juré</sys:String>
     <sys:String x:Key="MarkPresentLbl">Cliquez pour marquer comme présent</sys:String>
     <sys:String x:Key="MarkAbsentLbl">Cliquez pour marquer comme absent</sys:String>
     <sys:String x:Key="ProceedBtn">Continuer</sys:String>
     <sys:String x:Key="MarkAllPresentBtn">Marquer tous présents</sys:String>
+
+    <!-- ICJ Edit Page -->
+    <sys:String x:Key="ICJTitle">Cour internationale de Justice</sys:String>
+    <sys:String x:Key="BoardLbl">Bureau</sys:String>
+    <sys:String x:Key="AdvocatesLbl">Avocats</sys:String>
+    <sys:String x:Key="JurorsLbl">Jurés</sys:String>
+    <sys:String x:Key="JudgeLbl2">Juge</sys:String>
+    <sys:String x:Key="ViceJudgesLbl">Vice-juges</sys:String>
+    <sys:String x:Key="PlaintiffsLbl">Demandeurs</sys:String>
+    <sys:String x:Key="PlaintiffsCountryLbl">Pays des demandeurs</sys:String>
+    <sys:String x:Key="DefenseLbl">Défense</sys:String>
+    <sys:String x:Key="DefenseCountryLbl">Pays de la défense</sys:String>
+    <sys:String x:Key="AddJurorBtn">Ajouter un juré</sys:String>
+    <sys:String x:Key="RemoveJurorBtn">Supprimer le juré</sys:String>
 
     <!-- Page Session -->
     <sys:String x:Key="AvailableSpeakersLbl">Orateurs disponibles</sys:String>
