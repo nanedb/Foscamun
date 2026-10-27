@@ -58,6 +58,9 @@ namespace Foscamun.Data
 
             // Ensure ICJMemberWarnings table exists
             EnsureICJMemberWarningsTableExists();
+
+            // Ensure ICJ table can store any number of advocates
+            ICJRepository.EnsureAdvocatesColumnsExist();
         }
 
         /// <summary>
@@ -629,21 +632,19 @@ namespace Foscamun.Data
             if (icj == null)
                 return list;
 
-            // Aggiungi Plaintiffs (Advocates con bandiera)
-            if (!string.IsNullOrWhiteSpace(icj.Plaintiff1))
-                list.Add(new ICJMember { Name = icj.Plaintiff1, IsoCode = icj.PCountry?.IsoCode, Kind = "Plaintiff", Warnings = 0 });
-            if (!string.IsNullOrWhiteSpace(icj.Plaintiff2))
-                list.Add(new ICJMember { Name = icj.Plaintiff2, IsoCode = icj.PCountry?.IsoCode, Kind = "Plaintiff", Warnings = 0 });
-            if (!string.IsNullOrWhiteSpace(icj.Plaintiff3))
-                list.Add(new ICJMember { Name = icj.Plaintiff3, IsoCode = icj.PCountry?.IsoCode, Kind = "Plaintiff", Warnings = 0 });
+            // Aggiungi Plaintiffs (Advocates con la bandiera del proprio paese)
+            foreach (var plaintiff in icj.Plaintiffs)
+            {
+                if (!string.IsNullOrWhiteSpace(plaintiff.Name))
+                    list.Add(new ICJMember { Name = plaintiff.Name, IsoCode = plaintiff.IsoCode, Kind = "Plaintiff", Warnings = 0 });
+            }
 
-            // Aggiungi Defense (Advocates con bandiera)
-            if (!string.IsNullOrWhiteSpace(icj.Defense1))
-                list.Add(new ICJMember { Name = icj.Defense1, IsoCode = icj.DCountry?.IsoCode, Kind = "Defense", Warnings = 0 });
-            if (!string.IsNullOrWhiteSpace(icj.Defense2))
-                list.Add(new ICJMember { Name = icj.Defense2, IsoCode = icj.DCountry?.IsoCode, Kind = "Defense", Warnings = 0 });
-            if (!string.IsNullOrWhiteSpace(icj.Defense3))
-                list.Add(new ICJMember { Name = icj.Defense3, IsoCode = icj.DCountry?.IsoCode, Kind = "Defense", Warnings = 0 });
+            // Aggiungi Defense (Advocates con la bandiera del proprio paese)
+            foreach (var defense in icj.Defense)
+            {
+                if (!string.IsNullOrWhiteSpace(defense.Name))
+                    list.Add(new ICJMember { Name = defense.Name, IsoCode = defense.IsoCode, Kind = "Defense", Warnings = 0 });
+            }
 
             // Aggiungi Jurors (senza IsoCode, senza bandiera)
             if (icj.Jurors != null)

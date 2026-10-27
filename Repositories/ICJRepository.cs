@@ -44,6 +44,21 @@ namespace Foscamun.Repositories
                 return JsonSerializer.Deserialize<List<string>>(json) ?? new List<string>();
             }
 
+            // Advocates list reading from JSON. Data saved by older versions only has
+            // the fixed columns (three names sharing one country): convert those.
+            List<ICJAdvocate> GetAdvocates(string jsonColumn, string namePrefix, string countryColumn)
+            {
+                if (reader[jsonColumn] is string json && !string.IsNullOrWhiteSpace(json))
+                    return JsonSerializer.Deserialize<List<ICJAdvocate>>(json) ?? new List<ICJAdvocate>();
+
+                string isoCode = GetString(countryColumn);
+                return Enumerable.Range(1, 3)
+                    .Select(i => GetString($"{namePrefix}{i}"))
+                    .Where(name => !string.IsNullOrWhiteSpace(name))
+                    .Select(name => new ICJAdvocate { Name = name, IsoCode = isoCode })
+                    .ToList();
+            }
+
             return new ICJ
             {
                 Judge = GetString("Judge"),
@@ -51,17 +66,8 @@ namespace Foscamun.Repositories
                 ViceJudge2 = GetString("ViceJudge2"),
                 Topic = GetString("Topic"),
 
-                Plaintiff1 = GetString("Plaintiff1"),
-                Plaintiff2 = GetString("Plaintiff2"),
-                Plaintiff3 = GetString("Plaintiff3"),
-
-                PCountry = new Country { IsoCode = GetString("PCountryIso") },
-
-                Defense1 = GetString("Defense1"),
-                Defense2 = GetString("Defense2"),
-                Defense3 = GetString("Defense3"),
-
-                DCountry = new Country { IsoCode = GetString("DCountryIso") },
+                Plaintiffs = GetAdvocates("PlaintiffsJson", "Plaintiff", "PCountryIso"),
+                Defense = GetAdvocates("DefenseJson", "Defense", "DCountryIso"),
 
                 Jurors = GetJurors()
             };
@@ -76,6 +82,8 @@ namespace Foscamun.Repositories
             using var conn = new SqliteConnection(_connectionString);
             conn.Open();
 
+            // The old fixed advocate columns (Plaintiff1-3, PCountryIso, Defense1-3,
+            // DCountryIso) are NOT NULL: they are left empty, advocates live in the JSON columns.
             using var cmd = conn.CreateCommand();
             cmd.CommandText = @"
                 DELETE FROM ICJ;
@@ -84,12 +92,12 @@ namespace Foscamun.Repositories
                     Judge, ViceJudge1, ViceJudge2, Topic,
                     Plaintiff1, Plaintiff2, Plaintiff3, PCountryIso,
                     Defense1, Defense2, Defense3, DCountryIso,
-                    JurorsJson
+                    PlaintiffsJson, DefenseJson, JurorsJson
                 ) VALUES (
                     @Judge, @ViceJudge1, @ViceJudge2, @Topic,
-                    @Plaintiff1, @Plaintiff2, @Plaintiff3, @PCountryIso,
-                    @Defense1, @Defense2, @Defense3, @DCountryIso,
-                    @JurorsJson
+                    '', '', '', '',
+                    '', '', '', '',
+                    @PlaintiffsJson, @DefenseJson, @JurorsJson
                 );
             ";
 
@@ -98,19 +106,40 @@ namespace Foscamun.Repositories
             cmd.Parameters.AddWithValue("@ViceJudge2", icj.ViceJudge2);
             cmd.Parameters.AddWithValue("@Topic", icj.Topic);
 
-            cmd.Parameters.AddWithValue("@Plaintiff1", icj.Plaintiff1);
-            cmd.Parameters.AddWithValue("@Plaintiff2", icj.Plaintiff2);
-            cmd.Parameters.AddWithValue("@Plaintiff3", icj.Plaintiff3);
-            cmd.Parameters.AddWithValue("@PCountryIso", icj.PCountry?.IsoCode);
-
-            cmd.Parameters.AddWithValue("@Defense1", icj.Defense1);
-            cmd.Parameters.AddWithValue("@Defense2", icj.Defense2);
-            cmd.Parameters.AddWithValue("@Defense3", icj.Defense3);
-            cmd.Parameters.AddWithValue("@DCountryIso", icj.DCountry?.IsoCode);
-
+            cmd.Parameters.AddWithValue("@PlaintiffsJson", JsonSerializer.Serialize(icj.Plaintiffs));
+            cmd.Parameters.AddWithValue("@DefenseJson", JsonSerializer.Serialize(icj.Defense));
             cmd.Parameters.AddWithValue("@JurorsJson", JsonSerializer.Serialize(icj.Jurors));
 
             cmd.ExecuteNonQuery();
+        }
+
+        /// <summary>
+        /// Adds the PlaintiffsJson and DefenseJson columns to databases created by
+        /// older versions, which only had three fixed advocates per side.
+        /// </summary>
+        public void EnsureAdvocatesColumnsExist()
+        {
+            using var conn = new SqliteConnection(_connectionString);
+            conn.Open();
+
+            var columns = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            using (var info = conn.CreateCommand())
+            {
+                info.CommandText = "PRAGMA table_info(ICJ)";
+                using var reader = info.ExecuteReader();
+                while (reader.Read())
+                    columns.Add(reader.GetString(1));
+            }
+
+            foreach (var column in new[] { "PlaintiffsJson", "DefenseJson" })
+            {
+                if (columns.Contains(column))
+                    continue;
+
+                using var alter = conn.CreateCommand();
+                alter.CommandText = $"ALTER TABLE ICJ ADD COLUMN {column} TEXT";
+                alter.ExecuteNonQuery();
+            }
         }
 
         /// <summary>

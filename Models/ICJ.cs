@@ -1,3 +1,5 @@
+using Foscamun.Models;
+
 /// <summary>
 /// Represents the International Court of Justice (ICJ) configuration.
 /// Includes judges, advocates (plaintiff/defense), jurors, and case topic.
@@ -9,15 +11,15 @@ public class ICJ
     public string ViceJudge2 { get; set; } = "";
     public string Topic { get; set; } = "";
 
-    public string Plaintiff1 { get; set; } = "";
-    public string Plaintiff2 { get; set; } = "";
-    public string Plaintiff3 { get; set; } = "";
-    public Country? PCountry { get; set; }
+    /// <summary>
+    /// Plaintiff advocates, each with the country they represent.
+    /// </summary>
+    public List<ICJAdvocate> Plaintiffs { get; set; } = new();
 
-    public string Defense1 { get; set; } = "";
-    public string Defense2 { get; set; } = "";
-    public string Defense3 { get; set; } = "";
-    public Country? DCountry { get; set; }
+    /// <summary>
+    /// Defense advocates, each with the country they represent.
+    /// </summary>
+    public List<ICJAdvocate> Defense { get; set; } = new();
 
     public List<string> Jurors { get; set; } = new();
 

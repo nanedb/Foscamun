@@ -23,14 +23,6 @@ namespace Foscamun.ViewModels
         private string _viceJudge1 = "";
         private string _viceJudge2 = "";
         private string _topic = "";
-        private string _plaintiff1 = "";
-        private string _plaintiff2 = "";
-        private string _plaintiff3 = "";
-        private Country? _pCountry;
-        private string _defense1 = "";
-        private string _defense2 = "";
-        private string _defense3 = "";
-        private Country? _dCountry;
 
     /// <summary>
     /// Initializes the ViewModel with ICJ data and available countries.
@@ -51,25 +43,12 @@ namespace Foscamun.ViewModels
         _viceJudge2 = model.ViceJudge2;
         _topic = model.Topic;
 
-        _plaintiff1 = model.Plaintiff1;
-        _plaintiff2 = model.Plaintiff2;
-        _plaintiff3 = model.Plaintiff3;
+        Plaintiffs = new ICJAdvocateListViewModel(model.Plaintiffs, Countries);
+        Defense = new ICJAdvocateListViewModel(model.Defense, Countries);
 
-        // Find plaintiff country in collection by IsoCode
-        if (model.PCountry != null && !string.IsNullOrEmpty(model.PCountry.IsoCode))
-        {
-            _pCountry = Countries.FirstOrDefault(c => c.IsoCode == model.PCountry.IsoCode);
-        }
-
-        _defense1 = model.Defense1;
-        _defense2 = model.Defense2;
-        _defense3 = model.Defense3;
-
-        // Find defense country in collection by IsoCode
-        if (model.DCountry != null && !string.IsNullOrEmpty(model.DCountry.IsoCode))
-        {
-            _dCountry = Countries.FirstOrDefault(c => c.IsoCode == model.DCountry.IsoCode);
-        }
+        // Saving requires at least one advocate per side
+        Plaintiffs.Advocates.CollectionChanged += (_, _) => (SaveCommand as RelayCommand)?.NotifyCanExecuteChanged();
+        Defense.Advocates.CollectionChanged += (_, _) => (SaveCommand as RelayCommand)?.NotifyCanExecuteChanged();
 
         Jurors = new ObservableCollection<string>(model.Jurors);
 
@@ -135,117 +114,9 @@ namespace Foscamun.ViewModels
         }
     }
 
-    public string Plaintiff1
-    {
-        get => _plaintiff1;
-        set
-        {
-            if (_plaintiff1 != value)
-            {
-                _plaintiff1 = value;
-                OnPropertyChanged(nameof(Plaintiff1));
-                (SaveCommand as RelayCommand)?.NotifyCanExecuteChanged();
-            }
-        }
-    }
+    public ICJAdvocateListViewModel Plaintiffs { get; }
 
-    public string Plaintiff2
-    {
-        get => _plaintiff2;
-        set
-        {
-            if (_plaintiff2 != value)
-            {
-                _plaintiff2 = value;
-                OnPropertyChanged(nameof(Plaintiff2));
-                (SaveCommand as RelayCommand)?.NotifyCanExecuteChanged();
-            }
-        }
-    }
-
-    public string Plaintiff3
-    {
-        get => _plaintiff3;
-        set
-        {
-            if (_plaintiff3 != value)
-            {
-                _plaintiff3 = value;
-                OnPropertyChanged(nameof(Plaintiff3));
-                (SaveCommand as RelayCommand)?.NotifyCanExecuteChanged();
-            }
-        }
-    }
-
-    public Country? PCountry
-    {
-        get => _pCountry;
-        set
-        {
-            if (_pCountry != value)
-            {
-                _pCountry = value;
-                OnPropertyChanged(nameof(PCountry));
-                (SaveCommand as RelayCommand)?.NotifyCanExecuteChanged();
-            }
-        }
-    }
-
-    public string Defense1
-    {
-        get => _defense1;
-        set
-        {
-            if (_defense1 != value)
-            {
-                _defense1 = value;
-                OnPropertyChanged(nameof(Defense1));
-                (SaveCommand as RelayCommand)?.NotifyCanExecuteChanged();
-            }
-        }
-    }
-
-    public string Defense2
-    {
-        get => _defense2;
-        set
-        {
-            if (_defense2 != value)
-            {
-                _defense2 = value;
-                OnPropertyChanged(nameof(Defense2));
-                (SaveCommand as RelayCommand)?.NotifyCanExecuteChanged();
-            }
-        }
-    }
-
-    public string Defense3
-    {
-        get => _defense3;
-        set
-        {
-            if (_defense3 != value)
-            {
-                _defense3 = value;
-                OnPropertyChanged(nameof(Defense3));
-                (SaveCommand as RelayCommand)?.NotifyCanExecuteChanged();
-            }
-        }
-    }
-
-    public Country? DCountry
-    {
-        get => _dCountry;
-        set
-        {
-            if (_dCountry != value)
-            {
-                _dCountry = value;
-                OnPropertyChanged(nameof(DCountry));
-                (SaveCommand as RelayCommand)?.NotifyCanExecuteChanged();
-            }
-        }
-    }
+    public ICJAdvocateListViewModel Defense { get; }
 
     public ObservableCollection<string> Jurors { get; set; }
 
@@ -308,21 +179,16 @@ namespace Foscamun.ViewModels
     }
 
     /// <summary>
-    /// Validates that all required fields are filled and at least one juror is added.
+    /// Validates that all required fields are filled and at least one plaintiff,
+    /// one defense advocate and one juror are added.
     /// </summary>
     private bool CanSave() =>
         !string.IsNullOrWhiteSpace(Judge) &&
         !string.IsNullOrWhiteSpace(ViceJudge1) &&
         !string.IsNullOrWhiteSpace(ViceJudge2) &&
         !string.IsNullOrWhiteSpace(Topic) &&
-        !string.IsNullOrWhiteSpace(Plaintiff1) &&
-        !string.IsNullOrWhiteSpace(Plaintiff2) &&
-        !string.IsNullOrWhiteSpace(Plaintiff3) &&
-        PCountry != null &&
-        !string.IsNullOrWhiteSpace(Defense1) &&
-        !string.IsNullOrWhiteSpace(Defense2) &&
-        !string.IsNullOrWhiteSpace(Defense3) &&
-        DCountry != null &&
+        Plaintiffs.Advocates.Count > 0 &&
+        Defense.Advocates.Count > 0 &&
         Jurors.Count > 0;
 
     /// <summary>
@@ -337,15 +203,8 @@ namespace Foscamun.ViewModels
             ViceJudge2 = ViceJudge2,
             Topic = Topic,
 
-            Plaintiff1 = Plaintiff1,
-            Plaintiff2 = Plaintiff2,
-            Plaintiff3 = Plaintiff3,
-            PCountry = PCountry!,
-
-            Defense1 = Defense1,
-            Defense2 = Defense2,
-            Defense3 = Defense3,
-            DCountry = DCountry!,
+            Plaintiffs = Plaintiffs.Advocates.ToList(),
+            Defense = Defense.Advocates.ToList(),
 
             Jurors = Jurors.ToList()
         };

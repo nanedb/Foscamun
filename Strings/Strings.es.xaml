@@ -63,9 +63,9 @@
     <sys:String x:Key="JudgeLbl2">Juez</sys:String>
     <sys:String x:Key="ViceJudgesLbl">Vicejueces</sys:String>
     <sys:String x:Key="PlaintiffsLbl">Demandantes</sys:String>
-    <sys:String x:Key="PlaintiffsCountryLbl">País de los demandantes</sys:String>
     <sys:String x:Key="DefenseLbl">Defensa</sys:String>
-    <sys:String x:Key="DefenseCountryLbl">País de la defensa</sys:String>
+    <sys:String x:Key="AdvocateNameLbl">Nombre</sys:String>
+    <sys:String x:Key="AdvocateCountryLbl">País</sys:String>
     <sys:String x:Key="AddJurorBtn">Añadir jurado</sys:String>
     <sys:String x:Key="RemoveJurorBtn">Eliminar jurado</sys:String>
 

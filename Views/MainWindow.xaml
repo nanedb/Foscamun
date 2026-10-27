@@ -7,7 +7,7 @@
         xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
         mc:Ignorable="d"
         Title="Foscamun"
-        Height="600" Width="1000"
+        Height="720" Width="1000"
         WindowStartupLocation="CenterScreen"
         Icon="/Foscamun;component/Resources/Foscamun.ico"
         Background="{StaticResource WhiteBrush}">

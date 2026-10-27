@@ -37,6 +37,9 @@ namespace Foscamun.Views
         {
             InitializeComponent();
 
+            // On short screens keep the whole window (title bar and bottom buttons) visible
+            Height = Math.Min(Height, SystemParameters.WorkArea.Height);
+
             DataContext = this;
             Instance = this;
             Db = new SqliteDataAccess();
