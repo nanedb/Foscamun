@@ -3,7 +3,7 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <!-- Títulos -->
-    <sys:String x:Key="WelcomeMessage">Bienvenido a Foscamun </sys:String>
+    <sys:String x:Key="WelcomeMessage">Bienvenido a FOSCAMUN </sys:String>
     <sys:String x:Key="ConfigurationTitle">Configuración</sys:String>
     <sys:String x:Key="SelCommittee">Comité seleccionado:</sys:String>
     <sys:String x:Key="YearLbl">Seleccionar año:</sys:String>
