@@ -1,11 +1,17 @@
+using CommunityToolkit.Mvvm.Input;
 using Foscamun.Models;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace Foscamun.Views
 {
-    public partial class ICJResultPage : Page
+    public partial class ICJResultPage : Page, IFlowPage
     {
+        // Flow: back to the session, forward to the next round
+        public string TitleKey => "ResultLbl";
+        public FlowLink? Previous { get; }
+        public FlowLink? Next { get; }
+
         private readonly List<ICJRollCallMember> _voters;
         private readonly List<int> _inFavorIndices;
         private readonly List<int> _abstainedIndices;
@@ -21,6 +27,8 @@ namespace Foscamun.Views
             _abstainedIndices = abstainedIndices;
             _againstIndices = againstIndices;
             _sessionPage = sessionPage;
+            Previous = new FlowLink("SessionLbl2", new RelayCommand(BackToSession));
+            Next = new FlowLink("NextRoundLbl", new RelayCommand(StartNextRound));
 
             UpdateRoundText();
             DisplayResults();
@@ -66,14 +74,18 @@ namespace Foscamun.Views
             }
         }
 
-        private void NewRoundBtn_Click(object sender, RoutedEventArgs e)
+        private void NewRoundBtn_Click(object sender, RoutedEventArgs e) => StartNextRound();
+
+        private void StartNextRound()
         {
             ICJVotingPage.Round++;
             var votingPage = new ICJVotingPage(_voters, _sessionPage);
             NavigationService?.Navigate(votingPage);
         }
 
-        private void BackBtn_Click(object sender, RoutedEventArgs e)
+        private void BackBtn_Click(object sender, RoutedEventArgs e) => BackToSession();
+
+        private void BackToSession()
         {
             var result = MessageBox.Show(
                 Properties.Settings.Default.Lang switch

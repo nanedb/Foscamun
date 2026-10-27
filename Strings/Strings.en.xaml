@@ -92,6 +92,11 @@
     <sys:String x:Key="AbstainedLbl">Abstained</sys:String>
     <sys:String x:Key="AgainstLbl">Against</sys:String>
     <sys:String x:Key="NewRoundBtn">New Round</sys:String>
+    <sys:String x:Key="ResultLbl">Result</sys:String>
+    <sys:String x:Key="NextRoundLbl">Next round</sys:String>
+    <sys:String x:Key="FinalResultLbl">Final result</sys:String>
+    <sys:String x:Key="ConfirmTitle">Confirmation</sys:String>
+    <sys:String x:Key="LeaveVotingMsg">Are you sure you want to go back? The current vote will be lost.</sys:String>
 
     <!-- Timer Window -->
     <sys:String x:Key="TimerWindowTitle">Timer</sys:String>

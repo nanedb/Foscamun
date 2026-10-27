@@ -5,8 +5,13 @@ using System.Windows.Media.Animation;
 
 namespace Foscamun.Views
 {
-    public partial class HomePage : Page
+    public partial class HomePage : Page, IFlowPage
     {
+        // Flow: Home is the first page, next comes the roll call
+        public string TitleKey => FlowLink.HomeKey;
+        public FlowLink? Previous => null;
+        public FlowLink? Next => new("RollCallBtn", MainWindow.Instance.OpenRollCallCommand);
+
         public HomePage()
         {
             InitializeComponent();

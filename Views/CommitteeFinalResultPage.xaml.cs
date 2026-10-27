@@ -1,11 +1,17 @@
+using CommunityToolkit.Mvvm.Input;
 using Foscamun.Models;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace Foscamun.Views
 {
-    public partial class CommitteeFinalResultPage : Page
+    public partial class CommitteeFinalResultPage : Page, IFlowPage
     {
+        // Flow: back to the session, or home
+        public string TitleKey => "FinalResultLbl";
+        public FlowLink? Previous { get; }
+        public FlowLink? Next => new(FlowLink.HomeKey, MainWindow.Instance.GoHomeCommand);
+
         private readonly List<Country> _voters;
         private readonly List<int> _inFavorIndices;
         private readonly List<int> _againstIndices;
@@ -19,6 +25,7 @@ namespace Foscamun.Views
             _inFavorIndices = inFavorIndices;
             _againstIndices = againstIndices;
             _sessionPage = sessionPage;
+            Previous = new FlowLink("SessionLbl2", new RelayCommand(BackToSession));
 
             DisplayResults();
         }
@@ -63,7 +70,9 @@ namespace Foscamun.Views
             OutcomeTextBlock.Text = outcome;
         }
 
-        private void BackBtn_Click(object sender, RoutedEventArgs e)
+        private void BackBtn_Click(object sender, RoutedEventArgs e) => BackToSession();
+
+        private void BackToSession()
         {
             if (_sessionPage != null && NavigationService != null)
             {

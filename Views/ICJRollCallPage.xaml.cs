@@ -6,8 +6,13 @@ using System.Windows.Controls;
 
 namespace Foscamun.Views
 {
-    public partial class ICJRollCallPage : Page
+    public partial class ICJRollCallPage : Page, IFlowPage
     {
+        // Flow: back to Home, forward to the session once someone is present
+        public string TitleKey => "RollCallBtn";
+        public FlowLink? Previous => new(FlowLink.HomeKey, MainWindow.Instance.GoHomeCommand);
+        public FlowLink? Next => new("SessionLbl2", _viewModel.ProceedCommand);
+
         private readonly ICJRollCallViewModel _viewModel;
         private readonly SqliteDataAccess _db;
 

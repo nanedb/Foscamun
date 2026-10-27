@@ -1,11 +1,17 @@
+using CommunityToolkit.Mvvm.Input;
 using Foscamun.Models;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace Foscamun.Views
 {
-    public partial class CommitteeVotingPage : Page
+    public partial class CommitteeVotingPage : Page, IFlowPage
     {
+        // Flow: back to the session; the result comes by itself after the last vote
+        public string TitleKey => "VotingBtn";
+        public FlowLink? Previous { get; }
+        public FlowLink? Next => new("ResultLbl", null);
+
         private readonly List<Country> _voters;
         private int _currentVoterIndex;
         private readonly int _numVoters;
@@ -24,6 +30,7 @@ namespace Foscamun.Views
             _numVoters = _voters.Count;
             _currentVoterIndex = 0;
             _sessionPage = sessionPage;
+            Previous = new FlowLink("SessionLbl2", new RelayCommand(BackToSession));
 
             UpdateRoundText();
 
@@ -50,6 +57,22 @@ namespace Foscamun.Views
             var voter = _voters[index];
             CurrentVoterFlag.Source = new Uri(voter.FlagPath);
             CurrentVoterText.Text = voter.Name;
+        }
+
+        /// <summary>
+        /// Goes back to the session; votes already cast would be lost, so it asks first.
+        /// </summary>
+        private void BackToSession()
+        {
+            if (_currentVoterIndex > 0 &&
+                MessageBox.Show((string)FindResource("LeaveVotingMsg"), (string)FindResource("ConfirmTitle"),
+                                MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
+                return;
+
+            if (_sessionPage != null)
+                NavigationService?.Navigate(_sessionPage);
+            else if (NavigationService?.CanGoBack == true)
+                NavigationService.GoBack();
         }
 
         private void FavorBtn_Click(object sender, RoutedEventArgs e)

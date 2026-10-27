@@ -92,6 +92,11 @@
     <sys:String x:Key="AbstainedLbl">Abstenciones</sys:String>
     <sys:String x:Key="AgainstLbl">En contra</sys:String>
     <sys:String x:Key="NewRoundBtn">Nueva ronda</sys:String>
+    <sys:String x:Key="ResultLbl">Resultado</sys:String>
+    <sys:String x:Key="NextRoundLbl">Siguiente ronda</sys:String>
+    <sys:String x:Key="FinalResultLbl">Resultado final</sys:String>
+    <sys:String x:Key="ConfirmTitle">Confirmación</sys:String>
+    <sys:String x:Key="LeaveVotingMsg">¿Estás seguro de que quieres volver atrás? La votación en curso se perderá.</sys:String>
 
     <!-- Ventana Temporizador -->
     <sys:String x:Key="TimerWindowTitle">Temporizador</sys:String>

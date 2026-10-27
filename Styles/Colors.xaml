@@ -53,4 +53,7 @@
         <GradientStop Color="{StaticResource PrimaryColor}" Offset="1"/>
     </LinearGradientBrush>
 
+    <!-- Sidebar: background of the current page's item (navy at 18%) -->
+    <SolidColorBrush x:Key="SidebarActiveBrush" Color="#2E0A2A44"/>
+
 </ResourceDictionary>

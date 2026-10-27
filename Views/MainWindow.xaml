@@ -19,6 +19,8 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
+            <!-- Room left by the expanded pane (200) after padding, margins and icon -->
+            <Setter Property="MaxWidth" Value="128"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsPaneCollapsed, ElementName=Root}" Value="True">
                     <Setter Property="Visibility" Value="Collapsed"/>
@@ -28,10 +30,15 @@
 
         <!-- Sidebar icon: fixed size, gap before the label -->
         <Style x:Key="SidebarIcon" TargetType="svgc:SvgViewbox">
-            <Setter Property="Width" Value="18"/>
-            <Setter Property="Height" Value="18"/>
+            <Setter Property="Width" Value="24"/>
+            <Setter Property="Height" Value="24"/>
             <Setter Property="Stretch" Value="Uniform"/>
-            <Setter Property="Margin" Value="0,0,10,0"/>
+            <Setter Property="Margin" Value="0,0,12,0"/>
+        </Style>
+
+        <!-- Sidebar item: icon + label, tooltip with the label when the pane is collapsed -->
+        <Style x:Key="SidebarItem" TargetType="Button" BasedOn="{StaticResource IconTooltipWhenCollapsed}">
+            <Setter Property="Margin" Value="0,0,0,6"/>
         </Style>
 
         <!-- Page transitions: slide + fade + blur -->
@@ -68,7 +75,7 @@
 
     <Grid x:Name="MainGrid">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition x:Name="LeftColumn" Width="56"/>
+            <ColumnDefinition x:Name="LeftColumn" Width="64"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
@@ -85,89 +92,87 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- Top: hamburger + logo, then navigation -->
-                <StackPanel Grid.Row="0">
+                <!-- Header: hamburger on the left, logo on the right (hidden when collapsed) -->
+                <Grid Grid.Row="0" Margin="0,2,0,14">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-                    <Grid Margin="0,0,0,6">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
+                    <Button Style="{StaticResource MenuButton}"
+                            Height="34" HorizontalAlignment="Left"
+                            Click="HamburgerBtn_Click"
+                            ToolTip="{DynamicResource HamburgerBtn}">
+                        <svgc:SvgViewbox Width="20" Height="15" Stretch="Uniform"
+                                         Source="pack://application:,,,/Resources/Icons/hamburger.svg"/>
+                    </Button>
 
-                        <Button Style="{StaticResource MenuButton}"
-                                Click="HamburgerBtn_Click"
-                                ToolTip="{DynamicResource HamburgerBtn}">
-                            <svgc:SvgViewbox Style="{StaticResource SidebarIcon}" Margin="0,5,0,0"
-                                             Source="pack://application:,,,/Resources/Icons/hamburger.svg"/>
-                        </Button>
+                    <!-- App logo, hidden when collapsed -->
+                    <svgc:SvgViewbox Grid.Column="1"
+                                     Width="30" Height="30" Margin="0,0,10,0"
+                                     VerticalAlignment="Center" HorizontalAlignment="Right"
+                                     Source="pack://application:,,,/Resources/Icons/icon.svg"
+                                     Stretch="Uniform"
+                                     SnapsToDevicePixels="True" UseLayoutRounding="True"
+                                     AutomationProperties.Name="Foscamun logo">
+                        <svgc:SvgViewbox.Style>
+                            <Style TargetType="svgc:SvgViewbox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsPaneCollapsed, ElementName=Root}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </svgc:SvgViewbox.Style>
+                    </svgc:SvgViewbox>
+                </Grid>
 
-                        <!-- App logo, hidden when collapsed -->
-                        <svgc:SvgViewbox Grid.Column="1"
-                                         Width="30" Height="30" Margin="0,0,10,0"
-                                         VerticalAlignment="Center" HorizontalAlignment="Right"
-                                         Source="pack://application:,,,/Resources/Icons/icon.svg"
-                                         Stretch="Uniform"
-                                         SnapsToDevicePixels="True" UseLayoutRounding="True"
-                                         AutomationProperties.Name="Foscamun logo">
-                            <svgc:SvgViewbox.Style>
-                                <Style TargetType="svgc:SvgViewbox">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsPaneCollapsed, ElementName=Root}" Value="True">
-                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </svgc:SvgViewbox.Style>
-                        </svgc:SvgViewbox>
-                    </Grid>
-
-                    <!-- Home -->
-                    <Button x:Name="HomeBtn" Style="{StaticResource IconTooltipWhenCollapsed}"
-                            Margin="0,0,0,6"
-                            Click="HomeBtn_Click"
-                            Tag="{DynamicResource HomeBtn}">
+                <!-- Flow: previous page, current page (inert), next page.
+                     Filled in code-behind from the page shown (see UpdateSidebar). -->
+                <StackPanel Grid.Row="1">
+                    <Button x:Name="PreviousBtn" Style="{StaticResource SidebarItem}">
                         <StackPanel Orientation="Horizontal">
-                            <svgc:SvgViewbox Style="{StaticResource SidebarIcon}"
-                                             Source="pack://application:,,,/Resources/Icons/house.svg"/>
-                            <TextBlock Style="{StaticResource SidebarLabel}" Text="{DynamicResource HomeBtn}"/>
+                            <svgc:SvgViewbox x:Name="PreviousIcon" Style="{StaticResource SidebarIcon}"/>
+                            <TextBlock x:Name="PreviousLabel" Style="{StaticResource SidebarLabel}"/>
                         </StackPanel>
                     </Button>
 
-                    <!-- Roll call (enabled only when a committee is selected) -->
-                    <Button x:Name="RollCallBtn" Style="{StaticResource IconTooltipWhenCollapsed}"
-                            Margin="0,0,0,6"
-                            IsEnabled="{Binding IsRollCallEnabled}"
-                            Click="RollCallBtn_Click"
-                            Tag="{DynamicResource RollCallBtn}">
+                    <Button x:Name="CurrentBtn" Style="{StaticResource SidebarItem}"
+                            Background="{DynamicResource SidebarActiveBrush}"
+                            IsHitTestVisible="False" Focusable="False">
                         <StackPanel Orientation="Horizontal">
-                            <svgc:SvgViewbox Style="{StaticResource SidebarIcon}"
-                                             Source="pack://application:,,,/Resources/Icons/next.svg"/>
-                            <TextBlock Style="{StaticResource SidebarLabel}" Text="{DynamicResource RollCallBtn}"/>
+                            <svgc:SvgViewbox x:Name="CurrentIcon" Style="{StaticResource SidebarIcon}"/>
+                            <TextBlock x:Name="CurrentLabel" Style="{StaticResource SidebarLabel}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button x:Name="NextBtn" Style="{StaticResource SidebarItem}">
+                        <StackPanel Orientation="Horizontal">
+                            <svgc:SvgViewbox x:Name="NextIcon" Style="{StaticResource SidebarIcon}"/>
+                            <TextBlock x:Name="NextLabel" Style="{StaticResource SidebarLabel}"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
 
-                <!-- Bottom: configure + exit -->
-                <StackPanel Grid.Row="2" VerticalAlignment="Bottom">
+                <!-- Bottom: Setup (marked as current on Setup and its edit pages) + Exit -->
+                <StackPanel Grid.Row="3">
 
-                    <Button x:Name="ConfigureBtn" Style="{StaticResource IconTooltipWhenCollapsed}"
-                            Margin="0,0,0,6"
+                    <Button x:Name="ConfigureBtn" Style="{StaticResource SidebarItem}"
                             Click="ConfigureBtn_Click"
                             Tag="{DynamicResource ConfigureBtn}">
                         <StackPanel Orientation="Horizontal">
-                            <svgc:SvgViewbox Style="{StaticResource SidebarIcon}"
+                            <svgc:SvgViewbox x:Name="ConfigureIcon" Style="{StaticResource SidebarIcon}"
                                              Source="pack://application:,,,/Resources/Icons/configure.svg"/>
-                            <TextBlock Style="{StaticResource SidebarLabel}" Text="{DynamicResource ConfigureBtn}"
-                                       MaxWidth="130"/>
+                            <TextBlock Style="{StaticResource SidebarLabel}" Text="{DynamicResource ConfigureBtn}"/>
                         </StackPanel>
                     </Button>
 
-                    <Button x:Name="ExitBtn" Style="{StaticResource IconTooltipWhenCollapsed}"
-                            Margin="0,0,0,6"
+                    <Button x:Name="ExitBtn" Style="{StaticResource SidebarItem}"
                             Click="ExitBtn_Click"
                             Tag="{DynamicResource ExitBtn}">
                         <StackPanel Orientation="Horizontal">
@@ -182,7 +187,8 @@
 
         <!-- ====================== CONTENT AREA ====================== -->
         <Grid Grid.Column="1" Background="{DynamicResource PrimaryBrush}" ClipToBounds="True">
-            <Frame x:Name="RightFrame" NavigationUIVisibility="Hidden" RenderTransformOrigin="0,0">
+            <Frame x:Name="RightFrame" NavigationUIVisibility="Hidden" RenderTransformOrigin="0,0"
+                   Navigated="RightFrame_Navigated">
                 <Frame.RenderTransform>
                     <TranslateTransform X="0"/>
                 </Frame.RenderTransform>

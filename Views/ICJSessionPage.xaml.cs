@@ -1,3 +1,4 @@
+using CommunityToolkit.Mvvm.Input;
 using Foscamun.Data;
 using Foscamun.Models;
 using Foscamun.ViewModels;
@@ -6,8 +7,13 @@ using System.Windows.Input;
 
 namespace Foscamun.Views
 {
-    public partial class ICJSessionPage : Page
+    public partial class ICJSessionPage : Page, IFlowPage
     {
+        // Flow: back to a new roll call, forward to voting
+        public string TitleKey => "SessionLbl2";
+        public FlowLink? Previous { get; }
+        public FlowLink? Next => new("VotingBtn", _viewModel.OpenVotingCommand);
+
         private ICJSessionViewModel _viewModel = null!;
         private readonly SqliteDataAccess _dataAccess;
 
@@ -18,6 +24,8 @@ namespace Foscamun.Views
             _dataAccess = dataAccess;
             _viewModel = new ICJSessionViewModel(judge, viceJudge1, viceJudge2, topic, session, presentMembers, NavigateToVoting, dataAccess);
             DataContext = _viewModel;
+
+            Previous = new FlowLink("RollCallBtn", new RelayCommand(BackToRollCall));
         }
 
         private void NavigateToVoting(List<ICJRollCallMember> voters)
@@ -35,7 +43,9 @@ namespace Foscamun.Views
             }
         }
 
-        private void BackButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void BackButton_Click(object sender, System.Windows.RoutedEventArgs e) => BackToRollCall();
+
+        private void BackToRollCall()
         {
             if (NavigationService != null)
             {
