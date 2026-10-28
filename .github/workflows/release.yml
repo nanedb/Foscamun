@@ -61,17 +61,17 @@ jobs:
       run: |
         $version = "${{ github.ref_name }}"
         $readmeContent = @"
-Foscamun $version
+        Foscamun $version
 
-INSTALLAZIONE:
-1. Estrai tutti i file in una cartella
-2. Esegui Foscamun.exe
+        INSTALLAZIONE:
+        1. Estrai tutti i file in una cartella
+        2. Esegui Foscamun.exe
 
-REQUISITI:
-- Windows 10 o superiore
+        REQUISITI:
+        - Windows 10 o superiore
 
-Repository: https://github.com/nanedb/Foscamun2026
-"@
+        Repository: https://github.com/nanedb/Foscamun
+        "@
         
         Set-Content -Path "./publish/win-x64/README.txt" -Value $readmeContent
         Set-Content -Path "./publish/win-x86/README.txt" -Value $readmeContent
