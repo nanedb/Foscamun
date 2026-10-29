@@ -20,6 +20,7 @@
             </ResourceDictionary.MergedDictionaries>
             
             <local:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+            <local:CommitteeEmblemConverter x:Key="CommitteeEmblemConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 

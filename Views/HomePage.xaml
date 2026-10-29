@@ -63,10 +63,11 @@
         <!-- Area inferiore -->
         <Border Grid.Row="2" Background="{DynamicResource PrimaryBrush}" SnapsToDevicePixels="True">
             <TextBlock Style="{StaticResource Caption}"
-                       Padding="5 0 0 5"
+                       Padding="16 0 16 14"
                        TextAlignment="Left" VerticalAlignment="Bottom">
                         <Run Text="{DynamicResource HintStr1}"/>
-                        <Run Text="{Binding Path=SelCommName, Source={x:Static properties:Settings.Default}}"/>
+                        <Run Text="{Binding Path=SelCommName, Source={x:Static properties:Settings.Default}}"
+                             FontWeight="Bold"/>
                         <LineBreak/>
                         <Run Text="{DynamicResource HintStr2}"/>
                         <Run Text="{DynamicResource ConfigureBtn}"/>
