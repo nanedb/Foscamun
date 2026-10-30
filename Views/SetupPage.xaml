@@ -32,7 +32,7 @@
             <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Opacity" Value="0.65"/>
-            <Setter Property="Margin" Value="28,0,0,0"/>
+            <Setter Property="Margin" Value="0,6"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
@@ -80,149 +80,163 @@
         <Grid.RowDefinitions>
             <!-- Title -->
             <RowDefinition Height="Auto"/>
-            <!-- Selected Committee -->
+            <!-- Committee label -->
             <RowDefinition Height="Auto"/>
-            <!-- Year -->
-            <RowDefinition Height="Auto"/>
-            <!-- Language -->
-            <RowDefinition Height="Auto"/>
-            <!-- Committee label + list + buttons -->
+            <!-- Committee list -->
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
+            <!-- Committee label + list -->
+            <ColumnDefinition Width="300"/>
             <ColumnDefinition Width="*"/>
+            <!-- Settings + action buttons -->
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
         <!-- TITLE -->
-        <TextBlock Grid.ColumnSpan="2"
+        <TextBlock Grid.ColumnSpan="3"
                    Style="{StaticResource H3}"
                    FontWeight="Bold"
                    Margin="0,0,0,10"
                    Text="{DynamicResource ConfigureBtn}"/>
 
-        <!-- SELECTED COMMITTEE -->
-        <Label Grid.Row="1" Grid.Column="0"
+        <!-- COMMITTEE LABEL -->
+        <Label Grid.Row="1"
                Style="{StaticResource LeftAlignedLabelStyle}"
-               Content="{DynamicResource SelCommittee}"/>
-        <TextBlock Grid.Row="1" Grid.Column="1"
-                   Text="{Binding SelectedCommittee.Name}"
-                   FontWeight="Bold"
-                   HorizontalAlignment="Right"
-                   VerticalAlignment="Center"/>
+               Content="{DynamicResource CommitteeLbl}"/>
 
-        <!-- YEAR -->
-        <Label Grid.Row="2" Grid.Column="0"
-               Style="{StaticResource LeftAlignedLabelStyle}"
-               Content="{DynamicResource YearLbl}"/>
-        <TextBox x:Name="YearBox"  Grid.Row="2" Grid.Column="1"
-                 Text="{Binding Source={x:Static properties:Settings.Default},
-                                Path=Year,
-                                Mode=TwoWay,
-                                UpdateSourceTrigger=PropertyChanged}"
-                 Width="96"
-                 HorizontalAlignment="Right"
-                 TextAlignment="Right"
-                 VerticalContentAlignment="Center"
-                 VerticalAlignment="Center" Padding="4"/>
-
-        <!-- LANGUAGE LABEL -->
-        <Label Grid.Row="3" Grid.Column="0"
-               Style="{StaticResource LeftAlignedLabelStyle}"
-               Content="{DynamicResource LanguageLbl}"/>
-
-        <!-- LANGUAGE BUTTONS -->
-        <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center">
-
-            <RadioButton x:Name="EngLangButton" Style="{StaticResource LanguageRadio}" Margin="0"
-                         Checked="EngLangButton_Checked">
-                <StackPanel Orientation="Horizontal">
-                    <svgc:SvgViewbox Width="18" Height="18"
-                                     Source="pack://application:,,,/Resources/flags/gb.svg"
-                                     Stretch="Uniform"
-                                     Margin="0,0,8,0"/>
-                    <TextBlock Text="English"/>
-                </StackPanel>
-            </RadioButton>
-
-            <RadioButton x:Name="FraLangButton" Style="{StaticResource LanguageRadio}"
-                         Checked="FraLangButton_Checked">
-                <StackPanel Orientation="Horizontal">
-                    <svgc:SvgViewbox Width="18" Height="18"
-                               Source="pack://application:,,,/Resources/flags/fr.svg"
+        <!-- COMMITTEE LIST -->
+        <ListView x:Name="CommitteesListBox" Grid.Row="2"
+                  ItemsSource="{Binding Committees}"
+                  SelectedItem="{Binding SelectedCommittee, Mode=TwoWay}"
+                  Background="{StaticResource InputBackgroundBrush}"
+                  Foreground="{StaticResource TextInputBrush}"
+                  Margin="0 4 0 0"
+                  MinHeight="120"
+                  SelectionMode="Single" Focusable="True">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <!-- Black emblem without its caption: the name is written beside it -->
+                        <Image Width="48" Height="48" Margin="0,0,14,0" VerticalAlignment="Center"
                                Stretch="Uniform"
-                               Margin="0,0,8,0"/>
-                    <TextBlock Text="Francais"/>
-                </StackPanel>
-            </RadioButton>
+                               Source="{Binding Name, Converter={StaticResource CommitteeEmblemConverter}}"/>
+                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center"
+                                   Foreground="{StaticResource TextInputBrush}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <!-- Global rounded item style + bold when selected -->
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem" BasedOn="{StaticResource {x:Type ListViewItem}}">
+                    <Setter Property="Padding" Value="8,2"/>
+                    <Setter Property="Margin" Value="0"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="FontWeight" Value="Bold"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
 
-            <RadioButton x:Name="EspLangButton" Style="{StaticResource LanguageRadio}"
-                         Checked="EspLangButton_Checked">
-                <StackPanel Orientation="Horizontal">
-                    <svgc:SvgViewbox Width="18" Height="18"
-                               Source="pack://application:,,,/Resources/flags/es.svg"
-                               Stretch="Uniform"
-                               Margin="0,0,8,0"/>
-                    <TextBlock Text="Espanol"/>
-                </StackPanel>
-            </RadioButton>
+        <!-- SETTINGS (label + value) AND ACTION BUTTONS -->
+        <Grid Grid.Row="1" Grid.RowSpan="2" Grid.Column="2">
 
-        </StackPanel>
+            <Grid.RowDefinitions>
+                <!-- Selected Committee -->
+                <RowDefinition Height="Auto"/>
+                <!-- Year -->
+                <RowDefinition Height="Auto"/>
+                <!-- Language -->
+                <RowDefinition Height="Auto"/>
+                <!-- Action buttons, level with the bottom of the list -->
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <!-- COMMITTEE LABEL, LIST (beside the label) + ACTION BUTTONS -->
-        <Grid Grid.Row="4" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="300"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="210"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
+            <!-- SELECTED COMMITTEE -->
             <Label Style="{StaticResource LeftAlignedLabelStyle}"
-                   VerticalAlignment="Top"
-                   Content="{DynamicResource CommitteeLbl}"/>
+                   Content="{DynamicResource SelCommittee}"/>
+            <TextBlock Grid.Column="1"
+                       Text="{Binding SelectedCommittee.Name}"
+                       FontWeight="Bold"
+                       Margin="32,0,0,0"
+                       HorizontalAlignment="Right"
+                       VerticalAlignment="Center"/>
 
-            <ListView x:Name="CommitteesListBox" Grid.Column="1"
-                      ItemsSource="{Binding Committees}"
-                      SelectedItem="{Binding SelectedCommittee, Mode=TwoWay}"
-                      Background="{StaticResource InputBackgroundBrush}"
-                      Foreground="{StaticResource TextInputBrush}"
-                      Margin="24 4 0 0"
-                      MinHeight="120"
-                      SelectionMode="Single" Focusable="True">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <!-- Black emblem without its caption: the name is written beside it -->
-                            <Image Width="48" Height="48" Margin="0,0,14,0" VerticalAlignment="Center"
+            <!-- YEAR -->
+            <Label Grid.Row="1"
+                   Style="{StaticResource LeftAlignedLabelStyle}"
+                   Content="{DynamicResource YearLbl}"/>
+            <TextBox x:Name="YearBox" Grid.Row="1" Grid.Column="1"
+                     Text="{Binding Source={x:Static properties:Settings.Default},
+                                    Path=Year,
+                                    Mode=TwoWay,
+                                    UpdateSourceTrigger=PropertyChanged}"
+                     Width="96"
+                     Margin="32,0,0,0"
+                     HorizontalAlignment="Right"
+                     TextAlignment="Right"
+                     VerticalContentAlignment="Center"
+                     VerticalAlignment="Center" Padding="4"/>
+
+            <!-- LANGUAGE -->
+            <Label Grid.Row="2"
+                   Style="{StaticResource LeftAlignedLabelStyle}"
+                   VerticalAlignment="Top"
+                   Content="{DynamicResource LanguageLbl}"/>
+
+            <!-- One choice per line: side by side they do not fit beside the label -->
+            <StackPanel Grid.Row="2" Grid.Column="1"
+                        Margin="32,0,0,0"
+                        HorizontalAlignment="Right">
+
+                <RadioButton x:Name="EngLangButton" Style="{StaticResource LanguageRadio}"
+                             Checked="EngLangButton_Checked">
+                    <StackPanel Orientation="Horizontal">
+                        <svgc:SvgViewbox Width="18" Height="18"
+                                         Source="pack://application:,,,/Resources/flags/gb.svg"
+                                         Stretch="Uniform"
+                                         Margin="0,0,8,0"/>
+                        <TextBlock Text="English"/>
+                    </StackPanel>
+                </RadioButton>
+
+                <RadioButton x:Name="FraLangButton" Style="{StaticResource LanguageRadio}"
+                             Checked="FraLangButton_Checked">
+                    <StackPanel Orientation="Horizontal">
+                        <svgc:SvgViewbox Width="18" Height="18"
+                                   Source="pack://application:,,,/Resources/flags/fr.svg"
                                    Stretch="Uniform"
-                                   Source="{Binding Name, Converter={StaticResource CommitteeEmblemConverter}}"/>
-                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center"
-                                       Foreground="{StaticResource TextInputBrush}"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-                <!-- Global rounded item style + bold when selected -->
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem" BasedOn="{StaticResource {x:Type ListViewItem}}">
-                        <Setter Property="Padding" Value="8,2"/>
-                        <Setter Property="Margin" Value="0"/>
-                        <Style.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="FontWeight" Value="Bold"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </ListView.ItemContainerStyle>
-            </ListView>
+                                   Margin="0,0,8,0"/>
+                        <TextBlock Text="Francais"/>
+                    </StackPanel>
+                </RadioButton>
+
+                <RadioButton x:Name="EspLangButton" Style="{StaticResource LanguageRadio}"
+                             Checked="EspLangButton_Checked">
+                    <StackPanel Orientation="Horizontal">
+                        <svgc:SvgViewbox Width="18" Height="18"
+                                   Source="pack://application:,,,/Resources/flags/es.svg"
+                                   Stretch="Uniform"
+                                   Margin="0,0,8,0"/>
+                        <TextBlock Text="Espanol"/>
+                    </StackPanel>
+                </RadioButton>
+
+            </StackPanel>
 
             <!-- ACTION BUTTONS -->
-            <StackPanel Grid.Column="3"
-                        Orientation="Vertical" VerticalAlignment="Center">
+            <StackPanel Grid.Row="3" Grid.ColumnSpan="2"
+                        Orientation="Vertical"
+                        VerticalAlignment="Bottom"
+                        Margin="0,28,0,0">
 
                 <Button Style="{StaticResource SetupActionButton}" x:Name="AddCommitteeButton"
                         Tag="pack://application:,,,/Resources/Icons/add.svg"
@@ -241,7 +255,9 @@
                         IsEnabled="{Binding IsICJButtonEnabled}"
                         Command="{Binding OpenICJCommand}"/>
 
+                <!-- No bottom margin: its edge meets the bottom of the list -->
                 <Button Style="{StaticResource SetupActionButton}" x:Name="RemoveButton"
+                        Margin="0"
                         Tag="pack://application:,,,/Resources/Icons/remove.svg"
                         Content="{DynamicResource RemoveBtn}"
                         IsEnabled="{Binding IsRemoveCommitteeEnabled}"
