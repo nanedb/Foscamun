@@ -22,7 +22,7 @@
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Padding" Value="0"/>
-            <Setter Property="Margin" Value="0,6"/>
+            <Setter Property="Margin" Value="0,15"/>
             <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
             <Setter Property="FontSize" Value="18"/>
         </Style>
@@ -75,7 +75,7 @@
     </Page.Resources>
 
     <!-- LAYOUT PRINCIPALE -->
-    <Grid Margin="40 24 40 16">
+    <Grid Margin="40 40 40 40">
 
         <Grid.RowDefinitions>
             <!-- Title -->
