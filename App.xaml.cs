@@ -2,7 +2,6 @@ using System;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Foscamun.Data;
-using Foscamun.Helpers;
 using Foscamun.ViewModels;
 using Foscamun.Views;
 using Foscamun.Properties;
@@ -30,9 +29,6 @@ namespace Foscamun
 
             // Inizializza il database (crea le cartelle e il file .db se non esistono)
             var db = new SqliteDataAccess();
-
-            // Copia i loghi delle commissioni se non esistono
-            LogoInstaller.EnsureLogosInstalled(SqliteDataAccess.CommitteeLogoFolder);
 
             var lang = Settings.Default.Lang;
             if (string.IsNullOrEmpty(lang))

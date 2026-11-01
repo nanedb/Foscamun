@@ -111,10 +111,10 @@ namespace Foscamun.Data
                     string fileName = Path.GetFileName(sourceFile);
                     string destFile = Path.Combine(CommitteeLogoFolder, fileName);
 
-                    // Copia se manca o se il logo fornito con l'app e' piu' recente
-                    // (un logo personalizzato dall'utente e' piu' recente e resta com'e')
+                    // I loghi forniti con l'app sono quelli da usare: copia se manca o se e' diverso
+                    // (non le date: il checkout della release le rende tutte recenti)
                     if (!File.Exists(destFile) ||
-                        File.GetLastWriteTimeUtc(sourceFile) > File.GetLastWriteTimeUtc(destFile))
+                        !File.ReadAllBytes(sourceFile).AsSpan().SequenceEqual(File.ReadAllBytes(destFile)))
                     {
                         File.Copy(sourceFile, destFile, overwrite: true);
                     }
