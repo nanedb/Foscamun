@@ -97,7 +97,7 @@ namespace Foscamun.Views
         /// <summary>
         /// Shows the previous, current and next page of the flow. Setup and its edit pages are
         /// outside the flow: the current marker moves down to Setup, and on top stays the flow
-        /// page the user came from (to go back with one click) with its next page dimmed.
+        /// page the user came from (to go back with one click) with its next page.
         /// </summary>
         private void UpdateSidebar(object content)
         {
@@ -119,10 +119,17 @@ namespace Foscamun.Views
 
                 ShowLink(PreviousBtn, PreviousIcon, PreviousLabel, back, "back");
                 CurrentBtn.Visibility = Visibility.Collapsed;
-                ShowLink(NextBtn, NextIcon, NextLabel, origin?.Next is { } next ? next with { Command = null } : null, "next");
+                ShowLink(NextBtn, NextIcon, NextLabel, origin?.Next is { } next ? WithoutPageCommand(next) : null, "next");
                 ShowSetupAsCurrent(true);
             }
         }
+
+        /// <summary>
+        /// The next page of a flow page that is not shown: the window's own commands (roll call,
+        /// Home) still work, while a page's commands navigate only from that page and are dimmed.
+        /// </summary>
+        private FlowLink WithoutPageCommand(FlowLink link) =>
+            link.Command == OpenRollCallCommand || link.Command == GoHomeCommand ? link : link with { Command = null };
 
         private static void ShowLink(Button button, SvgViewbox icon, TextBlock label, FlowLink? link, string arrowIcon)
         {
