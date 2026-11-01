@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Xml;
 using Foscamun.Data;
 using SharpVectors.Converters;
 using SharpVectors.Renderers.Wpf;
@@ -65,7 +66,18 @@ namespace Foscamun.Converters
             // Logos are white on transparent: paint every shape black
             Recolor(drawing, Brushes.Black);
 
+            // SharpVectors draws every shape, also those outside the viewBox (UNWOMEN keeps
+            // its wordmark there): show only what the viewBox frames
             Rect bounds = drawing.Bounds;
+            if (FindViewport(drawing, path) is Rect viewport)
+            {
+                bounds = Rect.Intersect(bounds, viewport);
+                if (bounds.IsEmpty)
+                    bounds = drawing.Bounds;
+                else
+                    drawing = new DrawingGroup { Children = { drawing }, ClipGeometry = new RectangleGeometry(bounds) };
+            }
+
             double? captionTop = FindCaptionTop(drawing, bounds);
             if (captionTop is double top)
             {
@@ -79,6 +91,36 @@ namespace Foscamun.Converters
             var image = new DrawingImage(drawing);
             image.Freeze();
             return image;
+        }
+
+        /// <summary>
+        /// The area the SVG's viewBox frames, in the drawing's coordinates, or null if unknown.
+        /// SharpVectors maps the viewBox through the transform of the group under the root.
+        /// </summary>
+        private static Rect? FindViewport(DrawingGroup drawing, string path)
+        {
+            if (drawing.Children.Count != 1 || drawing.Children[0] is not DrawingGroup { Transform: { } transform })
+                return null;
+
+            using var xml = XmlReader.Create(path, new XmlReaderSettings { DtdProcessing = DtdProcessing.Ignore });
+            if (!xml.ReadToFollowing("svg", "http://www.w3.org/2000/svg"))
+                return null;
+
+            var parts = xml.GetAttribute("viewBox")?.Split([' ', ','], StringSplitOptions.RemoveEmptyEntries);
+            if (parts is not { Length: 4 })
+                return null;
+
+            var n = new double[4];
+            for (int i = 0; i < 4; i++)
+            {
+                if (!double.TryParse(parts[i], NumberStyles.Float, CultureInfo.InvariantCulture, out n[i]))
+                    return null;
+            }
+
+            if (n[2] <= 0 || n[3] <= 0)
+                return null;
+
+            return transform.TransformBounds(new Rect(n[0], n[1], n[2], n[3]));
         }
 
         private static void Recolor(Drawing drawing, Brush brush)
