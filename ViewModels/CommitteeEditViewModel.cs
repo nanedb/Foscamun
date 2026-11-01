@@ -36,6 +36,9 @@ namespace Foscamun.ViewModels
 
         public Committee Committee { get; set; }
 
+        // Name before editing: if it was the selected committee, the selection follows a rename
+        private readonly string _originalName = "";
+
         private bool _canSave;
         /// <summary>
         /// Determines if the Save button should be enabled based on validation.
@@ -77,6 +80,7 @@ namespace Foscamun.ViewModels
         {
             _db = db;
             Committee = committeeToEdit;
+            _originalName = committeeToEdit.Name;
             IsEditMode = true;
 
             HookEventsAndCommands();
@@ -212,6 +216,12 @@ namespace Foscamun.ViewModels
                 // Update existing committee and replace country associations
                 await _db.UpdateCommitteeAsync(Committee);
                 await _db.DeleteCountriesForCommitteeAsync(Committee.CommID);
+
+                if (Properties.Settings.Default.SelCommName == _originalName && Committee.Name != _originalName)
+                {
+                    Properties.Settings.Default.SelCommName = Committee.Name;
+                    Properties.Settings.Default.Save();
+                }
             }
             else
             {

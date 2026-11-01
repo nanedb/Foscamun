@@ -61,6 +61,10 @@ namespace Foscamun.ViewModels
                 if (!string.IsNullOrWhiteSpace(savedName))
                 {
                     SelectedCommittee = Committees.FirstOrDefault(c => c.Name == savedName);
+
+                    // The saved committee no longer exists: forget it
+                    if (SelectedCommittee == null)
+                        ClearSavedCommittee();
                 }
             }
             catch (Exception ex)
@@ -162,7 +166,8 @@ namespace Foscamun.ViewModels
             if (result != MessageBoxResult.Yes)
                 return;
 
-            await _db.RemoveCommitteeAsync(SelectedCommittee);
+            var removed = SelectedCommittee;
+            await _db.RemoveCommitteeAsync(removed);
 
             // If ICJ was deleted, reload the entire list (because ICJ is dynamically added)
             if (SelectedCommittee.CommID == -1)
@@ -174,7 +179,16 @@ namespace Foscamun.ViewModels
                 Committees.Remove(SelectedCommittee);
             }
 
+            if (removed.Name == Properties.Settings.Default.SelCommName)
+                ClearSavedCommittee();
+
             SelectedCommittee = null;
+        }
+
+        private static void ClearSavedCommittee()
+        {
+            Properties.Settings.Default.SelCommName = "";
+            Properties.Settings.Default.Save();
         }
     }
 }

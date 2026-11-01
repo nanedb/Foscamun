@@ -34,6 +34,7 @@
 
     <!--Strings-->
     <sys:String x:Key="HintStr1">El comité seleccionado es</sys:String>
+    <sys:String x:Key="NoCommitteeStr">Ningún comité seleccionado</sys:String>
     <sys:String x:Key="HintStr2">Para cambiarlo, edítalo; para añadir o eliminar un comité, haz clic en</sys:String>
 
     <!-- Páginas de Lista -->

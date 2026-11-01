@@ -62,16 +62,45 @@
 
         <!-- Area inferiore -->
         <Border Grid.Row="2" Background="{DynamicResource PrimaryBrush}" SnapsToDevicePixels="True">
-            <TextBlock Style="{StaticResource Caption}"
-                       Padding="16 0 16 14"
-                       TextAlignment="Left" VerticalAlignment="Bottom">
-                        <Run Text="{DynamicResource HintStr1}"/>
-                        <Run Text="{Binding Path=SelCommName, Source={x:Static properties:Settings.Default}}"
-                             FontWeight="Bold"/>
-                        <LineBreak/>
-                        <Run Text="{DynamicResource HintStr2}"/>
-                        <Run Text="{DynamicResource ConfigureBtn}"/>
-            </TextBlock>
+            <StackPanel Margin="16 0 16 14" VerticalAlignment="Bottom">
+                <!-- Selected committee, or a note that there is none -->
+                <TextBlock TextAlignment="Left">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource Caption}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=SelCommName, Source={x:Static properties:Settings.Default}}" Value="">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path=SelCommName, Source={x:Static properties:Settings.Default}}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                    <Run Text="{DynamicResource HintStr1}"/>
+                    <Run Text="{Binding Path=SelCommName, Source={x:Static properties:Settings.Default}}"
+                         FontWeight="Bold"/>
+                </TextBlock>
+                <TextBlock Text="{DynamicResource NoCommitteeStr}" TextAlignment="Left">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource Caption}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=SelCommName, Source={x:Static properties:Settings.Default}}" Value="">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path=SelCommName, Source={x:Static properties:Settings.Default}}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <TextBlock Style="{StaticResource Caption}" TextAlignment="Left">
+                    <Run Text="{DynamicResource HintStr2}"/>
+                    <Run Text="{DynamicResource ConfigureBtn}"/>
+                </TextBlock>
+            </StackPanel>
         </Border>
         
     </Grid>
