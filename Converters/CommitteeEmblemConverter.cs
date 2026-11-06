@@ -228,6 +228,31 @@ namespace Foscamun.Converters
             if (!hasGap || !isShort)
                 return null;
 
+            // Captions can span several lines (SECURITY / COUNCIL): take in the lines above
+            // while they are about as tall as the last one, close to it, and the caption stays short
+            int lineHeight = bottom - bandTop + 1;
+            while (true)
+            {
+                int lineBottom = gapTop - 1;
+                int lineTop = lineBottom;
+                while (lineTop > 0 && filled[lineTop - 1])
+                    lineTop--;
+
+                int nextGapTop = lineTop;
+                while (nextGapTop > 0 && !filled[nextGapTop - 1])
+                    nextGapTop--;
+
+                bool similar = lineBottom - lineTop + 1 <= 1.5 * lineHeight;
+                bool close = bandTop - gapTop <= lineHeight;
+                bool stillShort = bottom - lineTop + 1 <= MaxCaptionShare * (bottom + 1);
+                bool separated = nextGapTop > 0 && nextGapTop < lineTop;
+                if (!similar || !close || !stillShort || !separated)
+                    break;
+
+                bandTop = lineTop;
+                gapTop = nextGapTop;
+            }
+
             return bounds.Y + gapTop / scale;
         }
     }

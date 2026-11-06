@@ -211,6 +211,9 @@ namespace Foscamun.ViewModels
                 return;
             }
 
+            // Names are stored in upper case, also those saved before this rule or pasted in
+            Committee.Name = Committee.Name.Trim().ToUpperInvariant();
+
             if (IsEditMode)
             {
                 // Update existing committee and replace country associations

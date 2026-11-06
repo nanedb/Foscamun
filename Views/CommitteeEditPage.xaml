@@ -95,7 +95,9 @@
                        Text="Committee" HorizontalAlignment="Right"
                        VerticalAlignment="Center"/>
 
+            <!-- Committee names are always upper case -->
             <TextBox Grid.Column="1" Grid.Row="1" Margin="5"
+                     CharacterCasing="Upper"
                      Text="{Binding Committee.Name, UpdateSourceTrigger=PropertyChanged}"/>
 
             <TextBlock Grid.Column="0" Grid.Row="2" Margin="5"

@@ -25,6 +25,9 @@
     <sys:String x:Key="CloseBtn">Close</sys:String>
     <sys:String x:Key="OkBtn">OK</sys:String>
     <sys:String x:Key="CancelBtn">Cancel</sys:String>
+    <sys:String x:Key="LogoMissingTitle">Logo missing</sys:String>
+    <sys:String x:Key="LogoMissingMsg" xml:space="preserve">No logo was found for: {0}.&#10;&#10;A generic logo is used for now. To use your own, save a white SVG on a transparent background, named after the committee (e.g. &quot;{2}.svg&quot;), in:&#10;{1}</sys:String>
+    <sys:String x:Key="AddICJBtn">Add ICJ</sys:String>
     <sys:String x:Key="EditICJBtn">Edit ICJ</sys:String>
     <sys:String x:Key="ICJBtn">ICJ</sys:String>
     <sys:String x:Key="RollCallBtn">Roll call</sys:String>

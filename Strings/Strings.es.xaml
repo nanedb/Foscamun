@@ -24,6 +24,9 @@
     <sys:String x:Key="CloseBtn">Cerrar</sys:String>
     <sys:String x:Key="OkBtn">Aceptar</sys:String>
     <sys:String x:Key="CancelBtn">Cancelar</sys:String>
+    <sys:String x:Key="LogoMissingTitle">Logo no encontrado</sys:String>
+    <sys:String x:Key="LogoMissingMsg" xml:space="preserve">No se encontró ningún logo para: {0}.&#10;&#10;Por ahora se usa un logo genérico. Para usar el suyo, guarde un SVG blanco sobre fondo transparente, con el nombre del comité (p. ej. &quot;{2}.svg&quot;), en:&#10;{1}</sys:String>
+    <sys:String x:Key="AddICJBtn">Añadir ICJ</sys:String>
     <sys:String x:Key="EditICJBtn">Editar ICJ</sys:String>
     <sys:String x:Key="ICJBtn">CIJ</sys:String>
     <sys:String x:Key="RollCallBtn">Lista</sys:String>

@@ -130,9 +130,8 @@ namespace Foscamun.Data
         /// <summary>
         /// Gets the path to a committee logo. Returns the custom logo if it exists,
         /// otherwise returns the generic fallback logo.
-        /// Shows a warning message if the logo is missing.
         /// </summary>
-        public static string GetCommitteeLogoPath(string committeeName, bool showWarning = false)
+        public static string GetCommitteeLogoPath(string committeeName)
         {
             string logoPath = Path.Combine(CommitteeLogoFolder, $"{committeeName}.svg");
 
@@ -141,24 +140,26 @@ namespace Foscamun.Data
                 return logoPath;
             }
 
-            // Logo mancante, mostra avviso se richiesto
-            if (showWarning)
-            {
-                string message = $"Logo for committee '{committeeName}' not found.\n\n" +
-                                 $"To add a custom logo:\n" +
-                                 $"1. Create an SVG file with white logo on transparent background\n" +
-                                 $"2. Name it '{committeeName}.svg'\n" +
-                                 $"3. Place it in: {CommitteeLogoFolder}\n\n" +
-                                 $"A generic logo will be used as '{committeeName}.svg' for now.";
-
-                MessageBox.Show(message, "Logo Missing", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                // Copia il logo generico come logo della commissione
-                CopyGenericLogoAs(committeeName);
-            }
-
             // Ritorna il logo generico di fallback
             return Path.Combine(CommitteeLogoFolder, "Generic.svg");
+        }
+
+        /// <summary>
+        /// Gives every committee without a logo a copy of the generic one, named after it.
+        /// Returns the names of the committees that had no logo.
+        /// </summary>
+        public static List<string> EnsureCommitteeLogos(IEnumerable<string> committeeNames)
+        {
+            var missing = new List<string>();
+            foreach (var name in committeeNames)
+            {
+                if (string.IsNullOrWhiteSpace(name) || File.Exists(Path.Combine(CommitteeLogoFolder, $"{name}.svg")))
+                    continue;
+
+                missing.Add(name);
+                CopyGenericLogoAs(name);
+            }
+            return missing;
         }
 
         /// <summary>

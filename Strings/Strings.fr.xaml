@@ -24,6 +24,9 @@
     <sys:String x:Key="CloseBtn">Fermer</sys:String>
     <sys:String x:Key="OkBtn">Valider</sys:String>
     <sys:String x:Key="CancelBtn">Annuler</sys:String>
+    <sys:String x:Key="LogoMissingTitle">Logo manquant</sys:String>
+    <sys:String x:Key="LogoMissingMsg" xml:space="preserve">Aucun logo trouvé pour : {0}.&#10;&#10;Un logo générique est utilisé pour le moment. Pour utiliser le vôtre, enregistrez un SVG blanc sur fond transparent, portant le nom de la commission (par ex. &quot;{2}.svg&quot;), dans :&#10;{1}</sys:String>
+    <sys:String x:Key="AddICJBtn">Ajouter ICJ</sys:String>
     <sys:String x:Key="EditICJBtn">Modifier ICJ</sys:String>
     <sys:String x:Key="ICJBtn">CIJ</sys:String>
     <sys:String x:Key="RollCallBtn">Appel</sys:String>

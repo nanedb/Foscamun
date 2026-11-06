@@ -22,7 +22,7 @@
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Padding" Value="0"/>
-            <Setter Property="Margin" Value="0,6"/>
+            <Setter Property="Margin" Value="0,12"/>
             <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
             <Setter Property="FontSize" Value="18"/>
         </Style>
@@ -65,7 +65,7 @@
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
             <Setter Property="Height" Value="40"/>
             <Setter Property="FontSize" Value="17"/>
-            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Setter Property="Margin" Value="0,0,0,14"/>
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">
                     <Setter Property="Background" Value="Transparent"/>
@@ -75,7 +75,7 @@
     </Page.Resources>
 
     <!-- LAYOUT PRINCIPALE -->
-    <Grid Margin="40 24 40 16">
+    <Grid Margin="40 36 40 24">
 
         <Grid.RowDefinitions>
             <!-- Title -->
@@ -99,7 +99,7 @@
         <TextBlock Grid.ColumnSpan="2"
                    Style="{StaticResource H3}"
                    FontWeight="Bold"
-                   Margin="0,0,0,10"
+                   Margin="0,0,0,24"
                    Text="{DynamicResource ConfigureBtn}"/>
 
         <!-- SELECTED COMMITTEE -->
@@ -191,7 +191,7 @@
                       SelectedItem="{Binding SelectedCommittee, Mode=TwoWay}"
                       Background="{StaticResource InputBackgroundBrush}"
                       Foreground="{StaticResource TextInputBrush}"
-                      Margin="24 4 0 0"
+                      Margin="24 12 0 0"
                       Height="322"
                       VerticalAlignment="Top"
                       SelectionMode="Single" Focusable="True">
@@ -221,9 +221,10 @@
                 </ListView.ItemContainerStyle>
             </ListView>
 
-            <!-- ACTION BUTTONS -->
+            <!-- ACTION BUTTONS: bottom-right, last one level with the bottom of the list -->
             <StackPanel Grid.Column="3"
-                        Orientation="Vertical" VerticalAlignment="Center">
+                        Orientation="Vertical" VerticalAlignment="Bottom"
+                        Margin="0,0,0,-14">
 
                 <Button Style="{StaticResource SetupActionButton}" x:Name="AddCommitteeButton"
                         Tag="pack://application:,,,/Resources/Icons/add.svg"
@@ -236,8 +237,14 @@
                         IsEnabled="{Binding IsEditCommitteeEnabled}"
                         Command="{Binding EditCommitteeCommand}"/>
 
+                <Button Style="{StaticResource SetupActionButton}" x:Name="AddICJButton"
+                        Tag="pack://application:,,,/Resources/Icons/add.svg"
+                        Content="{DynamicResource AddICJBtn}"
+                        IsEnabled="{Binding IsAddICJButtonEnabled}"
+                        Command="{Binding OpenICJCommand}"/>
+
                 <Button Style="{StaticResource SetupActionButton}" x:Name="ICJButton"
-                        Tag="pack://application:,,,/Resources/Icons/configure.svg"
+                        Tag="pack://application:,,,/Resources/Icons/edit.svg"
                         Content="{DynamicResource EditICJBtn}"
                         IsEnabled="{Binding IsICJButtonEnabled}"
                         Command="{Binding OpenICJCommand}"/>

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Threading;
 
 namespace Foscamun.ViewModels
 {
@@ -31,7 +32,11 @@ namespace Foscamun.ViewModels
 
         public bool IsRemoveCommitteeEnabled => SelectedCommittee != null;
 
-        public bool IsICJButtonEnabled => true; // Always enabled to allow creating or editing ICJ
+        // Edit ICJ: only with ICJ selected
+        public bool IsICJButtonEnabled => SelectedCommittee?.CommID == -1;
+
+        // Add ICJ: only while ICJ is missing from the list
+        public bool IsAddICJButtonEnabled => Committees != null && !Committees.Any(c => c.CommID == -1);
 
         public SetupPageViewModel(SqliteDataAccess db)
         {
@@ -54,6 +59,10 @@ namespace Foscamun.ViewModels
             try
             {
                 var list = await _db.GetCommitteesAsync();
+                // Committees without a logo get the generic one; say so once the page is shown
+                var missing = SqliteDataAccess.EnsureCommitteeLogos(list.Select(c => c.Name));
+                if (missing.Count > 0)
+                    Application.Current.Dispatcher.BeginInvoke(() => ShowMissingLogos(missing), DispatcherPriority.ApplicationIdle);
                 Committees = new ObservableCollection<Committee>(list);
 
                 var savedName = Properties.Settings.Default.SelCommName;
@@ -77,6 +86,7 @@ namespace Foscamun.ViewModels
         {
             OnPropertyChanged(nameof(IsEditCommitteeEnabled));
             OnPropertyChanged(nameof(IsRemoveCommitteeEnabled));
+            OnPropertyChanged(nameof(IsICJButtonEnabled));
 
             if (value != null)
             {
@@ -87,7 +97,8 @@ namespace Foscamun.ViewModels
 
         partial void OnCommitteesChanged(ObservableCollection<Committee> value)
         {
-            // No need to update IsICJButtonEnabled anymore as it's always true
+            OnPropertyChanged(nameof(IsICJButtonEnabled));
+            OnPropertyChanged(nameof(IsAddICJButtonEnabled));
         }
 
         // -------------------------
@@ -183,6 +194,15 @@ namespace Foscamun.ViewModels
                 ClearSavedCommittee();
 
             SelectedCommittee = null;
+        }
+
+        private static void ShowMissingLogos(List<string> names)
+        {
+            var app = Application.Current;
+            string message = string.Format((string)app.FindResource("LogoMissingMsg"),
+                string.Join(", ", names), SqliteDataAccess.CommitteeLogoFolder, names[0]);
+            MessageBox.Show(message, (string)app.FindResource("LogoMissingTitle"),
+                MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private static void ClearSavedCommittee()
