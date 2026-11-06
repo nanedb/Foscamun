@@ -14,7 +14,7 @@ using SharpVectors.Renderers.Wpf;
 namespace Foscamun.Converters
 {
     /// <summary>
-    /// Converts a committee name to its logo drawn in black, without the caption
+    /// Converts a committee name to its logo drawn in the accent colour, without the caption
     /// that many logos carry under the emblem. Used where the name is already written beside it.
     /// </summary>
     public class CommitteeEmblemConverter : IValueConverter
@@ -63,8 +63,11 @@ namespace Foscamun.Converters
             using var reader = new FileSvgReader(settings);
             DrawingGroup drawing = reader.Read(path).Clone();
 
-            // Logos are white on transparent: paint every shape black
-            Recolor(drawing, Brushes.Black);
+            // Logos are white on transparent: paint every shape in the accent colour
+            var color = Application.Current?.TryFindResource("AccentOnLightColor") is Color c ? c : Colors.Black;
+            var brush = new SolidColorBrush(color);
+            brush.Freeze();
+            Recolor(drawing, brush, color);
 
             // SharpVectors draws every shape, also those outside the viewBox (UNWOMEN keeps
             // its wordmark there): show only what the viewBox frames
@@ -123,13 +126,13 @@ namespace Foscamun.Converters
             return transform.TransformBounds(new Rect(n[0], n[1], n[2], n[3]));
         }
 
-        private static void Recolor(Drawing drawing, Brush brush)
+        private static void Recolor(Drawing drawing, Brush brush, Color color)
         {
             switch (drawing)
             {
                 case DrawingGroup group:
                     foreach (var child in group.Children)
-                        Recolor(child, brush);
+                        Recolor(child, brush, color);
                     break;
                 case GeometryDrawing geometry:
                     if (geometry.Brush != null) geometry.Brush = brush;
@@ -139,25 +142,26 @@ namespace Foscamun.Converters
                     glyphs.ForegroundBrush = brush;
                     break;
                 case ImageDrawing picture when picture.ImageSource is BitmapSource bitmap:
-                    // Older logos embed a PNG: keep its alpha, make it black
-                    picture.ImageSource = Blacken(bitmap);
+                    // Older logos embed a PNG: keep its alpha, paint it in the accent colour
+                    picture.ImageSource = Tint(bitmap, color);
                     break;
             }
         }
 
-        private static BitmapSource Blacken(BitmapSource source)
+        private static BitmapSource Tint(BitmapSource source, Color color)
         {
             var converted = new FormatConvertedBitmap(source, PixelFormats.Pbgra32, null, 0);
             int stride = converted.PixelWidth * 4;
             var pixels = new byte[stride * converted.PixelHeight];
             converted.CopyPixels(pixels, stride, 0);
 
-            // Premultiplied black is zero color with the original alpha
+            // Premultiplied: each channel is the colour scaled by the original alpha
             for (int i = 0; i < pixels.Length; i += 4)
             {
-                pixels[i] = 0;
-                pixels[i + 1] = 0;
-                pixels[i + 2] = 0;
+                int a = pixels[i + 3];
+                pixels[i] = (byte)(color.B * a / 255);
+                pixels[i + 1] = (byte)(color.G * a / 255);
+                pixels[i + 2] = (byte)(color.R * a / 255);
             }
 
             var result = BitmapSource.Create(converted.PixelWidth, converted.PixelHeight,

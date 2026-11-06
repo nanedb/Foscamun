@@ -42,6 +42,9 @@
     <SolidColorBrush x:Key="TextInputBrush" Color="#FF000000"/>
     <SolidColorBrush x:Key="InputHoverBrush" Color="#FFE0E0D6"/>
     <SolidColorBrush x:Key="InputSelectedBrush" Color="#FFD6D6C8"/>
+    <!-- Brand blue darkened for text and emblems on light surfaces (contrast ~6.4:1 on InputBackground) -->
+    <Color x:Key="AccentOnLightColor">#FF1E5A8C</Color>
+    <SolidColorBrush x:Key="AccentOnLightBrush" Color="{StaticResource AccentOnLightColor}"/>
 
     <!-- Scrollbar thumb: muted grey + alpha, readable on both dark and light surfaces -->
     <SolidColorBrush x:Key="ScrollThumbBrush" Color="#66A0A0A0"/>

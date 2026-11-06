@@ -192,17 +192,18 @@
                       Background="{StaticResource InputBackgroundBrush}"
                       Foreground="{StaticResource TextInputBrush}"
                       Margin="24 4 0 0"
-                      MinHeight="120"
+                      Height="322"
+                      VerticalAlignment="Top"
                       SelectionMode="Single" Focusable="True">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <!-- Black emblem without its caption: the name is written beside it -->
+                            <!-- Accent-blue emblem without its caption: the name is written beside it -->
                             <Image Width="48" Height="48" Margin="0,0,14,0" VerticalAlignment="Center"
                                    Stretch="Uniform"
                                    Source="{Binding Name, Converter={StaticResource CommitteeEmblemConverter}}"/>
                             <TextBlock Text="{Binding Name}" VerticalAlignment="Center"
-                                       Foreground="{StaticResource TextInputBrush}"/>
+                                       Foreground="{StaticResource AccentOnLightBrush}"/>
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
