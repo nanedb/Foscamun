@@ -24,6 +24,10 @@
     <sys:String x:Key="CloseBtn">Cerrar</sys:String>
     <sys:String x:Key="OkBtn">Aceptar</sys:String>
     <sys:String x:Key="CancelBtn">Cancelar</sys:String>
+    <sys:String x:Key="YesBtn">Sí</sys:String>
+    <sys:String x:Key="NoBtn">No</sys:String>
+    <sys:String x:Key="DontAskAgain">No volver a preguntar</sys:String>
+    <sys:String x:Key="ConfirmExitLbl">Preguntar antes de salir:</sys:String>
     <sys:String x:Key="LogoMissingTitle">Logo no encontrado</sys:String>
     <sys:String x:Key="LogoMissingMsg" xml:space="preserve">No se encontró ningún logo para: {0}.&#10;&#10;Por ahora se usa un logo genérico. Para usar el suyo, guarde un SVG blanco sobre fondo transparente, con el nombre del comité (p. ej. &quot;{2}.svg&quot;), en:&#10;{1}</sys:String>
     <sys:String x:Key="AddICJBtn">Añadir ICJ</sys:String>
@@ -115,7 +119,7 @@
     <sys:String x:Key="TimerRunningTitle">Temporizador en ejecución</sys:String>
     <sys:String x:Key="TimerRunningMsg">Detenga el temporizador antes de establecer un nuevo tiempo.</sys:String>
     <sys:String x:Key="InvalidInputTitle">Entrada no válida</sys:String>
-    <sys:String x:Key="InvalidValuesMsg">Por favor, introduzca valores válidos (Minutos = 0, Segundos 0-59).</sys:String>
+    <sys:String x:Key="InvalidValuesMsg">Por favor, introduzca valores válidos (Minutos ≥ 0, Segundos 0-59).</sys:String>
     <sys:String x:Key="InvalidNumbersMsg">Por favor, introduzca números válidos.</sys:String>
     <sys:String x:Key="NoTimeSetTitle">No se ha establecido tiempo</sys:String>
     <sys:String x:Key="NoTimeSetMsg">Por favor, establezca primero un tiempo usando el botón Establecer.</sys:String>
@@ -123,4 +127,24 @@
     <!-- Confirmación de salida -->
     <sys:String x:Key="ExitConfirmTitle">Confirmación de salida</sys:String>
     <sys:String x:Key="ExitConfirmMessage">¿Está seguro de que desea salir?</sys:String>
+
+    <!-- Dialog messages -->
+    <sys:String x:Key="NoCommitteeTitle">Ningún comité seleccionado</sys:String>
+    <sys:String x:Key="NoCommitteeMsg">Seleccione primero un comité.</sys:String>
+    <sys:String x:Key="ErrorTitle">Error</sys:String>
+    <sys:String x:Key="CommitteeNotFoundMsg">No se encontró el comité «{0}».</sys:String>
+    <sys:String x:Key="SelectToEditMsg">Seleccione un comité para editar.</sys:String>
+    <sys:String x:Key="SelectToDeleteMsg">Seleccione un comité para eliminar.</sys:String>
+    <sys:String x:Key="ConfirmDeleteTitle">Confirmar eliminación</sys:String>
+    <sys:String x:Key="ConfirmDeleteMsg">¿Seguro que desea eliminar «{0}»?</sys:String>
+    <sys:String x:Key="FillAllFieldsMsg">Rellene todos los campos y seleccione al menos un país.</sys:String>
+    <sys:String x:Key="CommitteeUpdatedMsg">Comité actualizado.</sys:String>
+    <sys:String x:Key="CommitteeCreatedMsg">Comité creado.</sys:String>
+
+    <!-- Add / Edit Committee page -->
+    <sys:String x:Key="CommitteeNameLbl">Comité:</sys:String>
+    <sys:String x:Key="CommitteeTopicLbl">Tema:</sys:String>
+    <sys:String x:Key="AddCountryHint">Haga clic en un país para añadirlo al comité</sys:String>
+    <sys:String x:Key="RemoveCountryHint">Haga clic en un país para quitarlo del comité</sys:String>
+
 </ResourceDictionary>

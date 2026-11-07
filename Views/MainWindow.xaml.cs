@@ -174,7 +174,7 @@ namespace Foscamun.Views
             var name = Settings.Default.SelCommName;
             if (string.IsNullOrWhiteSpace(name))
             {
-                MessageBox.Show("Please select a committee first.", "No Committee Selected",
+                AppDialog.Show(AppDialog.Text("NoCommitteeMsg"), AppDialog.Text("NoCommitteeTitle"),
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -189,7 +189,7 @@ namespace Foscamun.Views
             var committee = Db.GetCommitteeByNameAsync(name).GetAwaiter().GetResult();
             if (committee == null)
             {
-                MessageBox.Show($"Committee '{name}' not found.", "Error",
+                AppDialog.Show(AppDialog.Text("CommitteeNotFoundMsg", name), AppDialog.Text("ErrorTitle"),
                     MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -197,14 +197,34 @@ namespace Foscamun.Views
             NavigateRightFrame(new CommitteeRollCallPage(committee, Db));
         }
 
-        private void ExitBtn_Click(object sender, RoutedEventArgs e)
-        {
-            var message = (string)Application.Current.FindResource("ExitConfirmMessage");
-            var title = (string)Application.Current.FindResource("ExitConfirmTitle");
+        // Exit and the window's X take the same way out, through OnClosing
+        private void ExitBtn_Click(object sender, RoutedEventArgs e) => Close();
 
-            if (MessageBox.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Question)
-                == MessageBoxResult.Yes)
-                Application.Current.Shutdown();
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+            if (e.Cancel || !Settings.Default.ConfirmExit)
+                return;
+
+            var app = Application.Current;
+            var answer = AppDialog.Show(
+                (string)app.FindResource("ExitConfirmMessage"),
+                (string)app.FindResource("ExitConfirmTitle"),
+                MessageBoxButton.YesNo, MessageBoxImage.Question,
+                (string)app.FindResource("DontAskAgain"), out bool dontAskAgain);
+
+            if (answer != MessageBoxResult.Yes)
+            {
+                e.Cancel = true;
+                return;
+            }
+
+            // Setup can turn the question back on
+            if (dontAskAgain)
+            {
+                Settings.Default.ConfirmExit = false;
+                Settings.Default.Save();
+            }
         }
 
         // ------------------- ANIMATED NAVIGATION -------------------
@@ -236,6 +256,9 @@ namespace Foscamun.Views
         {
             Settings.Default.PropertyChanged -= Settings_PropertyChanged;
             base.OnClosed(e);
+
+            // Other windows (the timer) close with the app
+            Application.Current.Shutdown();
         }
     }
 }

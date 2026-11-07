@@ -65,7 +65,7 @@ namespace Foscamun.Views
         private void BackToSession()
         {
             if (_currentVoterIndex > 0 &&
-                MessageBox.Show((string)FindResource("LeaveVotingMsg"), (string)FindResource("ConfirmTitle"),
+                AppDialog.Show((string)FindResource("LeaveVotingMsg"), (string)FindResource("ConfirmTitle"),
                                 MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
                 return;
 

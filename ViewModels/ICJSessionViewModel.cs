@@ -7,7 +7,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Windows;
-using System.Windows.Data;
+using System.Windows.Data;
+using Foscamun.Views;
 
 namespace Foscamun.ViewModels
 {
@@ -249,7 +250,7 @@ namespace Foscamun.ViewModels
 
             if (voters.Count == 0)
             {
-                MessageBox.Show(
+                AppDialog.Show(
                     Properties.Settings.Default.Lang switch
                     {
                         "fr" => "Aucun juré disponible pour voter.",

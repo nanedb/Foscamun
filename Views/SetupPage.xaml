@@ -22,7 +22,7 @@
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Padding" Value="0"/>
-            <Setter Property="Margin" Value="0,12"/>
+            <Setter Property="Margin" Value="0,7"/>
             <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
             <Setter Property="FontSize" Value="18"/>
         </Style>
@@ -75,7 +75,7 @@
     </Page.Resources>
 
     <!-- LAYOUT PRINCIPALE -->
-    <Grid Margin="40 36 40 24">
+    <Grid Margin="40 30 40 24">
 
         <Grid.RowDefinitions>
             <!-- Title -->
@@ -85,6 +85,8 @@
             <!-- Year -->
             <RowDefinition Height="Auto"/>
             <!-- Language -->
+            <RowDefinition Height="Auto"/>
+            <!-- Ask before exiting -->
             <RowDefinition Height="Auto"/>
             <!-- Committee label + list + buttons -->
             <RowDefinition Height="*"/>
@@ -99,7 +101,7 @@
         <TextBlock Grid.ColumnSpan="2"
                    Style="{StaticResource H3}"
                    FontWeight="Bold"
-                   Margin="0,0,0,24"
+                   Margin="0,0,0,18"
                    Text="{DynamicResource ConfigureBtn}"/>
 
         <!-- SELECTED COMMITTEE -->
@@ -173,13 +175,23 @@
 
         </StackPanel>
 
+        <!-- ASK BEFORE EXITING (the exit dialog can turn it off) -->
+        <Label Grid.Row="4" Grid.Column="0"
+               Style="{StaticResource LeftAlignedLabelStyle}"
+               Content="{DynamicResource ConfirmExitLbl}"/>
+        <CheckBox Grid.Row="4" Grid.Column="1"
+                  Style="{StaticResource AppCheckBox}"
+                  HorizontalAlignment="Right" VerticalAlignment="Center"
+                  IsChecked="{Binding Source={x:Static properties:Settings.Default},
+                                      Path=ConfirmExit, Mode=TwoWay}"/>
+
         <!-- COMMITTEE LABEL, LIST (beside the label) + ACTION BUTTONS -->
-        <Grid Grid.Row="4" Grid.ColumnSpan="2">
+        <Grid Grid.Row="5" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="300"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="210"/>
+                <ColumnDefinition Width="260"/>
             </Grid.ColumnDefinitions>
 
             <Label Style="{StaticResource LeftAlignedLabelStyle}"
@@ -191,7 +203,7 @@
                       SelectedItem="{Binding SelectedCommittee, Mode=TwoWay}"
                       Background="{StaticResource InputBackgroundBrush}"
                       Foreground="{StaticResource TextInputBrush}"
-                      Margin="24 12 0 0"
+                      Margin="24 7 0 0"
                       Height="322"
                       VerticalAlignment="Top"
                       SelectionMode="Single" Focusable="True">

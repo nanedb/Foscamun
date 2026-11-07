@@ -207,7 +207,7 @@ namespace Foscamun.ViewModels
         {
             if (!CanSave)
             {
-                MessageBox.Show("Please fill all fields and select at least one country.");
+                AppDialog.Show(AppDialog.Text("FillAllFieldsMsg"));
                 return;
             }
 
@@ -236,7 +236,7 @@ namespace Foscamun.ViewModels
             foreach (var c in SelectedCountries)
                 await _db.InsertSelectedCountryAsync(Committee.CommID, c.IsoCode);
 
-            MessageBox.Show(IsEditMode ? "Committee updated." : "Committee created.");
+            AppDialog.Show(AppDialog.Text(IsEditMode ? "CommitteeUpdatedMsg" : "CommitteeCreatedMsg"));
 
             NavigateBack();
         }

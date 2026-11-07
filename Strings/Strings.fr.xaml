@@ -24,6 +24,10 @@
     <sys:String x:Key="CloseBtn">Fermer</sys:String>
     <sys:String x:Key="OkBtn">Valider</sys:String>
     <sys:String x:Key="CancelBtn">Annuler</sys:String>
+    <sys:String x:Key="YesBtn">Oui</sys:String>
+    <sys:String x:Key="NoBtn">Non</sys:String>
+    <sys:String x:Key="DontAskAgain">Ne plus demander</sys:String>
+    <sys:String x:Key="ConfirmExitLbl">Demander avant de quitter :</sys:String>
     <sys:String x:Key="LogoMissingTitle">Logo manquant</sys:String>
     <sys:String x:Key="LogoMissingMsg" xml:space="preserve">Aucun logo trouvé pour : {0}.&#10;&#10;Un logo générique est utilisé pour le moment. Pour utiliser le vôtre, enregistrez un SVG blanc sur fond transparent, portant le nom de la commission (par ex. &quot;{2}.svg&quot;), dans :&#10;{1}</sys:String>
     <sys:String x:Key="AddICJBtn">Ajouter ICJ</sys:String>
@@ -115,7 +119,7 @@
     <sys:String x:Key="TimerRunningTitle">Minuteur en cours</sys:String>
     <sys:String x:Key="TimerRunningMsg">Arrêtez le minuteur avant de définir une nouvelle heure.</sys:String>
     <sys:String x:Key="InvalidInputTitle">Entrée invalide</sys:String>
-    <sys:String x:Key="InvalidValuesMsg">Veuillez entrer des valeurs valides (Minutes = 0, Secondes 0-59).</sys:String>
+    <sys:String x:Key="InvalidValuesMsg">Veuillez entrer des valeurs valides (Minutes ≥ 0, Secondes 0-59).</sys:String>
     <sys:String x:Key="InvalidNumbersMsg">Veuillez entrer des nombres valides.</sys:String>
     <sys:String x:Key="NoTimeSetTitle">Aucune heure définie</sys:String>
     <sys:String x:Key="NoTimeSetMsg">Veuillez d'abord définir une heure en utilisant le bouton Définir.</sys:String>
@@ -123,5 +127,24 @@
     <!-- Confirmation de sortie -->
     <sys:String x:Key="ExitConfirmTitle">Confirmation de sortie</sys:String>
     <sys:String x:Key="ExitConfirmMessage">Êtes-vous sûr de vouloir quitter?</sys:String>
+
+    <!-- Dialog messages -->
+    <sys:String x:Key="NoCommitteeTitle">Aucune commission sélectionnée</sys:String>
+    <sys:String x:Key="NoCommitteeMsg">Veuillez d'abord sélectionner une commission.</sys:String>
+    <sys:String x:Key="ErrorTitle">Erreur</sys:String>
+    <sys:String x:Key="CommitteeNotFoundMsg">Commission « {0} » introuvable.</sys:String>
+    <sys:String x:Key="SelectToEditMsg">Veuillez sélectionner une commission à modifier.</sys:String>
+    <sys:String x:Key="SelectToDeleteMsg">Veuillez sélectionner une commission à supprimer.</sys:String>
+    <sys:String x:Key="ConfirmDeleteTitle">Confirmer la suppression</sys:String>
+    <sys:String x:Key="ConfirmDeleteMsg">Voulez-vous vraiment supprimer « {0} » ?</sys:String>
+    <sys:String x:Key="FillAllFieldsMsg">Veuillez remplir tous les champs et sélectionner au moins un pays.</sys:String>
+    <sys:String x:Key="CommitteeUpdatedMsg">Commission mise à jour.</sys:String>
+    <sys:String x:Key="CommitteeCreatedMsg">Commission créée.</sys:String>
+
+    <!-- Add / Edit Committee page -->
+    <sys:String x:Key="CommitteeNameLbl">Commission:</sys:String>
+    <sys:String x:Key="CommitteeTopicLbl">Sujet:</sys:String>
+    <sys:String x:Key="AddCountryHint">Cliquez sur un pays pour l'ajouter à la commission</sys:String>
+    <sys:String x:Key="RemoveCountryHint">Cliquez sur un pays pour le retirer de la commission</sys:String>
 
 </ResourceDictionary>

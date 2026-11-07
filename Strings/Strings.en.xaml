@@ -25,6 +25,10 @@
     <sys:String x:Key="CloseBtn">Close</sys:String>
     <sys:String x:Key="OkBtn">OK</sys:String>
     <sys:String x:Key="CancelBtn">Cancel</sys:String>
+    <sys:String x:Key="YesBtn">Yes</sys:String>
+    <sys:String x:Key="NoBtn">No</sys:String>
+    <sys:String x:Key="DontAskAgain">Don't ask again</sys:String>
+    <sys:String x:Key="ConfirmExitLbl">Ask before exiting:</sys:String>
     <sys:String x:Key="LogoMissingTitle">Logo missing</sys:String>
     <sys:String x:Key="LogoMissingMsg" xml:space="preserve">No logo was found for: {0}.&#10;&#10;A generic logo is used for now. To use your own, save a white SVG on a transparent background, named after the committee (e.g. &quot;{2}.svg&quot;), in:&#10;{1}</sys:String>
     <sys:String x:Key="AddICJBtn">Add ICJ</sys:String>
@@ -115,7 +119,7 @@
     <sys:String x:Key="TimerRunningTitle">Timer Running</sys:String>
     <sys:String x:Key="TimerRunningMsg">Stop the timer before setting a new time.</sys:String>
     <sys:String x:Key="InvalidInputTitle">Invalid Input</sys:String>
-    <sys:String x:Key="InvalidValuesMsg">Please enter valid values (Minutes = 0, Seconds 0-59).</sys:String>
+    <sys:String x:Key="InvalidValuesMsg">Please enter valid values (Minutes ≥ 0, Seconds 0-59).</sys:String>
     <sys:String x:Key="InvalidNumbersMsg">Please enter valid numbers.</sys:String>
     <sys:String x:Key="NoTimeSetTitle">No Time Set</sys:String>
     <sys:String x:Key="NoTimeSetMsg">Please set a time first using the Set button.</sys:String>
@@ -123,5 +127,24 @@
     <!-- Exit Confirmation -->
     <sys:String x:Key="ExitConfirmTitle">Exit Confirmation</sys:String>
     <sys:String x:Key="ExitConfirmMessage">Are you sure you want to exit?</sys:String>
+
+    <!-- Dialog messages -->
+    <sys:String x:Key="NoCommitteeTitle">No Committee Selected</sys:String>
+    <sys:String x:Key="NoCommitteeMsg">Please select a committee first.</sys:String>
+    <sys:String x:Key="ErrorTitle">Error</sys:String>
+    <sys:String x:Key="CommitteeNotFoundMsg">Committee '{0}' not found.</sys:String>
+    <sys:String x:Key="SelectToEditMsg">Please select a committee to edit.</sys:String>
+    <sys:String x:Key="SelectToDeleteMsg">Please select a committee to delete.</sys:String>
+    <sys:String x:Key="ConfirmDeleteTitle">Confirm delete</sys:String>
+    <sys:String x:Key="ConfirmDeleteMsg">Are you sure you want to delete '{0}'?</sys:String>
+    <sys:String x:Key="FillAllFieldsMsg">Please fill all fields and select at least one country.</sys:String>
+    <sys:String x:Key="CommitteeUpdatedMsg">Committee updated.</sys:String>
+    <sys:String x:Key="CommitteeCreatedMsg">Committee created.</sys:String>
+
+    <!-- Add / Edit Committee page -->
+    <sys:String x:Key="CommitteeNameLbl">Committee:</sys:String>
+    <sys:String x:Key="CommitteeTopicLbl">Topic:</sys:String>
+    <sys:String x:Key="AddCountryHint">Click a country to add it to the committee</sys:String>
+    <sys:String x:Key="RemoveCountryHint">Click a country to remove it from the committee</sys:String>
 
 </ResourceDictionary>

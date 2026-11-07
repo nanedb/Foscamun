@@ -146,7 +146,7 @@ namespace Foscamun.ViewModels
         {
             if (SelectedCommittee == null)
             {
-                MessageBox.Show("Please select a committee to edit.");
+                AppDialog.Show(AppDialog.Text("SelectToEditMsg"));
                 return;
             }
 
@@ -164,13 +164,13 @@ namespace Foscamun.ViewModels
         {
             if (SelectedCommittee == null)
             {
-                MessageBox.Show("Please select a committee to delete.");
+                AppDialog.Show(AppDialog.Text("SelectToDeleteMsg"));
                 return;
             }
 
-            var result = MessageBox.Show(
-                $"Are you sure you want to delete '{SelectedCommittee.Name}'?",
-                "Confirm delete",
+            var result = AppDialog.Show(
+                AppDialog.Text("ConfirmDeleteMsg", SelectedCommittee.Name),
+                AppDialog.Text("ConfirmDeleteTitle"),
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Warning);
 
@@ -201,7 +201,7 @@ namespace Foscamun.ViewModels
             var app = Application.Current;
             string message = string.Format((string)app.FindResource("LogoMissingMsg"),
                 string.Join(", ", names), SqliteDataAccess.CommitteeLogoFolder, names[0]);
-            MessageBox.Show(message, (string)app.FindResource("LogoMissingTitle"),
+            AppDialog.Show(message, (string)app.FindResource("LogoMissingTitle"),
                 MessageBoxButton.OK, MessageBoxImage.Information);
         }
 

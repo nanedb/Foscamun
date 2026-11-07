@@ -51,6 +51,10 @@ namespace Foscamun
             {
                 if (ev.PropertyName == "Year")
                     Application.Current.Resources["YearResource"] = Settings.Default.Year;
+
+                // Changed from Setup's check box: keep it
+                if (ev.PropertyName == "ConfirmExit")
+                    Settings.Default.Save();
             };
 
             // Mostra MainWindow come prima finestra

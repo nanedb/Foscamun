@@ -79,7 +79,7 @@ namespace Foscamun.Views
 
         private void BackToSession()
         {
-            var result = MessageBox.Show(
+            var result = AppDialog.Show(
                 Properties.Settings.Default.Lang switch
                 {
                     "fr" => "Êtes-vous sûr de vouloir revenir en arrière? Le vote en cours sera perdu.",

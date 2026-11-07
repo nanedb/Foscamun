@@ -65,7 +65,7 @@ namespace Foscamun.Views
         {
             if (_vm.SelectedCommittee == null)
             {
-                MessageBox.Show("Please select a committee to edit.");
+                AppDialog.Show(AppDialog.Text("SelectToEditMsg"));
                 return;
             }
 
@@ -81,13 +81,13 @@ namespace Foscamun.Views
         {
             if (_vm.SelectedCommittee == null)
             {
-                MessageBox.Show("Please select a committee to delete.");
+                AppDialog.Show(AppDialog.Text("SelectToDeleteMsg"));
                 return;
             }
 
-            var result = MessageBox.Show(
-                $"Are you sure you want to delete '{_vm.SelectedCommittee.Name}'?",
-                "Confirm delete",
+            var result = AppDialog.Show(
+                AppDialog.Text("ConfirmDeleteMsg", _vm.SelectedCommittee.Name),
+                AppDialog.Text("ConfirmDeleteTitle"),
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Warning);
 

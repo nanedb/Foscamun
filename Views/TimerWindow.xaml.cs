@@ -179,7 +179,7 @@ namespace Foscamun.Views
         {
             if (_running)
             {
-                MessageBox.Show("Stop the timer before setting a new time.", "Timer Running", 
+                AppDialog.Show(AppDialog.Text("TimerRunningMsg"), AppDialog.Text("TimerRunningTitle"),
                     MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
@@ -189,8 +189,8 @@ namespace Foscamun.Views
             {
                 if (minutes < 0 || seconds < 0 || seconds >= 60)
                 {
-                    MessageBox.Show("Please enter valid values (Minutes ≥ 0, Seconds 0-59).", 
-                        "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    AppDialog.Show(AppDialog.Text("InvalidValuesMsg"),
+                        AppDialog.Text("InvalidInputTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
@@ -201,7 +201,7 @@ namespace Foscamun.Views
             }
             else
             {
-                MessageBox.Show("Please enter valid numbers.", "Invalid Input", 
+                AppDialog.Show(AppDialog.Text("InvalidNumbersMsg"), AppDialog.Text("InvalidInputTitle"),
                     MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
@@ -220,7 +220,7 @@ namespace Foscamun.Views
                 // Start
                 if (_initialTime.TotalSeconds == 0 && _remainingTime.TotalSeconds == 0 && !_isOvertime)
                 {
-                    MessageBox.Show(
+                    AppDialog.Show(
                         (string)FindResource("NoTimeSetMsg"),
                         (string)FindResource("NoTimeSetTitle"), 
                         MessageBoxButton.OK, 

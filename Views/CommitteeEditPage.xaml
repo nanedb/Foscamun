@@ -78,13 +78,13 @@
 
             <!-- Titoli liste -->
             <TextBlock Grid.Column="2" Grid.Row="0" Margin="5"
-                       Text="Click to add Country to Committee"
+                       Text="{DynamicResource AddCountryHint}"
                        FontSize="12" TextWrapping="Wrap"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center" />
 
             <TextBlock Grid.Column="3" Grid.Row="0" Margin="5"
-                       Text="Click to remove Country from Committee"
+                       Text="{DynamicResource RemoveCountryHint}"
                        FontSize="12" TextWrapping="Wrap"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center" />
@@ -92,7 +92,7 @@
             <!-- ? CAMPI TESTO (binding corretto) -->
 
             <TextBlock Grid.Column="0" Grid.Row="1" Margin="5"
-                       Text="Committee" HorizontalAlignment="Right"
+                       Text="{DynamicResource CommitteeNameLbl}" HorizontalAlignment="Right"
                        VerticalAlignment="Center"/>
 
             <!-- Committee names are always upper case -->
@@ -101,7 +101,7 @@
                      Text="{Binding Committee.Name, UpdateSourceTrigger=PropertyChanged}"/>
 
             <TextBlock Grid.Column="0" Grid.Row="2" Margin="5"
-                       Text="Topic" HorizontalAlignment="Right"
+                       Text="{DynamicResource CommitteeTopicLbl}" HorizontalAlignment="Right"
                        VerticalAlignment="Center" />
 
             <TextBox Grid.Column="1" Grid.Row="2" Margin="5,10,5,10"
@@ -109,21 +109,21 @@
                      TextWrapping="Wrap"/>
 
             <TextBlock Grid.Column="0" Grid.Row="3" Margin="5"
-                       Text="President" HorizontalAlignment="Right"
+                       Text="{DynamicResource PresidentLbl}" HorizontalAlignment="Right"
                        VerticalAlignment="Center" />
 
             <TextBox Grid.Column="1" Grid.Row="3" Margin="5"
                      Text="{Binding Committee.President, UpdateSourceTrigger=PropertyChanged}"/>
 
             <TextBlock Grid.Column="0" Grid.Row="4" Margin="5"
-                       Text="Vice President" HorizontalAlignment="Right"
+                       Text="{DynamicResource VicePresidentLbl}" HorizontalAlignment="Right"
                        VerticalAlignment="Center" />
 
             <TextBox Grid.Column="1" Grid.Row="4" Margin="5"
                      Text="{Binding Committee.VicePresident, UpdateSourceTrigger=PropertyChanged}"/>
 
             <TextBlock Grid.Column="0" Grid.Row="5" Margin="5"
-                       Text="Moderator" HorizontalAlignment="Right"
+                       Text="{DynamicResource ModeratorLbl}" HorizontalAlignment="Right"
                        VerticalAlignment="Center" />
 
             <TextBox Grid.Column="1" Grid.Row="5" Margin="5"
@@ -161,13 +161,13 @@
             <!-- CANCEL -->
             <Button Style="{StaticResource IconButton}"
                     Tag="pack://application:,,,/Resources/Icons/close.svg"
-                    Content="Cancel"
+                    Content="{DynamicResource CancelBtn}"
                     Command="{Binding CancelCommand}" Width="150"/>
 
             <!-- OK -->
             <Button Style="{StaticResource IconButton}"
                     Tag="pack://application:,,,/Resources/Icons/check.svg"
-                    Content="OK"
+                    Content="{DynamicResource OkBtn}"
                     Command="{Binding SaveCommand}" Width="150"/>
 
         </StackPanel>
