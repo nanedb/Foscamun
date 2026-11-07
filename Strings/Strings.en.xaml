@@ -61,7 +61,7 @@
     <sys:String x:Key="MarkPresentLbl">Click to mark as Present</sys:String>
     <sys:String x:Key="MarkAbsentLbl">Click to mark as Absent</sys:String>
     <sys:String x:Key="ProceedBtn">Proceed</sys:String>
-    <sys:String x:Key="MarkAllPresentBtn">Mark All Present</sys:String>
+    <sys:String x:Key="MarkAllPresentBtn">Mark all present</sys:String>
 
     <!-- ICJ Edit Page -->
     <sys:String x:Key="ICJTitle">International Court of Justice</sys:String>
@@ -140,11 +140,24 @@
     <sys:String x:Key="FillAllFieldsMsg">Please fill all fields and select at least one country.</sys:String>
     <sys:String x:Key="CommitteeUpdatedMsg">Committee updated.</sys:String>
     <sys:String x:Key="CommitteeCreatedMsg">Committee created.</sys:String>
+    <sys:String x:Key="UnsavedChangesTitle">Unsaved changes</sys:String>
+    <sys:String x:Key="UnsavedChangesMsg">Your changes have not been saved and will be lost. Leave anyway?</sys:String>
 
     <!-- Add / Edit Committee page -->
     <sys:String x:Key="CommitteeNameLbl">Committee:</sys:String>
     <sys:String x:Key="CommitteeTopicLbl">Topic:</sys:String>
     <sys:String x:Key="AddCountryHint">Click a country to add it to the committee</sys:String>
     <sys:String x:Key="RemoveCountryHint">Click a country to remove it from the committee</sys:String>
+
+    <!-- Roll call page -->
+    <sys:String x:Key="PresentWord">present</sys:String>
+    <sys:String x:Key="AbsentWord">absent</sys:String>
+    <sys:String x:Key="AbsentListHeader">ABSENT — CLICK TO MARK PRESENT</sys:String>
+    <sys:String x:Key="PresentListHeader">PRESENT — CLICK TO MARK ABSENT</sys:String>
+    <sys:String x:Key="ProceedToSessionBtn">Proceed to session</sys:String>
+    <sys:String x:Key="PresidentRole">President</sys:String>
+    <sys:String x:Key="VicePresidentRole">Vice President</sys:String>
+    <sys:String x:Key="ModeratorRole">Moderator</sys:String>
+    <sys:String x:Key="ViceJudgeRole">Vice Judge</sys:String>
 
 </ResourceDictionary>

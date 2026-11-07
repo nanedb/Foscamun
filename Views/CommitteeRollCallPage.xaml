@@ -5,181 +5,87 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
       mc:Ignorable="d"
-      d:DesignWidth="800"
-      d:DesignHeight="450"
+      d:DesignWidth="900"
+      d:DesignHeight="600"
       Background="{DynamicResource PrimaryBrush}"
       Foreground="{DynamicResource TextPrimaryBrush}"
+      FontFamily="{DynamicResource FontPrimary}"
       Title="Committee Roll Call">
 
     <Page.Resources>
-        <!-- Template per lista paesi con font più grande -->
+        <!-- Country row: flag and name -->
         <DataTemplate x:Key="CountryTemplateList">
             <StackPanel Orientation="Horizontal">
-                <svgc:SvgViewbox Width="28" Height="19"
+                <svgc:SvgViewbox Width="24" Height="16"
                                  Source="{Binding FlagPath}"
                                  Stretch="Uniform"/>
                 <TextBlock Text="{Binding Name}"
                            Margin="10,0,0,0"
                            VerticalAlignment="Center"
-                           FontSize="16"
+                           FontSize="15"
                            Foreground="{StaticResource TextInputBrush}"/>
             </StackPanel>
         </DataTemplate>
 
-        <!-- Stile per pulsante con icona a destra -->
-        <Style x:Key="IconRightButton" TargetType="Button" BasedOn="{StaticResource MenuButton}">
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="HorizontalContentAlignment" Value="Right"/>
-            <Setter Property="Padding" Value="10,0,10,0"/>
-            <Setter Property="Height" Value="28"/>
-            <Setter Property="MinHeight" Value="0"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="ContentTemplate">
-                <Setter.Value>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal" 
-                                    VerticalAlignment="Center"
-                                    HorizontalAlignment="Right">
-                            <ContentPresenter Content="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Content}"
-                                              Margin="0,0,10,0"
-                                              VerticalAlignment="Center"/>
+        <!-- Small caption above each list -->
+        <Style x:Key="ListHeader" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+            <Setter Property="Margin" Value="2,0,0,6"/>
+        </Style>
 
-                            <svgc:SvgViewbox Width="18" Height="18"
-                                             Stretch="Uniform"
-                                             Margin="0"
-                                             Source="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Tag}"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </Setter.Value>
-            </Setter>
+        <!-- Board member in the header: name above, role below -->
+        <Style x:Key="BoardName" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+        </Style>
+        <Style x:Key="BoardRole" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+        </Style>
+
+        <!-- Secondary action: outlined pill -->
+        <Style x:Key="OutlineButton" TargetType="Button" BasedOn="{StaticResource MenuButton}">
+            <Setter Property="BorderBrush" Value="{DynamicResource SurfaceBorderHoverBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Padding" Value="6,0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+
+        <!-- Main action: white pill with blue text and arrow -->
+        <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
+            <Setter Property="Background" Value="{DynamicResource WhiteBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource AccentOnLightBrush}"/>
+            <Setter Property="TextElement.Foreground" Value="{DynamicResource AccentOnLightBrush}"/>
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Grid>
-                            <!-- Sfondo base -->
-                            <Border x:Name="Bd"
-                                    Background="{TemplateBinding Background}"
-                                    CornerRadius="{DynamicResource CornerRadiusMedium}"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="{TemplateBinding BorderThickness}" />
-
-                            <!-- Overlay animato -->
-                            <Border x:Name="Overlay"
-                                    Background="{DynamicResource PrimaryDarkBrush}"
-                                    CornerRadius="{DynamicResource CornerRadiusMedium}"
-                                    Opacity="0"
-                                    IsHitTestVisible="False"/>
-
-                            <!-- Contenuto -->
-                            <Grid>
-                                <ContentPresenter x:Name="contentPresenter"
-                                                  HorizontalAlignment="Right"
-                                                  VerticalAlignment="Center"
-                                                  RecognizesAccessKey="True"
-                                                  Margin="12,0,12,0">
-                                    <ContentPresenter.RenderTransform>
-                                        <ScaleTransform ScaleX="1" ScaleY="1" />
-                                    </ContentPresenter.RenderTransform>
-                                </ContentPresenter>
-                            </Grid>
+                            <Border Background="{TemplateBinding Background}"
+                                    CornerRadius="{DynamicResource CornerRadiusMedium}"/>
+                            <Border x:Name="Overlay" Background="{DynamicResource PrimaryBrush}"
+                                    CornerRadius="{DynamicResource CornerRadiusMedium}" Opacity="0"/>
+                            <ContentPresenter Margin="18,0" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                              TextElement.Foreground="{TemplateBinding Foreground}"/>
                         </Grid>
-
                         <ControlTemplate.Triggers>
-                            <!-- HOVER -->
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Trigger.EnterActions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Overlay"
-                                                             Storyboard.TargetProperty="Opacity"
-                                                             To="0.12"
-                                                             Duration="0:0:0.18"/>
-
-                                            <DoubleAnimation Storyboard.TargetName="contentPresenter"
-                                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
-                                                             To="1.002"
-                                                             Duration="0:0:0.18"/>
-
-                                            <DoubleAnimation Storyboard.TargetName="contentPresenter"
-                                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
-                                                             To="1.002"
-                                                             Duration="0:0:0.18"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </Trigger.EnterActions>
-
-                                <Trigger.ExitActions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Overlay"
-                                                             Storyboard.TargetProperty="Opacity"
-                                                             To="0"
-                                                             Duration="0:0:0.18"/>
-
-                                            <DoubleAnimation Storyboard.TargetName="contentPresenter"
-                                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
-                                                             To="1"
-                                                             Duration="0:0:0.18"/>
-
-                                            <DoubleAnimation Storyboard.TargetName="contentPresenter"
-                                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
-                                                             To="1"
-                                                             Duration="0:0:0.18"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </Trigger.ExitActions>
+                                <Setter TargetName="Overlay" Property="Opacity" Value="0.12"/>
                             </Trigger>
-
-                            <!-- PRESSED -->
                             <Trigger Property="IsPressed" Value="True">
-                                <Trigger.EnterActions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Overlay"
-                                                             Storyboard.TargetProperty="Opacity"
-                                                             To="0.22"
-                                                             Duration="0:0:0.08"/>
-
-                                            <DoubleAnimation Storyboard.TargetName="contentPresenter"
-                                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
-                                                             To="0.995"
-                                                             Duration="0:0:0.08"/>
-
-                                            <DoubleAnimation Storyboard.TargetName="contentPresenter"
-                                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
-                                                             To="0.995"
-                                                             Duration="0:0:0.08"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </Trigger.EnterActions>
-
-                                <Trigger.ExitActions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Overlay"
-                                                             Storyboard.TargetProperty="Opacity"
-                                                             To="0"
-                                                             Duration="0:0:0.12"/>
-
-                                            <DoubleAnimation Storyboard.TargetName="contentPresenter"
-                                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
-                                                             To="1"
-                                                             Duration="0:0:0.12"/>
-
-                                            <DoubleAnimation Storyboard.TargetName="contentPresenter"
-                                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
-                                                             To="1"
-                                                             Duration="0:0:0.12"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </Trigger.ExitActions>
+                                <Setter TargetName="Overlay" Property="Opacity" Value="0.25"/>
                             </Trigger>
-
-                            <!-- DISABLED -->
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="contentPresenter" Property="Opacity" Value="0.4" />
-                                <Setter Property="Foreground" Value="#808080" />
-                                <Setter Property="Cursor" Value="Arrow" />
+                                <Setter Property="Opacity" Value="0.55"/>
+                                <Setter Property="Cursor" Value="Arrow"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -188,139 +94,79 @@
         </Style>
     </Page.Resources>
 
-    <Grid Margin="30 25 30 25">
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <!-- Committee header: takes the height the body leaves -->
             <RowDefinition Height="*"/>
+            <!-- Page body: lists sized for 10 rows -->
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Titolo -->
-        <TextBlock Grid.Row="0"
-                   Text="{DynamicResource CommitteeRollCallTitle}" 
-                   Style="{StaticResource H3}"
-                   Margin="0,0,0,0"/>
+        <!-- COMMITTEE HEADER: emblem, name and topic; board on the right -->
+        <Border BorderBrush="{DynamicResource SurfaceBorderBrush}" BorderThickness="0,0,0,1">
+            <Grid Margin="24,10,28,10" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-        <!-- Contenuto -->
-        <Grid Grid.Row="1">
+                <Image Width="80" Height="80" Margin="0,0,18,0" Stretch="Uniform"
+                       VerticalAlignment="Center"
+                       Source="{Binding CommitteeName, Converter={StaticResource CommitteeEmblemConverter}, ConverterParameter=Light}"/>
+
+                <!-- Right margin keeps the topic well apart from the chairs -->
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,60,0">
+                    <TextBlock Text="{Binding CommitteeName}" FontSize="24" FontWeight="Bold"
+                               TextTrimming="CharacterEllipsis"/>
+                    <!-- Long topics wrap on up to three lines, then are cut -->
+                    <TextBlock Text="{Binding Topic}" FontSize="15" LineHeight="19"
+                               LineStackingStrategy="BlockLineHeight" MaxHeight="57"
+                               TextWrapping="Wrap" TextTrimming="WordEllipsis"
+                               Foreground="{DynamicResource TextSecondaryBrush}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <StackPanel Margin="20,0,0,0">
+                        <TextBlock Style="{StaticResource BoardName}" Text="{Binding President}"/>
+                        <TextBlock Style="{StaticResource BoardRole}" Text="{DynamicResource PresidentRole}"/>
+                    </StackPanel>
+                    <StackPanel Margin="20,0,0,0">
+                        <TextBlock Style="{StaticResource BoardName}" Text="{Binding VicePresident}"/>
+                        <TextBlock Style="{StaticResource BoardRole}" Text="{DynamicResource VicePresidentRole}"/>
+                    </StackPanel>
+                    <StackPanel Margin="20,0,0,0">
+                        <TextBlock Style="{StaticResource BoardName}" Text="{Binding Moderator}"/>
+                        <TextBlock Style="{StaticResource BoardRole}" Text="{DynamicResource ModeratorRole}"/>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- PAGE BODY -->
+        <Grid Grid.Row="1" Margin="28,14,28,20">
             <Grid.RowDefinitions>
-                <!-- Logo e Board -->
+                <!-- Title + session -->
                 <RowDefinition Height="Auto"/>
-                <!-- Liste e Session -->
-                <RowDefinition Height="*"/>
+                <!-- Progress -->
+                <RowDefinition Height="Auto"/>
+                <!-- Lists -->
+                <RowDefinition Height="Auto"/>
+                <!-- Actions -->
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- Logo e Board -->
-            <Grid Grid.Row="0" Margin="0,10,0,10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-
-                <!-- Logo -->
-                <Viewbox Grid.Column="0" Grid.Row="0" Grid.RowSpan="3"
-                         Margin="0,0,20,0" 
-                         HorizontalAlignment="Left" 
-                         VerticalAlignment="Center" 
-                         MaxHeight="110" 
-                         MinHeight="80">
-                    <svgc:SvgViewbox Source="{Binding CommitteeLogoPath}"
-                                     Stretch="Uniform"/>
-                </Viewbox>
-
-                <!-- Labels Board -->
-                <TextBlock Grid.Column="1" Grid.Row="0"
-                           Text="{DynamicResource PresidentLbl}"
-                           Style="{StaticResource Caption}"
-                           Margin="20,3,20,3"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Right"/>
-                <TextBlock Grid.Column="1" Grid.Row="1" 
-                           Text="{DynamicResource VicePresidentLbl}"
-                           Style="{StaticResource Caption}"
-                           Margin="20,3,20,3"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Right"/>
-                <TextBlock Grid.Column="1" Grid.Row="2" 
-                           Text="{DynamicResource ModeratorLbl}"
-                           Style="{StaticResource Caption}"
-                           Margin="20,3,20,3"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Right"/>
-
-                <!-- Valori Board -->
-                <TextBlock Grid.Column="2" Grid.Row="0"
-                           Text="{Binding President}"
-                           Style="{StaticResource Body}"
-                           Margin="0,3,0,3"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Left"/>
-                <TextBlock Grid.Column="2" Grid.Row="1" 
-                           Text="{Binding VicePresident}"
-                           Style="{StaticResource Body}"
-                           Margin="0,3,0,3"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Left"/>
-                <TextBlock Grid.Column="2" Grid.Row="2" 
-                           Text="{Binding Moderator}"
-                           Style="{StaticResource Body}"
-                           Margin="0,3,0,3"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Left"/>
-            </Grid>
-
-            <!-- Liste e Session -->
-            <Grid Grid.Row="1" Margin="0,0,0,10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <!-- Titoli delle liste -->
-                <TextBlock Grid.Column="0" Grid.Row="0"
-                           Text="{DynamicResource MarkPresentLbl}"
-                           Style="{StaticResource Caption}"
-                           HorizontalAlignment="Center"
-                           TextWrapping="Wrap"
-                           Margin="0,7,5,2"/>
-
-                <TextBlock Grid.Column="2" Grid.Row="0"
-                           Text="{DynamicResource MarkAbsentLbl}"
-                           Style="{StaticResource Caption}"
-                           HorizontalAlignment="Center"
-                           TextWrapping="Wrap"
-                           Margin="5,7,0,2"/>
-
-                <!-- Session in alto a destra -->
-                <StackPanel Grid.Column="4" Grid.Row="0"
-                            Orientation="Horizontal"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Top"
-                            Margin="20,0,0,2">
-                    <!-- Label Session -->
-                    <TextBlock Text="{DynamicResource SessionLbl}"
-                               Style="{StaticResource Caption}"
-                               VerticalAlignment="Center"
-                               Margin="0,0,10,0"/>
-
-                    <!-- ComboBox Session -->
+            <!-- TITLE + SESSION -->
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="{DynamicResource SessionLbl2}" FontSize="14"
+                               Foreground="{DynamicResource TextSecondaryBrush}"
+                               VerticalAlignment="Center" Margin="0,0,10,0"/>
                     <ComboBox x:Name="SessionComboBox"
                               ItemsSource="{Binding Sessions}"
                               SelectedItem="{Binding SelectedSession}"
                               VerticalAlignment="Center"
-                              MinWidth="80">
+                              MinWidth="70">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding}" Foreground="{StaticResource TextInputBrush}"/>
@@ -328,57 +174,92 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
                 </StackPanel>
+                <TextBlock Text="{DynamicResource RollCallBtn}" Style="{StaticResource H3}"
+                           FontWeight="Bold" Margin="0" VerticalAlignment="Center"/>
+            </DockPanel>
 
-                <!-- Lista paesi disponibili (Absent) -->
-                <ListView Grid.Column="0" Grid.Row="1"
+            <!-- PROGRESS: share of present countries -->
+            <DockPanel Grid.Row="1" Margin="0,10,0,14">
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="14,0,0,0"
+                            VerticalAlignment="Center">
+                    <TextBlock FontSize="13" FontWeight="Bold">
+                        <Run Text="{Binding PresentCount, Mode=OneWay}"/>
+                        <Run Text="{DynamicResource PresentWord}"/>
+                    </TextBlock>
+                    <TextBlock FontSize="13" Margin="12,0,0,0"
+                               Foreground="{DynamicResource TextSecondaryBrush}">
+                        <Run Text="{Binding AbsentCount, Mode=OneWay}"/>
+                        <Run Text="{DynamicResource AbsentWord}"/>
+                    </TextBlock>
+                </StackPanel>
+                <ProgressBar Height="6" VerticalAlignment="Center"
+                             Minimum="0" Maximum="1" Value="{Binding PresentRatio, Mode=OneWay}">
+                    <ProgressBar.Template>
+                        <ControlTemplate TargetType="ProgressBar">
+                            <Grid>
+                                <Border CornerRadius="3" Background="{DynamicResource SurfaceBorderBrush}"/>
+                                <Border x:Name="PART_Track"/>
+                                <Border x:Name="PART_Indicator" CornerRadius="3" HorizontalAlignment="Left"
+                                        Background="{DynamicResource WhiteBrush}"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </ProgressBar.Template>
+                </ProgressBar>
+            </DockPanel>
+
+            <!-- LISTS: absent on the left, present on the right -->
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="14"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <!-- 10 rows of 28 px, plus padding and border -->
+                    <RowDefinition Height="294"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Style="{StaticResource ListHeader}" Text="{DynamicResource AbsentListHeader}"/>
+                <TextBlock Grid.Column="2" Style="{StaticResource ListHeader}" Text="{DynamicResource PresentListHeader}"/>
+
+                <ListView Grid.Row="1"
                           ItemsSource="{Binding AvailableCountries}"
                           ItemTemplate="{StaticResource CountryTemplateList}"
                           SelectedItem="{Binding SelectedCountry, Mode=OneWayToSource}"
                           MouseLeftButtonUp="AvailableCountries_Click"
-                          Background="{StaticResource InputBackgroundBrush}"
-                          BorderBrush="{StaticResource SurfaceBorderBrush}"
-                          BorderThickness="1"
-                          Margin="0,0,5,0"
-                          Padding="4"/>
+                          Padding="6"/>
 
-                <!-- Pulsante Mark All Present -->
-                <Button Grid.Column="1" Grid.Row="1"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Center"
-                        Style="{StaticResource MenuButton}"
-                        Command="{Binding MarkAllPresentCommand}"
-                        Padding="8"
-                        Margin="5,0,5,0"
-                        ToolTip="{DynamicResource MarkAllPresentBtn}">
-                    <svgc:SvgViewbox Width="24" Height="24"
-                                     Source="pack://application:,,,/Resources/Icons/next.svg"
-                                     Stretch="Uniform"/>
-                </Button>
-
-                <!-- Lista paesi presenti (Present) -->
-                <ListView Grid.Column="2" Grid.Row="1"
+                <ListView Grid.Row="1" Grid.Column="2"
                           ItemsSource="{Binding PresentCountries}"
                           ItemTemplate="{StaticResource CountryTemplateList}"
                           SelectedItem="{Binding SelectedCountry, Mode=OneWayToSource}"
                           MouseLeftButtonUp="PresentCountries_Click"
-                          Background="{StaticResource InputBackgroundBrush}"
-                          BorderBrush="{StaticResource SurfaceBorderBrush}"
-                          BorderThickness="1"
-                          Margin="5,0,0,0"
-                          Padding="4"/>
-
-                <!-- Colonna pulsante Proceed -->
-                <Grid Grid.Column="4" Grid.Row="1"
-                      Margin="20,0,0,0"
-                      VerticalAlignment="Bottom">
-                    <Button Style="{StaticResource IconRightButton}"
-                            Tag="pack://application:,,,/Resources/Icons/next.svg"
-                            Content="{DynamicResource ProceedBtn}"
-                            Command="{Binding ProceedCommand}"
-                            Width="150"
-                            HorizontalAlignment="Right"/>
-                </Grid>
+                          Padding="6"/>
             </Grid>
+
+            <!-- ACTIONS -->
+            <DockPanel Grid.Row="3" Margin="0,16,0,0" LastChildFill="False">
+                <Button DockPanel.Dock="Left" Style="{StaticResource OutlineButton}"
+                        Content="{DynamicResource MarkAllPresentBtn}"
+                        Command="{Binding MarkAllPresentCommand}"
+                        MinWidth="140"/>
+
+                <Button DockPanel.Dock="Right" Style="{StaticResource PrimaryButton}"
+                        Command="{Binding ProceedCommand}" MinWidth="200">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{DynamicResource ProceedToSessionBtn}" VerticalAlignment="Center"
+                                   Foreground="{DynamicResource AccentOnLightBrush}"/>
+                        <!-- Arrow in a circle, drawn in the button's blue -->
+                        <Grid Width="18" Height="18" Margin="10,0,0,0" VerticalAlignment="Center">
+                            <Ellipse Stroke="{DynamicResource AccentOnLightBrush}" StrokeThickness="1.6"/>
+                            <Path Data="M 5,9 H 12.5 M 9.5,6 L 12.5,9 L 9.5,12"
+                                  Stroke="{DynamicResource AccentOnLightBrush}" StrokeThickness="1.6"
+                                  StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round"/>
+                        </Grid>
+                    </StackPanel>
+                </Button>
+            </DockPanel>
         </Grid>
     </Grid>
 </Page>

@@ -56,7 +56,20 @@ namespace Foscamun.ViewModels
         RemoveJurorCommand = new RelayCommand(RemoveJuror, CanRemoveJuror);
         SaveCommand = new RelayCommand(Save, CanSave);
         CancelCommand = new RelayCommand(Cancel);
+
+        _savedState = CurrentState();
     }
+
+    // Everything as loaded, to tell whether anything changed
+    private string _savedState;
+
+    public bool HasUnsavedChanges => CurrentState() != _savedState;
+
+    private string CurrentState() => string.Join("|",
+        Judge, ViceJudge1, ViceJudge2, Topic,
+        string.Join(";", Plaintiffs.Advocates.Select(a => a.Name + ":" + a.IsoCode)),
+        string.Join(";", Defense.Advocates.Select(a => a.Name + ":" + a.IsoCode)),
+        string.Join(";", Jurors));
 
     public string Judge
     {
@@ -211,7 +224,11 @@ namespace Foscamun.ViewModels
 
         _repository.Save(model);
 
-        _mainWindow.NavigateRightFrame(new SetupPage());
+        // ICJ becomes the selected committee, and its roll call opens
+        _savedState = CurrentState();
+        Properties.Settings.Default.SelCommName = "ICJ";
+        Properties.Settings.Default.Save();
+        _mainWindow.OpenRollCallCommand.Execute(null);
     }
 
     private void Cancel()

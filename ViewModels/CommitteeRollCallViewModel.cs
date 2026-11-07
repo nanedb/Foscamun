@@ -49,6 +49,16 @@ namespace Foscamun.ViewModels
 
         public ObservableCollection<Country> PresentCountries { get; } = new();
 
+        public string Topic => _committee.Topic;
+
+        public int PresentCount => PresentCountries.Count;
+
+        public int AbsentCount => AvailableCountries.Count;
+
+        /// <summary>Share of present countries, 0 to 1, for the progress bar.</summary>
+        public double PresentRatio =>
+            PresentCount + AbsentCount == 0 ? 0 : (double)PresentCount / (PresentCount + AbsentCount);
+
         /// <summary>
         /// Gets the logo path for the committee.
         /// Returns custom logo if exists, otherwise generic fallback.
@@ -96,6 +106,10 @@ namespace Foscamun.ViewModels
             viewPresent.SortDescriptions.Add(
                 new SortDescription(nameof(Country.Name), ListSortDirection.Ascending));
 
+            // Keep the counts and the progress bar in step with the lists
+            AvailableCountries.CollectionChanged += (_, _) => OnCountsChanged();
+            PresentCountries.CollectionChanged += (_, _) => OnCountsChanged();
+
             // Refresh country names when language changes
             App.LanguageChanged += OnLanguageChanged;
 
@@ -103,6 +117,13 @@ namespace Foscamun.ViewModels
             MarkAllPresentCommand = new RelayCommand(MarkAllPresent, CanMarkAllPresent);
 
             _ = LoadCountriesAsync();
+        }
+
+        private void OnCountsChanged()
+        {
+            OnPropertyChanged(nameof(PresentCount));
+            OnPropertyChanged(nameof(AbsentCount));
+            OnPropertyChanged(nameof(PresentRatio));
         }
 
         private void OnLanguageChanged()

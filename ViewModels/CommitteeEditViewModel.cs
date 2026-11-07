@@ -39,6 +39,15 @@ namespace Foscamun.ViewModels
         // Name before editing: if it was the selected committee, the selection follows a rename
         private readonly string _originalName = "";
 
+        // Fields and countries as last loaded or saved, to tell whether anything changed
+        private string _savedState = "";
+
+        public bool HasUnsavedChanges => CurrentState() != _savedState;
+
+        private string CurrentState() => string.Join("|",
+            Committee.Name, Committee.Topic, Committee.President, Committee.VicePresident, Committee.Moderator,
+            string.Join(",", SelectedCountries.Select(c => c.IsoCode).OrderBy(code => code)));
+
         private bool _canSave;
         /// <summary>
         /// Determines if the Save button should be enabled based on validation.
@@ -70,6 +79,7 @@ namespace Foscamun.ViewModels
             IsEditMode = false;
 
             HookEventsAndCommands();
+            _savedState = CurrentState();
             _ = LoadCountriesAsync();
         }
 
@@ -158,6 +168,7 @@ namespace Foscamun.ViewModels
                         AllCountries.Add(c);
                 }
 
+                _savedState = CurrentState();
                 Validate();
             }
             catch (Exception ex)
@@ -238,7 +249,11 @@ namespace Foscamun.ViewModels
 
             AppDialog.Show(AppDialog.Text(IsEditMode ? "CommitteeUpdatedMsg" : "CommitteeCreatedMsg"));
 
-            NavigateBack();
+            // The saved committee becomes the selected one, and its roll call opens
+            _savedState = CurrentState();
+            Properties.Settings.Default.SelCommName = Committee.Name;
+            Properties.Settings.Default.Save();
+            MainWindow.Instance.OpenRollCallCommand.Execute(null);
         }
 
         private void Cancel()

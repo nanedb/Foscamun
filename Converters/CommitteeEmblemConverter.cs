@@ -16,6 +16,7 @@ namespace Foscamun.Converters
     /// <summary>
     /// Converts a committee name to its logo drawn in the accent colour, without the caption
     /// that many logos carry under the emblem. Used where the name is already written beside it.
+    /// ConverterParameter "Light" draws it in white, for the blue surfaces.
     /// </summary>
     public class CommitteeEmblemConverter : IValueConverter
     {
@@ -24,6 +25,9 @@ namespace Foscamun.Converters
 
         // The bottom band counts as a caption only if it is at most this share of the logo's height
         private const double MaxCaptionShare = 0.25;
+
+        // A caption line is text: at least this many separate pieces from left to right
+        private const int MinCaptionPieces = 3;
 
         private static readonly Dictionary<string, (DateTime Stamp, ImageSource Image)> Cache = new();
 
@@ -36,14 +40,17 @@ namespace Foscamun.Converters
             if (!File.Exists(path))
                 return null;
 
+            string colorKey = parameter as string == "Light" ? "TextPrimaryColor" : "AccentOnLightColor";
+            string cacheKey = path + "|" + colorKey;
+
             DateTime stamp = File.GetLastWriteTimeUtc(path);
-            if (Cache.TryGetValue(path, out var cached) && cached.Stamp == stamp)
+            if (Cache.TryGetValue(cacheKey, out var cached) && cached.Stamp == stamp)
                 return cached.Image;
 
             try
             {
-                var image = BuildEmblem(path);
-                Cache[path] = (stamp, image);
+                var image = BuildEmblem(path, colorKey);
+                Cache[cacheKey] = (stamp, image);
                 return image;
             }
             catch
@@ -57,14 +64,14 @@ namespace Foscamun.Converters
             throw new NotImplementedException();
         }
 
-        private static ImageSource BuildEmblem(string path)
+        private static ImageSource BuildEmblem(string path, string colorKey)
         {
             var settings = new WpfDrawingSettings { IncludeRuntime = false, TextAsGeometry = true };
             using var reader = new FileSvgReader(settings);
             DrawingGroup drawing = reader.Read(path).Clone();
 
-            // Logos are white on transparent: paint every shape in the accent colour
-            var color = Application.Current?.TryFindResource("AccentOnLightColor") is Color c ? c : Colors.Black;
+            // Logos are white on transparent: paint every shape in the chosen colour
+            var color = Application.Current?.TryFindResource(colorKey) is Color c ? c : Colors.Black;
             var brush = new SolidColorBrush(color);
             brush.Freeze();
             Recolor(drawing, brush, color);
@@ -223,9 +230,27 @@ namespace Foscamun.Converters
             while (gapTop > 0 && !filled[gapTop - 1])
                 gapTop--;
 
+            // A line of text breaks into several pieces from left to right (the letters);
+            // a bar, like UNESCO's steps, is one piece and belongs to the emblem
+            bool LooksLikeText(int top, int bottomRow)
+            {
+                int pieces = 0;
+                bool inPiece = false;
+                for (int x = 0; x < width; x++)
+                {
+                    bool any = false;
+                    for (int y = top; y <= bottomRow && !any; y++)
+                        any = pixels[y * stride + x * 4 + 3] > 32;
+                    if (any && !inPiece)
+                        pieces++;
+                    inPiece = any;
+                }
+                return pieces >= MinCaptionPieces;
+            }
+
             bool hasGap = gapTop > 0 && gapTop < bandTop;
             bool isShort = bottom - bandTop + 1 <= MaxCaptionShare * (bottom + 1);
-            if (!hasGap || !isShort)
+            if (!hasGap || !isShort || !LooksLikeText(bandTop, bottom))
                 return null;
 
             // Captions can span several lines (SECURITY / COUNCIL): take in the lines above
@@ -246,7 +271,7 @@ namespace Foscamun.Converters
                 bool close = bandTop - gapTop <= lineHeight;
                 bool stillShort = bottom - lineTop + 1 <= MaxCaptionShare * (bottom + 1);
                 bool separated = nextGapTop > 0 && nextGapTop < lineTop;
-                if (!similar || !close || !stillShort || !separated)
+                if (!similar || !close || !stillShort || !separated || !LooksLikeText(lineTop, lineBottom))
                     break;
 
                 bandTop = lineTop;

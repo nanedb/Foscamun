@@ -16,8 +16,10 @@ namespace Foscamun.Views
     /// <summary>
     /// Logica di interazione per ICJEditPage.xaml
     /// </summary>
-    public partial class ICJEditPage : Page
+    public partial class ICJEditPage : Page, IUnsavedChanges
     {
+        public bool HasUnsavedChanges => (DataContext as ViewModels.ICJEditViewModel)?.HasUnsavedChanges == true;
+
         public ICJEditPage()
         {
             InitializeComponent();

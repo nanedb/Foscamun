@@ -7,9 +7,11 @@ using System.Windows.Input;
 
 namespace Foscamun.Views
 {
-    public partial class CommitteeEditPage : Page
+    public partial class CommitteeEditPage : Page, IUnsavedChanges
     {
         private CommitteeEditViewModel VM => (CommitteeEditViewModel)DataContext;
+
+        public bool HasUnsavedChanges => VM.HasUnsavedChanges;
 
         public CommitteeEditPage(SqliteDataAccess db)
         {

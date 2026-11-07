@@ -42,15 +42,14 @@ namespace Foscamun.Views
         /// <summary>Goes back to the Home page.</summary>
         public IRelayCommand GoHomeCommand { get; }
 
-        // Last page of the flow shown, and the committee it belongs to: Setup and its
-        // edit pages keep it in the sidebar, to go back to it with one click.
-        private IFlowPage? _flowPage;
-        private string _flowCommittee = "";
-
         public MainWindow()
         {
             OpenRollCallCommand = new RelayCommand(OpenRollCall, () => IsRollCallEnabled);
-            GoHomeCommand = new RelayCommand(() => NavigateRightFrame(new HomePage()));
+            GoHomeCommand = new RelayCommand(() =>
+            {
+                if (ConfirmDiscardChanges())
+                    NavigateRightFrame(new HomePage());
+            });
 
             InitializeComponent();
 
@@ -69,19 +68,8 @@ namespace Foscamun.Views
 
         private void Settings_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName != nameof(Settings.Default.SelCommName))
-                return;
-
-            OpenRollCallCommand.NotifyCanExecuteChanged();
-
-            // The flow kept for Setup belongs to the previous committee: start again from Home
-            if (Settings.Default.SelCommName != _flowCommittee && _flowPage is not HomePage)
-            {
-                _flowPage = new HomePage();
-                _flowCommittee = Settings.Default.SelCommName;
-                if (RightFrame.Content is not IFlowPage)
-                    UpdateSidebar(RightFrame.Content);
-            }
+            if (e.PropertyName == nameof(Settings.Default.SelCommName))
+                OpenRollCallCommand.NotifyCanExecuteChanged();
         }
 
         // ------------------------- SIDEBAR -------------------------
@@ -96,16 +84,13 @@ namespace Foscamun.Views
 
         /// <summary>
         /// Shows the previous, current and next page of the flow. Setup and its edit pages are
-        /// outside the flow: the current marker moves down to Setup, and on top stays the flow
-        /// page the user came from (to go back with one click) with its next page.
+        /// outside the flow: the current marker moves down to Setup, on top go Home and the
+        /// roll call, which only Setup can open (the edit pages save or cancel first).
         /// </summary>
         private void UpdateSidebar(object content)
         {
             if (content is IFlowPage page)
             {
-                _flowPage = page;
-                _flowCommittee = Settings.Default.SelCommName;
-
                 ShowLink(PreviousBtn, PreviousIcon, PreviousLabel, page.Previous, "back");
                 ShowCurrent(page.TitleKey);
                 ShowLink(NextBtn, NextIcon, NextLabel, page.Next, "next");
@@ -113,23 +98,25 @@ namespace Foscamun.Views
             }
             else
             {
-                var origin = _flowPage;
-                var back = origin == null ? null
-                    : new FlowLink(origin.TitleKey, new RelayCommand(() => NavigateRightFrame((Page)origin)));
-
-                ShowLink(PreviousBtn, PreviousIcon, PreviousLabel, back, "back");
+                ShowLink(PreviousBtn, PreviousIcon, PreviousLabel, new FlowLink(FlowLink.HomeKey, GoHomeCommand), "back");
                 CurrentBtn.Visibility = Visibility.Collapsed;
-                ShowLink(NextBtn, NextIcon, NextLabel, origin?.Next is { } next ? WithoutPageCommand(next) : null, "next");
+                ShowLink(NextBtn, NextIcon, NextLabel,
+                    new FlowLink("RollCallBtn", content is SetupPage ? OpenRollCallCommand : null), "next");
                 ShowSetupAsCurrent(true);
             }
         }
 
         /// <summary>
-        /// The next page of a flow page that is not shown: the window's own commands (roll call,
-        /// Home) still work, while a page's commands navigate only from that page and are dimmed.
+        /// On a page with unsaved changes, asks before leaving it. True to go on.
         /// </summary>
-        private FlowLink WithoutPageCommand(FlowLink link) =>
-            link.Command == OpenRollCallCommand || link.Command == GoHomeCommand ? link : link with { Command = null };
+        private bool ConfirmDiscardChanges()
+        {
+            if (RightFrame.Content is not IUnsavedChanges { HasUnsavedChanges: true })
+                return true;
+
+            return AppDialog.Show(AppDialog.Text("UnsavedChangesMsg"), AppDialog.Text("UnsavedChangesTitle"),
+                MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes;
+        }
 
         private static void ShowLink(Button button, SvgViewbox icon, TextBlock label, FlowLink? link, string arrowIcon)
         {
@@ -203,7 +190,17 @@ namespace Foscamun.Views
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
-            if (e.Cancel || !Settings.Default.ConfirmExit)
+            if (e.Cancel)
+                return;
+
+            // Unsaved changes: that question is enough, no second one to exit
+            if (RightFrame.Content is IUnsavedChanges { HasUnsavedChanges: true })
+            {
+                e.Cancel = !ConfirmDiscardChanges();
+                return;
+            }
+
+            if (!Settings.Default.ConfirmExit)
                 return;
 
             var app = Application.Current;

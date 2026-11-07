@@ -108,7 +108,8 @@
                             Height="34" HorizontalAlignment="Left"
                             Click="HamburgerBtn_Click"
                             ToolTip="{DynamicResource HamburgerBtn}">
-                        <svgc:SvgViewbox Width="20" Height="15" Stretch="Uniform"
+                        <!-- Same width as the sidebar icons, so it lines up with them -->
+                        <svgc:SvgViewbox Width="24" Height="18" Stretch="Uniform"
                                          Source="pack://application:,,,/Resources/Icons/hamburger.svg"/>
                     </Button>
 

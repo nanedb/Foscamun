@@ -44,6 +44,14 @@ namespace Foscamun.ViewModels
 
         public ObservableCollection<ICJRollCallMember> PresentMembers { get; } = new();
 
+        public int PresentCount => PresentMembers.Count;
+
+        public int AbsentCount => AvailableMembers.Count;
+
+        /// <summary>Share of present members, 0 to 1, for the progress bar.</summary>
+        public double PresentRatio =>
+            PresentCount + AbsentCount == 0 ? 0 : (double)PresentCount / (PresentCount + AbsentCount);
+
         /// <summary>
         /// Gets the logo path for ICJ.
         /// Returns custom logo if exists, otherwise generic fallback.
@@ -85,6 +93,10 @@ namespace Foscamun.ViewModels
             viewPresent.SortDescriptions.Clear();
             viewPresent.CustomSort = new ICJMemberComparer();
 
+            // Keep the counts and the progress bar in step with the lists
+            AvailableMembers.CollectionChanged += (_, _) => OnCountsChanged();
+            PresentMembers.CollectionChanged += (_, _) => OnCountsChanged();
+
             ProceedCommand = new RelayCommand(Proceed, CanProceed);
             MarkAllPresentCommand = new RelayCommand(MarkAllPresent, CanMarkAllPresent);
 
@@ -120,6 +132,13 @@ namespace Foscamun.ViewModels
             {
                 Debug.WriteLine("ERROR loading ICJ data: " + ex.Message);
             }
+        }
+
+        private void OnCountsChanged()
+        {
+            OnPropertyChanged(nameof(PresentCount));
+            OnPropertyChanged(nameof(AbsentCount));
+            OnPropertyChanged(nameof(PresentRatio));
         }
 
         public void AvailableMembersClicked(ICJRollCallMember member)

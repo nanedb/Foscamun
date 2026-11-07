@@ -140,11 +140,24 @@
     <sys:String x:Key="FillAllFieldsMsg">Rellene todos los campos y seleccione al menos un país.</sys:String>
     <sys:String x:Key="CommitteeUpdatedMsg">Comité actualizado.</sys:String>
     <sys:String x:Key="CommitteeCreatedMsg">Comité creado.</sys:String>
+    <sys:String x:Key="UnsavedChangesTitle">Cambios sin guardar</sys:String>
+    <sys:String x:Key="UnsavedChangesMsg">Los cambios no se han guardado y se perderán. ¿Salir de todos modos?</sys:String>
 
     <!-- Add / Edit Committee page -->
     <sys:String x:Key="CommitteeNameLbl">Comité:</sys:String>
     <sys:String x:Key="CommitteeTopicLbl">Tema:</sys:String>
     <sys:String x:Key="AddCountryHint">Haga clic en un país para añadirlo al comité</sys:String>
     <sys:String x:Key="RemoveCountryHint">Haga clic en un país para quitarlo del comité</sys:String>
+
+    <!-- Roll call page -->
+    <sys:String x:Key="PresentWord">presentes</sys:String>
+    <sys:String x:Key="AbsentWord">ausentes</sys:String>
+    <sys:String x:Key="AbsentListHeader">AUSENTES — CLIC PARA MARCAR PRESENTE</sys:String>
+    <sys:String x:Key="PresentListHeader">PRESENTES — CLIC PARA MARCAR AUSENTE</sys:String>
+    <sys:String x:Key="ProceedToSessionBtn">Ir a la sesión</sys:String>
+    <sys:String x:Key="PresidentRole">Presidente</sys:String>
+    <sys:String x:Key="VicePresidentRole">Vicepresidente</sys:String>
+    <sys:String x:Key="ModeratorRole">Moderador</sys:String>
+    <sys:String x:Key="ViceJudgeRole">Vicejuez</sys:String>
 
 </ResourceDictionary>

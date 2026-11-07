@@ -1,370 +1,270 @@
 <Page x:Class="Foscamun.Views.ICJRollCallPage"
-	  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	  xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
-	  mc:Ignorable="d"
-	  d:DesignWidth="800"
-	  d:DesignHeight="450"
-	  Background="{DynamicResource PrimaryBrush}"
-	  Foreground="{DynamicResource TextPrimaryBrush}"
-	  Title="ICJ Roll Call">
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+      mc:Ignorable="d"
+      d:DesignWidth="900"
+      d:DesignHeight="600"
+      Background="{DynamicResource PrimaryBrush}"
+      Foreground="{DynamicResource TextPrimaryBrush}"
+      FontFamily="{DynamicResource FontPrimary}"
+      Title="ICJ Roll Call">
 
-	<Page.Resources>
-		<!-- Template per lista membri con font più grande -->
-		<DataTemplate x:Key="MemberTemplateList">
-			<StackPanel Orientation="Horizontal">
-				<svgc:SvgViewbox Width="28" Height="19"
-								 Source="{Binding FlagPath}"
-								 Stretch="Uniform"
-								 Visibility="{Binding FlagPath, Converter={StaticResource NullToVisibilityConverter}}"/>
-				<TextBlock Text="{Binding DisplayName}"
-						   Margin="10,0,0,0"
-						   VerticalAlignment="Center"
-						   FontSize="14"
-						   Foreground="{StaticResource TextInputBrush}"/>
-			</StackPanel>
-		</DataTemplate>
+    <Page.Resources>
+        <!-- Member row: flag of the represented country (advocates) and name with role -->
+        <DataTemplate x:Key="MemberTemplateList">
+            <StackPanel Orientation="Horizontal">
+                <!-- Jurors have no flag: the space stays, so all names line up -->
+                <Grid Width="24" Height="16">
+                    <svgc:SvgViewbox Source="{Binding FlagPath}"
+                                     Stretch="Uniform"
+                                     Visibility="{Binding FlagPath, Converter={StaticResource NullToVisibilityConverter}}"/>
+                </Grid>
+                <TextBlock Text="{Binding DisplayName}"
+                           Margin="10,0,0,0"
+                           VerticalAlignment="Center"
+                           FontSize="15"
+                           Foreground="{StaticResource TextInputBrush}"/>
+            </StackPanel>
+        </DataTemplate>
 
-		<!-- Stile per pulsante con icona a destra -->
-		<Style x:Key="IconRightButton" TargetType="Button" BasedOn="{StaticResource MenuButton}">
-			<Setter Property="HorizontalAlignment" Value="Center"/>
-			<Setter Property="HorizontalContentAlignment" Value="Right"/>
-			<Setter Property="Padding" Value="10,0,10,0"/>
-			<Setter Property="Height" Value="28"/>
-			<Setter Property="MinHeight" Value="0"/>
-			<Setter Property="VerticalContentAlignment" Value="Center"/>
-			<Setter Property="ContentTemplate">
-				<Setter.Value>
-					<DataTemplate>
-						<StackPanel Orientation="Horizontal" 
-									VerticalAlignment="Center"
-									HorizontalAlignment="Right">
-							<ContentPresenter Content="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Content}"
-											  Margin="0,0,10,0"
-											  VerticalAlignment="Center"/>
+        <!-- Small caption above each list -->
+        <Style x:Key="ListHeader" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+            <Setter Property="Margin" Value="2,0,0,6"/>
+        </Style>
 
-							<svgc:SvgViewbox Width="18" Height="18"
-											 Stretch="Uniform"
-											 Margin="0"
-											 Source="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Tag}"/>
-						</StackPanel>
-					</DataTemplate>
-				</Setter.Value>
-			</Setter>
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="Button">
-						<Grid>
-							<Border x:Name="Bd"
-									Background="{TemplateBinding Background}"
-									CornerRadius="{DynamicResource CornerRadiusMedium}"
-									BorderBrush="{TemplateBinding BorderBrush}"
-									BorderThickness="{TemplateBinding BorderThickness}" />
+        <!-- Board member in the header: name above, role below -->
+        <Style x:Key="BoardName" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+        </Style>
+        <Style x:Key="BoardRole" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+        </Style>
 
-							<Border x:Name="Overlay"
-									Background="{DynamicResource PrimaryDarkBrush}"
-									CornerRadius="{DynamicResource CornerRadiusMedium}"
-									Opacity="0"
-									IsHitTestVisible="False"/>
+        <!-- Secondary action: outlined pill -->
+        <Style x:Key="OutlineButton" TargetType="Button" BasedOn="{StaticResource MenuButton}">
+            <Setter Property="BorderBrush" Value="{DynamicResource SurfaceBorderHoverBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Padding" Value="6,0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
 
-							<Grid>
-								<ContentPresenter x:Name="contentPresenter"
-												  HorizontalAlignment="Right"
-												  VerticalAlignment="Center"
-												  RecognizesAccessKey="True"
-												  Margin="12,0,12,0">
-									<ContentPresenter.RenderTransform>
-										<ScaleTransform ScaleX="1" ScaleY="1" />
-									</ContentPresenter.RenderTransform>
-								</ContentPresenter>
-							</Grid>
-						</Grid>
+        <!-- Main action: white pill with blue text and arrow -->
+        <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
+            <Setter Property="Background" Value="{DynamicResource WhiteBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource AccentOnLightBrush}"/>
+            <Setter Property="TextElement.Foreground" Value="{DynamicResource AccentOnLightBrush}"/>
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Border Background="{TemplateBinding Background}"
+                                    CornerRadius="{DynamicResource CornerRadiusMedium}"/>
+                            <Border x:Name="Overlay" Background="{DynamicResource PrimaryBrush}"
+                                    CornerRadius="{DynamicResource CornerRadiusMedium}" Opacity="0"/>
+                            <ContentPresenter Margin="18,0" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                              TextElement.Foreground="{TemplateBinding Foreground}"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Overlay" Property="Opacity" Value="0.12"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Overlay" Property="Opacity" Value="0.25"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.55"/>
+                                <Setter Property="Cursor" Value="Arrow"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
 
-						<ControlTemplate.Triggers>
-							<Trigger Property="IsMouseOver" Value="True">
-								<Trigger.EnterActions>
-									<BeginStoryboard>
-										<Storyboard>
-											<DoubleAnimation Storyboard.TargetName="Overlay"
-															 Storyboard.TargetProperty="Opacity"
-															 To="0.12"
-															 Duration="0:0:0.18"/>
-											<DoubleAnimation Storyboard.TargetName="contentPresenter"
-															 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
-															 To="1.002"
-															 Duration="0:0:0.18"/>
-											<DoubleAnimation Storyboard.TargetName="contentPresenter"
-															 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
-															 To="1.002"
-															 Duration="0:0:0.18"/>
-										</Storyboard>
-									</BeginStoryboard>
-								</Trigger.EnterActions>
-								<Trigger.ExitActions>
-									<BeginStoryboard>
-										<Storyboard>
-											<DoubleAnimation Storyboard.TargetName="Overlay"
-															 Storyboard.TargetProperty="Opacity"
-															 To="0"
-															 Duration="0:0:0.18"/>
-											<DoubleAnimation Storyboard.TargetName="contentPresenter"
-															 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
-															 To="1"
-															 Duration="0:0:0.18"/>
-											<DoubleAnimation Storyboard.TargetName="contentPresenter"
-															 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
-															 To="1"
-															 Duration="0:0:0.18"/>
-										</Storyboard>
-									</BeginStoryboard>
-								</Trigger.ExitActions>
-							</Trigger>
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- Court header: takes the height the body leaves -->
+            <RowDefinition Height="*"/>
+            <!-- Page body: lists sized for 10 rows -->
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-							<Trigger Property="IsPressed" Value="True">
-								<Trigger.EnterActions>
-									<BeginStoryboard>
-										<Storyboard>
-											<DoubleAnimation Storyboard.TargetName="Overlay"
-															 Storyboard.TargetProperty="Opacity"
-															 To="0.22"
-															 Duration="0:0:0.08"/>
-											<DoubleAnimation Storyboard.TargetName="contentPresenter"
-															 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
-															 To="0.995"
-															 Duration="0:0:0.08"/>
-											<DoubleAnimation Storyboard.TargetName="contentPresenter"
-															 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
-															 To="0.995"
-															 Duration="0:0:0.08"/>
-										</Storyboard>
-									</BeginStoryboard>
-								</Trigger.EnterActions>
-								<Trigger.ExitActions>
-									<BeginStoryboard>
-										<Storyboard>
-											<DoubleAnimation Storyboard.TargetName="Overlay"
-															 Storyboard.TargetProperty="Opacity"
-															 To="0"
-															 Duration="0:0:0.12"/>
-											<DoubleAnimation Storyboard.TargetName="contentPresenter"
-															 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
-															 To="1"
-															 Duration="0:0:0.12"/>
-											<DoubleAnimation Storyboard.TargetName="contentPresenter"
-															 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
-															 To="1"
-															 Duration="0:0:0.12"/>
-										</Storyboard>
-									</BeginStoryboard>
-								</Trigger.ExitActions>
-							</Trigger>
+        <!-- COURT HEADER: emblem, name and case; judges on the right -->
+        <Border BorderBrush="{DynamicResource SurfaceBorderBrush}" BorderThickness="0,0,0,1">
+            <Grid Margin="24,10,28,10" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-							<Trigger Property="IsEnabled" Value="False">
-								<Setter TargetName="contentPresenter" Property="Opacity" Value="0.4" />
-								<Setter Property="Foreground" Value="#808080" />
-								<Setter Property="Cursor" Value="Arrow" />
-							</Trigger>
-						</ControlTemplate.Triggers>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
-	</Page.Resources>
+                <Image Width="80" Height="80" Margin="0,0,18,0" Stretch="Uniform"
+                       VerticalAlignment="Center"
+                       Source="{Binding Source=ICJ, Converter={StaticResource CommitteeEmblemConverter}, ConverterParameter=Light}"/>
 
-	<Grid Margin="30 25 30 25">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="*"/>
-		</Grid.RowDefinitions>
+                <!-- Right margin keeps the case well apart from the judges -->
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,60,0">
+                    <TextBlock Text="{DynamicResource ICJTitle}" FontSize="24" FontWeight="Bold"
+                               TextTrimming="CharacterEllipsis"/>
+                    <!-- Long cases wrap on up to three lines, then are cut -->
+                    <TextBlock Text="{Binding Topic}" FontSize="15" LineHeight="19"
+                               LineStackingStrategy="BlockLineHeight" MaxHeight="57"
+                               TextWrapping="Wrap" TextTrimming="WordEllipsis"
+                               Foreground="{DynamicResource TextSecondaryBrush}"/>
+                </StackPanel>
 
-		<!-- Titolo -->
-		<TextBlock Grid.Row="0"
-				   Text="{DynamicResource CommitteeRollCallTitle}" 
-				   Style="{StaticResource H3}"
-				   Margin="0,0,0,0"/>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <StackPanel Margin="20,0,0,0">
+                        <TextBlock Style="{StaticResource BoardName}" Text="{Binding Judge}"/>
+                        <TextBlock Style="{StaticResource BoardRole}" Text="{DynamicResource JudgeLbl2}"/>
+                    </StackPanel>
+                    <StackPanel Margin="20,0,0,0">
+                        <TextBlock Style="{StaticResource BoardName}" Text="{Binding ViceJudge1}"/>
+                        <TextBlock Style="{StaticResource BoardRole}" Text="{DynamicResource ViceJudgeRole}"/>
+                    </StackPanel>
+                    <StackPanel Margin="20,0,0,0">
+                        <TextBlock Style="{StaticResource BoardName}" Text="{Binding ViceJudge2}"/>
+                        <TextBlock Style="{StaticResource BoardRole}" Text="{DynamicResource ViceJudgeRole}"/>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </Border>
 
-		<!-- Contenuto -->
-		<Grid Grid.Row="1">
-			<Grid.RowDefinitions>
-				<!-- Logo e Board -->
-				<RowDefinition Height="Auto"/>
-				<!-- Liste e Session -->
-				<RowDefinition Height="*"/>
-			</Grid.RowDefinitions>
+        <!-- PAGE BODY -->
+        <Grid Grid.Row="1" Margin="28,14,28,20">
+            <Grid.RowDefinitions>
+                <!-- Title + session -->
+                <RowDefinition Height="Auto"/>
+                <!-- Progress -->
+                <RowDefinition Height="Auto"/>
+                <!-- Lists -->
+                <RowDefinition Height="Auto"/>
+                <!-- Actions -->
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-			<!-- Logo e Board -->
-			<Grid Grid.Row="0" Margin="0,10,0,10">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*"/>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="*"/>
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-				</Grid.RowDefinitions>
+            <!-- TITLE + SESSION -->
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="{DynamicResource SessionLbl2}" FontSize="14"
+                               Foreground="{DynamicResource TextSecondaryBrush}"
+                               VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <ComboBox x:Name="SessionComboBox"
+                              ItemsSource="{Binding Sessions}"
+                              SelectedItem="{Binding SelectedSession}"
+                              VerticalAlignment="Center"
+                              MinWidth="70">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" Foreground="{StaticResource TextInputBrush}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+                <TextBlock Text="{DynamicResource RollCallBtn}" Style="{StaticResource H3}"
+                           FontWeight="Bold" Margin="0" VerticalAlignment="Center"/>
+            </DockPanel>
 
-				<!-- Logo -->
-				<Viewbox Grid.Column="0" Grid.Row="0" Grid.RowSpan="3"
-						 Margin="0,0,20,0" 
-						 HorizontalAlignment="Left" 
-						 VerticalAlignment="Center" 
-						 MaxHeight="110" 
-						 MinHeight="80">
-					<svgc:SvgViewbox Source="{Binding CommitteeLogoPath}"
-									 Stretch="Uniform"/>
-				</Viewbox>
+            <!-- PROGRESS: share of present members -->
+            <DockPanel Grid.Row="1" Margin="0,10,0,14">
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="14,0,0,0"
+                            VerticalAlignment="Center">
+                    <TextBlock FontSize="13" FontWeight="Bold">
+                        <Run Text="{Binding PresentCount, Mode=OneWay}"/>
+                        <Run Text="{DynamicResource PresentWord}"/>
+                    </TextBlock>
+                    <TextBlock FontSize="13" Margin="12,0,0,0"
+                               Foreground="{DynamicResource TextSecondaryBrush}">
+                        <Run Text="{Binding AbsentCount, Mode=OneWay}"/>
+                        <Run Text="{DynamicResource AbsentWord}"/>
+                    </TextBlock>
+                </StackPanel>
+                <ProgressBar Height="6" VerticalAlignment="Center"
+                             Minimum="0" Maximum="1" Value="{Binding PresentRatio, Mode=OneWay}">
+                    <ProgressBar.Template>
+                        <ControlTemplate TargetType="ProgressBar">
+                            <Grid>
+                                <Border CornerRadius="3" Background="{DynamicResource SurfaceBorderBrush}"/>
+                                <Border x:Name="PART_Track"/>
+                                <Border x:Name="PART_Indicator" CornerRadius="3" HorizontalAlignment="Left"
+                                        Background="{DynamicResource WhiteBrush}"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </ProgressBar.Template>
+                </ProgressBar>
+            </DockPanel>
 
-				<!-- Labels Board -->
-				<TextBlock Grid.Column="1" Grid.Row="0"
-						   Text="{DynamicResource JudgeLbl}"
-						   Style="{StaticResource Caption}"
-						   Margin="20,3,20,3"
-						   VerticalAlignment="Center"
-						   HorizontalAlignment="Right"/>
-				<TextBlock Grid.Column="1" Grid.Row="1" 
-						   Text="{DynamicResource ViceJudge1Lbl}"
-						   Style="{StaticResource Caption}"
-						   Margin="20,3,20,3"
-						   VerticalAlignment="Center"
-						   HorizontalAlignment="Right"/>
-				<TextBlock Grid.Column="1" Grid.Row="2" 
-						   Text="{DynamicResource ViceJudge2Lbl}"
-						   Style="{StaticResource Caption}"
-						   Margin="20,3,20,3"
-						   VerticalAlignment="Center"
-						   HorizontalAlignment="Right"/>
+            <!-- LISTS: absent on the left, present on the right -->
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="14"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <!-- 10 rows of 28 px, plus padding and border -->
+                    <RowDefinition Height="294"/>
+                </Grid.RowDefinitions>
 
-				<!-- Valori Board -->
-				<TextBlock Grid.Column="2" Grid.Row="0"
-						   Text="{Binding Judge}"
-						   Style="{StaticResource Body}"
-						   Margin="0,3,0,3"
-						   VerticalAlignment="Center"
-						   HorizontalAlignment="Left"/>
-				<TextBlock Grid.Column="2" Grid.Row="1" 
-						   Text="{Binding ViceJudge1}"
-						   Style="{StaticResource Body}"
-						   Margin="0,3,0,3"
-						   VerticalAlignment="Center"
-						   HorizontalAlignment="Left"/>
-				<TextBlock Grid.Column="2" Grid.Row="2" 
-						   Text="{Binding ViceJudge2}"
-						   Style="{StaticResource Body}"
-						   Margin="0,3,0,3"
-						   VerticalAlignment="Center"
-						   HorizontalAlignment="Left"/>
-			</Grid>
+                <TextBlock Style="{StaticResource ListHeader}" Text="{DynamicResource AbsentListHeader}"/>
+                <TextBlock Grid.Column="2" Style="{StaticResource ListHeader}" Text="{DynamicResource PresentListHeader}"/>
 
-			<!-- Liste e Session -->
-			<Grid Grid.Row="1" Margin="0,0,0,10">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="3*"/>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="3*"/>
-					<ColumnDefinition Width="Auto"/>
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="*"/>
-				</Grid.RowDefinitions>
+                <ListView Grid.Row="1"
+                          ItemsSource="{Binding AvailableMembers}"
+                          ItemTemplate="{StaticResource MemberTemplateList}"
+                          SelectedItem="{Binding SelectedMember, Mode=OneWayToSource}"
+                          MouseLeftButtonUp="AvailableMembers_Click"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          Padding="6"/>
 
-				<!-- Titoli delle liste -->
-				<TextBlock Grid.Column="0" Grid.Row="0"
-						   Text="{DynamicResource MarkPresentLbl}"
-						   Style="{StaticResource Caption}"
-						   HorizontalAlignment="Center"
-						   TextWrapping="Wrap"
-						   Margin="0,8,0,2"/>
+                <ListView Grid.Row="1" Grid.Column="2"
+                          ItemsSource="{Binding PresentMembers}"
+                          ItemTemplate="{StaticResource MemberTemplateList}"
+                          SelectedItem="{Binding SelectedMember, Mode=OneWayToSource}"
+                          MouseLeftButtonUp="PresentMembers_Click"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          Padding="6"/>
+            </Grid>
 
-				<TextBlock Grid.Column="2" Grid.Row="0"
-						   Text="{DynamicResource MarkAbsentLbl}"
-						   Style="{StaticResource Caption}"
-						   HorizontalAlignment="Center"
-						   TextWrapping="Wrap"
-						   Margin="5,8,0,2"/>
+            <!-- ACTIONS -->
+            <DockPanel Grid.Row="3" Margin="0,16,0,0" LastChildFill="False">
+                <Button DockPanel.Dock="Left" Style="{StaticResource OutlineButton}"
+                        Content="{DynamicResource MarkAllPresentBtn}"
+                        Command="{Binding MarkAllPresentCommand}"
+                        MinWidth="140"/>
 
-				<!-- Session in alto a destra -->
-				<StackPanel Grid.Column="3" Grid.Row="0"
-							Orientation="Horizontal"
-							HorizontalAlignment="Right"
-							VerticalAlignment="Top"
-							Margin="10,0,0,2">
-					<!-- Label Session -->
-					<TextBlock Text="{DynamicResource SessionLbl}"
-							   Style="{StaticResource Caption}"
-							   VerticalAlignment="Center"
-							   Margin="0,0,10,0"/>
-
-					<!-- ComboBox Session -->
-					<ComboBox x:Name="SessionComboBox"
-							  ItemsSource="{Binding Sessions}"
-							  SelectedItem="{Binding SelectedSession}"
-							  VerticalAlignment="Center"
-							  MinWidth="50">
-						<ComboBox.ItemTemplate>
-							<DataTemplate>
-								<TextBlock Text="{Binding}" Foreground="{StaticResource TextInputBrush}"/>
-							</DataTemplate>
-						</ComboBox.ItemTemplate>
-					</ComboBox>
-				</StackPanel>
-
-				<!-- Lista membri disponibili (Absent) -->
-				<ListView Grid.Column="0" Grid.Row="1"
-						  ItemsSource="{Binding AvailableMembers}"
-						  ItemTemplate="{StaticResource MemberTemplateList}"
-						  SelectedItem="{Binding SelectedMember, Mode=OneWayToSource}"
-						  MouseLeftButtonUp="AvailableMembers_Click"
-						  Background="{StaticResource InputBackgroundBrush}"
-						  BorderBrush="{StaticResource SurfaceBorderBrush}"
-						  BorderThickness="1"
-						  Margin="0,0,3,0"
-						  Padding="8"
-						  ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
-
-				<!-- Pulsante Mark All Present -->
-				<Button Grid.Column="1" Grid.Row="1"
-						VerticalAlignment="Center"
-						HorizontalAlignment="Center"
-						Style="{StaticResource MenuButton}"
-						Command="{Binding MarkAllPresentCommand}"
-						Padding="8"
-						Margin="3,0,3,0"
-						ToolTip="{DynamicResource MarkAllPresentBtn}">
-					<svgc:SvgViewbox Width="24" Height="24"
-									 Source="pack://application:,,,/Resources/Icons/next.svg"
-									 Stretch="Uniform"/>
-				</Button>
-
-				<!-- Lista membri presenti (Present) -->
-				<ListView Grid.Column="2" Grid.Row="1"
-						  ItemsSource="{Binding PresentMembers}"
-						  ItemTemplate="{StaticResource MemberTemplateList}"
-						  SelectedItem="{Binding SelectedMember, Mode=OneWayToSource}"
-						  MouseLeftButtonUp="PresentMembers_Click"
-						  Background="{StaticResource InputBackgroundBrush}"
-						  BorderBrush="{StaticResource SurfaceBorderBrush}"
-						  BorderThickness="1"
-						  Margin="3,0,0,0"
-						  Padding="8"
-						  ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
-
-				<!-- Colonna pulsante Proceed -->
-				<Grid Grid.Column="3" Grid.Row="1"
-					  Margin="15,0,0,0"
-					  VerticalAlignment="Bottom">
-					<Button Style="{StaticResource IconRightButton}"
-							Tag="pack://application:,,,/Resources/Icons/next.svg"
-							Content="{DynamicResource ProceedBtn}"
-							Command="{Binding ProceedCommand}"
-							Width="150"
-							HorizontalAlignment="Right"/>
-				</Grid>
-			</Grid>
-		</Grid>
-	</Grid>
+                <Button DockPanel.Dock="Right" Style="{StaticResource PrimaryButton}"
+                        Command="{Binding ProceedCommand}" MinWidth="200">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{DynamicResource ProceedToSessionBtn}" VerticalAlignment="Center"
+                                   Foreground="{DynamicResource AccentOnLightBrush}"/>
+                        <!-- Arrow in a circle, drawn in the button's blue -->
+                        <Grid Width="18" Height="18" Margin="10,0,0,0" VerticalAlignment="Center">
+                            <Ellipse Stroke="{DynamicResource AccentOnLightBrush}" StrokeThickness="1.6"/>
+                            <Path Data="M 5,9 H 12.5 M 9.5,6 L 12.5,9 L 9.5,12"
+                                  Stroke="{DynamicResource AccentOnLightBrush}" StrokeThickness="1.6"
+                                  StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round"/>
+                        </Grid>
+                    </StackPanel>
+                </Button>
+            </DockPanel>
+        </Grid>
+    </Grid>
 </Page>
