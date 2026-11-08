@@ -25,7 +25,7 @@ dotnet build -c Release
 dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
 
 # All platforms at once (uses publish.ps1)
-.\publish.ps1 -Version "1.0.0"
+.\publish.ps1 -Version "2.0.0"
 ```
 
 There are no automated tests (`dotnet test` will find nothing).
@@ -50,7 +50,11 @@ There are no automated tests (`dotnet test` will find nothing).
 
 **Committee logos**: SVG files in `%LocalAppData%\Foscamun\CommitteeLogo\`. `Generic.svg` is the fallback. On first run, logos are copied from `Resources/CommitteeLogo/` in the exe directory via `LogoInstaller`.
 
-**Settings persistence**: `Properties.Settings.Default` (auto-generated `Settings.Designer.cs`) stores language, year, and last selected committee name.
+**DB compatibility**: `Data/DatabaseGuard.cs` checks the existing DB at startup (before `SqliteDataAccess`) via `PRAGMA user_version` against `DatabaseGuard.CurrentVersion`; newer or unreadable DBs trigger a warning (rename aside / exit). After `SqliteDataAccess` runs its `Ensure…` upgrades, `StampVersion()` writes the current version. Raise `CurrentVersion` whenever the schema changes.
+
+**Updates & releases**: `Services/UpdateService.cs` checks GitHub releases at startup and self-installs (ZIP per architecture, verified with `SHA256SUMS.txt`, replaced by a temp .cmd after the app exits). Releases are built by `.github/workflows/release.yml` on pushing a `v*` tag, with `RELEASE_NOTES.md` as the body; keep the asset names `Foscamun-{rid}-v{version}.zip`. Bump `<Version>`, `<AssemblyVersion>`, `<FileVersion>` in the csproj for each release.
+
+**Settings persistence**: `Properties.Settings.Default` (auto-generated `Settings.Designer.cs`) stores language, year, last selected committee name, ConfirmExit and SkippedUpdate.
 
 ## Key Conventions
 

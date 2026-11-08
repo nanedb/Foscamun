@@ -1,180 +1,169 @@
-# 📖 Foscamun - Quick User Guide
+# 📖 Foscamun - User Guide
 
-## 🚀 First Launch
+This guide describes **version 2.0.0** (new interface). Version 1.3.0, with the previous interface, works on the same data.
 
-1. **Extract** all files from the ZIP archive to a user folder (e.g., Desktop, Documents)
-   - ⚠️ Avoid protected folders like `C:\Program Files\`
-2. **Run** `Foscamun.exe`
-   - ✅ No administrator privileges required
-   - ✅ No installation needed
-3. On first launch, the database will be created automatically
+## 🚀 First launch
 
-## ⚙️ Initial Setup
+1. **Extract** the ZIP to a user folder (Desktop, Documents…)
+   - ⚠️ Avoid protected folders like `C:\Program Files\`: Foscamun could not update itself there
+2. **Run** `Foscamun.exe` — no installation and no administrator privileges needed
+3. On the first launch the database is created in `%LocalAppData%\Foscamun\`
 
-### 1. Select Language
-- Choose between English, French, or Spanish
-- Language can be changed at any time
+## 🧭 Moving around
 
-### 2. Set the Year
-- Enter the year of the MUN conference
+The sidebar on the left shows where you are in the flow:
 
-### 3. Add a Committee
-1. Click **"Add Committee"**
-2. Enter:
-   - Committee name
-   - President
-   - Vice-president
-   - Moderator
-   - Topic
-3. Click **"OK"**
+- at the top: the **previous** page (arrow left), the **current** page (check mark) and the **next** page (arrow right). A dimmed next page arrives by itself (for instance Result, after the last vote)
+- at the bottom: **Setup** (gear) and **Exit** (door)
+- the ☰ button opens the sidebar with the page names, or closes it to icons only
 
-### 4. Add Countries to Committee
-1. Select the committee
-2. Click **"Edit Committee"**
-3. Add participating countries
-4. Click **"Save"**
+The flow is: **Home → Roll call → Session → Voting → Result → Final result**.
 
-## 📋 Managing a Session
+## ⚙️ Setup
 
-### Phase 1: Roll Call
+Open **Setup** with the gear at the bottom of the sidebar.
 
-1. **From the main menu**, click **"Roll Call"**
-2. Select:
-   - Topic (already set in the committee)
-   - Session number
-3. **Mark present delegates**:
-   - Click on a country in the "Available" list
-   - The country will move to the "Present" list
-   - Or use **"Mark all present"**
-4. Click **"Proceed"** to start the session
+- **Select Year** — the conference year, shown on the Home page
+- **Select Language** — English, Français, Español; the change is immediate
+- **Ask before exiting** — whether Exit asks for confirmation
+- **Select Committee** — click a committee to make it the current one; Roll call opens it
 
-### Phase 2: Session
+### Committees
 
-1. **Speakers List**:
-   - Click on a country in "Available Speakers"
-   - The country is added to the "Speakers List"
-   - Order can be managed
+1. **Add Committee**: enter name, topic, president, vice-president and moderator, then choose the participating countries
+2. **Edit Committee**: changes the selected committee (click a country in its list to remove it)
+3. **Remove**: deletes the selected committee
 
-2. **Current Speaker**:
-   - The first in the list becomes the current speaker
-   - Use the **Timer** to manage speaking time
+### International Court of Justice
 
-3. **Speaker Management**:
-   - **Remove**: Removes the speaker from the list
-   - **Warn**: Adds a warning to the speaker
-   - **Remove Warning**: Removes a warning
+1. **Add ICJ** (or **Edit ICJ** once it exists)
+2. Enter the topic, the **judge** and the two **vice judges**
+3. Add **plaintiff** and **defense** advocates, each with the country they represent, and the **jurors**
+4. Saving needs at least one plaintiff, one defense advocate and one juror
 
-4. **When voting is needed**:
-   - Click **"Voting"**
+### Committee logos
 
-### Phase 3: Voting
+Logos are SVG files in `%LocalAppData%\Foscamun\CommitteeLogo\`, named after the committee (e.g. `ECOSOC.svg`), white on a transparent background. A committee without a logo gets a copy of the generic one, which you can replace.
 
-1. **Before voting**:
-   - All present countries are available to vote
+## 📋 Roll call
 
-2. **During voting**, for each country click:
-   - **Approve** - Vote in favor
-   - **Abstain** - Abstention
-   - **Reject** - Vote against
+1. Choose the **Session** number at the top right
+2. Click a country in **Absent** to mark it present, or in **Present** to mark it absent; **Mark all present** does it for everyone
+3. The bar shows how many are present and absent
+4. **Proceed to session**
 
-3. **Results**:
-   - Round results are shown
-   - Click **"New Round"** for another voting round
-   - Or **"Back"** to return to session
+For the ICJ the lists contain advocates (with their country's flag) and jurors.
 
-4. **Final Results**:
-   - Shows the overall result of all rounds
-   - Indicates if the motion is approved or rejected
+## 🎤 Session
 
-## 🏛️ ICJ (International Court of Justice)
+- **Available** (left): click a country to add it to the **Speakers list**; click it in the speakers list to send it back
+- The first in the speakers list is **now speaking**, shown with flag and name
+- **Timer**:
+  - **Start / Pause** — also with the **space bar**
+  - **Speaking time** — `−` / `+` change it by 15 seconds; the presets 1:00, 1:30, 2:00, 3:00 set it at once
+  - **Next** — the next speaker takes the floor
+  - the last seconds tick, a bell rings at the end, and the panel turns orange in overtime
+- **Warn** gives a warning to the current speaker; the **Warnings** list keeps the count. Select a delegate there and click **Remove Warning** to take one away
+- **Open voting** starts the vote among the present delegates
 
-ICJ works similarly but with some differences:
+## 🗳️ Voting
 
-### ICJ Configuration
-1. Click **"Edit ICJ"** from configuration
-2. Enter:
-   - Main judge
-   - Vice-judge 1
-   - Vice-judge 2
-   - Case topic
-3. Add:
-   - Advocates
-   - Jurors
+One delegate at a time, with the buttons or the keyboard:
 
-### ICJ Session
-- Roll call includes advocates and jurors
-- Session works like regular committees
-- Voting system is the same
+| Key | Vote |
+|---|---|
+| **A** | Approve |
+| **S** | Abstain (not available in the rounds without abstaining) |
+| **D** | Reject |
 
-## ⌨️ Keyboard Shortcuts
+Under the name you see how many have voted and who comes next. The previous-page link goes back to the session (votes already cast are lost, so it asks first).
 
-- **Home** → Return to main page
-- **Esc** → Go back (where available)
+### Rules
 
-## 💾 Data and Backup
+| Round | Committees | ICJ |
+|---|---|---|
+| 1 | Decided only by **unanimity** | **Majority of the votes cast** (abstentions do not count) |
+| 2 | **Two-thirds majority** of the votes cast | **Simple majority**, no abstaining |
+| 3 | **Simple majority**, no abstaining; a tie rejects | **Simple majority**, no abstaining; a tie rejects |
 
-### Where is data saved?
-- Database: `Foscamun.db` (in application folder)
-- Settings: Saved automatically
+### Result
 
-### How to backup?
-1. Close the application
-2. Copy the file `Foscamun.db`
-3. Store the copy in a safe place
+After a round with no decision, the **Result** page shows why the vote goes on (no unanimity, no two-thirds majority, no majority, tie), the tally bar (green in favor, orange abstained, red against) and who voted what.
 
-### How to restore a backup?
-1. Close the application
-2. Replace `Foscamun.db` with the backup copy
-3. Restart the application
+- **Next round** — starts the next round
+- **Back to session** — ends the vote and returns to the session
 
-## 🎨 Customization
+### Final result
 
-### Committee Logos
-Logos are located in: `Resources\CommitteeLogo\`
+When the vote is decided, **Final result** shows:
 
-**To add a custom logo:**
-1. Create an SVG file with the committee name (e.g., `ECOSOC.svg`)
-2. Place it in `Resources\CommitteeLogo\`
-3. Restart the application
+- the outcome (adopted / rejected) and the final tally
+- a row for every round, with its bar, its tally and why it did not decide; the decisive round is highlighted
+- who voted what in the decisive round
 
-**Generic logo:** If there's no specific logo, `Generic.svg` is used
+From here go **Back to session** or **Home**.
 
-### Sounds
-Audio files are in: `Resources\Sounds\`
-- Supported format: WAV
-- Used for notifications and timer
+## 🔄 Updates
 
-## ❓ Common Issues
+At every start Foscamun checks GitHub for a newer version. If there is one:
 
-### Application won't start
-- Verify you have Windows 10 or higher
-- Try running as administrator (right-click → "Run as administrator")
+- **Yes** downloads it (a window shows the progress; **Cancel** stops it), checks it, closes Foscamun, replaces the files and starts the new version
+- **No** asks again at the next start; tick **Don't remind me about this version** to skip that version
 
-### Database not found
-- Verify `Foscamun.db` is in the same folder as `Foscamun.exe`
-- If missing, the application will recreate it automatically (empty)
+Your committees, settings and logos are kept. Without an internet connection nothing is shown. If Foscamun cannot write to its own folder, it offers to open the download page instead.
 
-### Logos not showing
-- Verify the folder `Resources\CommitteeLogo\` exists
-- Verify SVG files are valid
-- Use `Generic.svg` as fallback
+## 💾 Data and backup
 
-### Language doesn't change
-- Restart the application after changing language
+### Where is the data?
+
+- Database: `%LocalAppData%\Foscamun\Foscamun.db` (paste the path in File Explorer's address bar)
+- Committee logos: `%LocalAppData%\Foscamun\CommitteeLogo\`
+- Settings (language, year, selected committee): saved automatically
+
+The `Foscamun.db` next to `Foscamun.exe` is only the starting database, copied on the first launch.
+
+### Backup
+
+1. Close Foscamun
+2. Copy `%LocalAppData%\Foscamun\Foscamun.db` somewhere safe
+
+### Restore
+
+1. Close Foscamun
+2. Put the backup copy in `%LocalAppData%\Foscamun\` with the name `Foscamun.db`
+3. Start Foscamun
+
+### "Incompatible database"
+
+If the database was saved by a newer version of Foscamun, or cannot be read, Foscamun warns at startup:
+
+- **Yes** — the current file is renamed (e.g. `Foscamun-backup-20261108-184515.db`, never deleted) and Foscamun starts with a new database
+- **No** — Foscamun closes without changing anything; you can install the newer version instead
+
+## ❓ Common issues
+
+### The application does not start
+- Windows 10 or later is required
+- If Windows blocks the downloaded file: right-click the ZIP → Properties → **Unblock**, then extract again
+- Make sure you downloaded the right architecture (x64, x86, ARM64)
+
+### Updates do not install
+- Foscamun must be able to write to its folder: move it out of `C:\Program Files\` to a user folder
+
+### A logo is missing
+- Check that the SVG in `%LocalAppData%\Foscamun\CommitteeLogo\` has exactly the committee's name
 
 ## 📧 Support
 
-- **Bugs or issues?** Open an issue at: https://github.com/nanedb/Foscamun2026/issues
-- **Questions?** Use discussions: https://github.com/nanedb/Foscamun2026/discussions
+- **Bugs or requests**: https://github.com/nanedb/Foscamun/issues
 
-## 📚 Additional Resources
+## 📚 More
 
-- **Complete documentation**: [README.md](README.md)
-- **Deployment guide**: [DEPLOYMENT.md](DEPLOYMENT.md)
-- **Release notes**: [RELEASE_NOTES_TEMPLATE.md](RELEASE_NOTES_TEMPLATE.md)
+- [README.md](README.md) — overview
+- [DEPLOYMENT.md](DEPLOYMENT.md) — building and releasing
 
 ---
 
-**Version**: 1.0.0  
-**Last updated**: 2025  
-**Repository**: https://github.com/nanedb/Foscamun2026
+**Version**: 2.0.0
+**Last updated**: November 2026
+**Repository**: https://github.com/nanedb/Foscamun

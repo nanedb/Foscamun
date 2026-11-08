@@ -4,6 +4,10 @@ on:
   push:  # Evaluated on every push; the job itself only runs for tags (see job-level `if` below)
   workflow_dispatch:  # Allow manual trigger
 
+# The job creates the GitHub release, so its token must be able to write
+permissions:
+  contents: write
+
 jobs:
   build:
     # Skip (not fail) on ordinary branch pushes — only run for version tags or a manual dispatch.
@@ -105,8 +109,8 @@ jobs:
           Foscamun-win-x86-*.zip
           Foscamun-win-arm64-*.zip
           SHA256SUMS.txt
-        body_path: RELEASE_NOTES_TEMPLATE.md
+        body_path: RELEASE_NOTES.md
         draft: false
-        prerelease: false
+        prerelease: ${{ contains(github.ref_name, '-') }}  # e.g. v2.1.0-beta.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

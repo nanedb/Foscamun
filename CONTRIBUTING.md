@@ -67,8 +67,8 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
 
 ```bash
 # Clone the repository
-git clone https://github.com/nanedb/Foscamun2026.git
-cd Foscamun2026
+git clone https://github.com/nanedb/Foscamun.git
+cd Foscamun
 
 # Restore dependencies
 dotnet restore
@@ -82,12 +82,13 @@ dotnet run
 
 ### Project Structure
 
-- `Data/` - Database access layer
+- `Data/` - Database access layer and schema version check (`DatabaseGuard`)
 - `Models/` - Data models
 - `ViewModels/` - MVVM ViewModels
 - `Views/` - WPF Pages and Windows
 - `Repositories/` - Data repositories
-- `Helpers/` - Utility classes
+- `Services/` - Update check against GitHub releases
+- `Converters/` - WPF value converters
 - `Resources/` - Images, icons, sounds
 - `Strings/` - Language resources
 - `Styles/` - WPF themes and styles
@@ -226,7 +227,8 @@ When adding features, please update:
 - Code comments for complex logic
 - XML documentation for public APIs
 - User-facing documentation in `USER_GUIDE.md`
-- Release notes in `RELEASE_NOTES_TEMPLATE.md`
+- Release notes in `RELEASE_NOTES.md`
+- `DatabaseGuard.CurrentVersion` if the database schema changes (see DEPLOYMENT.md)
 
 ---
 
@@ -247,7 +249,7 @@ Looking for ideas? Here are some areas where contributions would be especially v
 
 ## ❓ Questions?
 
-Feel free to open a [Discussion](https://github.com/nanedb/Foscamun2026/discussions) if you have questions about contributing!
+Feel free to open a [Discussion](https://github.com/nanedb/Foscamun/discussions) if you have questions about contributing!
 
 ---
 

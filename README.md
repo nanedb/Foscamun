@@ -1,346 +1,232 @@
 # 🌍 Foscamun - MUN Conference Management System
 
 [![.NET Version](https://img.shields.io/badge/.NET-10.0-blue)](https://dotnet.microsoft.com/download/dotnet/10.0)
-[![Platform](https://img.shields.io/badge/platform-Windows-lightgrey)](https://github.com/nanedb/Foscamun2026)
+[![Platform](https://img.shields.io/badge/platform-Windows-lightgrey)](https://github.com/nanedb/Foscamun)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Release](https://img.shields.io/github/v/release/nanedb/Foscamun2026)](https://github.com/nanedb/Foscamun2026/releases)
+[![Release](https://img.shields.io/github/v/release/nanedb/Foscamun?include_prereleases)](https://github.com/nanedb/Foscamun/releases)
 
-A modern, feature-rich desktop application for managing Model United Nations (MUN) conferences. Built with WPF and .NET 10, Foscamun streamlines committee sessions, roll calls, speaker management, and voting processes.
+A desktop application for running Model United Nations (MUN) conferences: roll call, speakers list with an integrated timer, warnings, and multi-round voting, for ordinary committees and for the International Court of Justice (ICJ). Built with WPF and .NET 10, in English, French and Spanish.
 
 ![Foscamun Logo](Resources/FoscamunLogo.svg)
+
+> **Version 2.0.0 brings a completely new interface.** While the choice is being made, two releases are available side by side: **v2.0.0** (new interface) and **v1.3.0** (previous interface). They share the same database, so you can try both on the same computer. See [Installation](#-installation).
 
 ---
 
 ## ✨ Features
 
-### 🏛️ Committee Management
-- Create and manage multiple committees
-- Assign president, vice-president, and moderator roles
-- Manage participating countries
-- Configure topics and sessions
-- Customizable committee logos
+### 🧭 Guided flow
+- Sidebar showing the previous, current and next page of the flow: Home → Roll call → Session → Voting → Result → Final result
+- Setup and Exit always at the bottom; the sidebar collapses to icons only
+- Animated page changes, dialogs in the app's own style
 
-### 📋 Roll Call System
-- Quick roll call for delegates
-- Mark present/absent countries
-- Visual country management
-- Automatic attendance tracking
+### 🏛️ Committee management
+- Any number of committees, each with topic, president, vice-president, moderator and participating countries
+- Committee emblems as SVG logos, with a generic logo as fallback
+- Conference year, language, and "ask before exiting" in Setup
 
-### 🎤 Session Management
-- Dynamic speakers list
-- Real-time speaker queue management
-- Current speaker display
-- Add/remove speakers on the fly
-- Warning system for delegates
+### 📋 Roll call
+- Click a country to mark it present or absent, or mark all present at once
+- Progress bar with present and absent counts, session number
 
-### ⏱️ Integrated Timer
-- Customizable speaking time limits
-- Visual countdown
-- Audio notifications
-- Pause and reset functionality
+### 🎤 Session
+- Available countries and speakers list side by side: a click moves a country from one to the other
+- The head of the speakers list is the current speaker, shown with flag and name
+- **Timer built into the page**: speaking time ±15 s, presets 1:00 / 1:30 / 2:00 / 3:00, Start/Pause (also with the space bar), Next; tick and bell sounds; the panel turns orange in overtime
+- Warnings per delegate, kept in the database
 
-### 🗳️ Voting System
-- Support for approval, abstention, and rejection
-- Multiple voting rounds
-- Real-time vote tallying
-- Comprehensive final results
-- Automatic motion outcome determination
+### 🗳️ Voting
+- One delegate at a time, with the keys **A** (approve), **S** (abstain) and **D** (reject)
+- Up to three rounds with the MUN rules (see [Voting rules](#-voting-rules))
+- **Result** after an undecided round: tally bar, who voted what, back to session or next round
+- **Final result**: outcome, every round of the vote in a table, and the decisive round's votes
 
-### ⚖️ ICJ (International Court of Justice) Support
-- Dedicated ICJ management
-- Judge and vice-judge assignments
-- Advocate and juror tracking
-- Specialized voting procedures
+### ⚖️ International Court of Justice
+- Judge and two vice judges, any number of plaintiff and defense advocates (each with the flag of the country they represent), and jurors
+- Roll call, session and voting adapted to the court
 
-### 🌐 Multi-Language Support
-- English
-- French (Français)
-- Spanish (Español)
-- Easy language switching without restart
+### 🌐 Languages
+- English, French and Spanish, switched at runtime without restarting
 
-### 💾 Data Persistence
-- SQLite database for reliable data storage
-- Automatic database creation
-- Settings persistence
-- Data backup and restore capabilities
+### 🔄 Updates and data
+- At startup Foscamun checks GitHub for a newer version and offers to download and install it (verified against the published SHA256 checksum)
+- The database is kept across installations; if it cannot work with the installed version, a warning explains what to do and nothing is deleted
 
 ---
 
 ## 🖥️ Screenshots
 
-![Home Screen](docs/screenshots/home.png)
-![Committee Setup](docs/screenshots/setup.png)
-![Roll Call](docs/screenshots/rollcall.png)
-![Session View](docs/screenshots/session.png)
-![Voting](docs/screenshots/voting.png)
-
+| | |
+|---|---|
+| ![Home](docs/screenshots/home.png) | ![Setup](docs/screenshots/setup.png) |
+| ![Roll call](docs/screenshots/rollcall.png) | ![Session](docs/screenshots/session.png) |
+| ![Voting](docs/screenshots/voting.png) | ![Result](docs/screenshots/result.png) |
+| ![Final result](docs/screenshots/finalresult.png) | |
 
 ---
 
 ## 📥 Installation
 
-### Option 1: Download Pre-Built Release (Recommended)
+### Download a release (recommended)
 
-1. Go to [Releases](https://github.com/nanedb/Foscamun2026/releases)
-2. Download the appropriate version for your system:
-   - `Foscamun-win-x64-v1.0.0.zip` - Windows 64-bit (most common)
-   - `Foscamun-win-x86-v1.0.0.zip` - Windows 32-bit
-   - `Foscamun-win-arm64-v1.0.0.zip` - Windows ARM64
-3. Extract to a user folder (Desktop, Documents, etc.)
-4. Run `Foscamun.exe`
+1. Go to [Releases](https://github.com/nanedb/Foscamun/releases)
+2. Choose the version:
+   - **v2.0.0** — new interface (pre-release, for comparison)
+   - **v1.3.0** — previous interface
+3. Download the ZIP for your system:
+   - `Foscamun-win-x64-v2.0.0.zip` — Windows 10/11 64-bit (most common)
+   - `Foscamun-win-x86-v2.0.0.zip` — Windows 10/11 32-bit
+   - `Foscamun-win-arm64-v2.0.0.zip` — Windows on ARM
+4. Extract it to a user folder (Desktop, Documents…), not `C:\Program Files\`
+5. Run `Foscamun.exe`
 
-✅ **No administrator privileges required**  
-✅ **No .NET installation needed** - Self-contained  
-✅ **Portable** - Can run from USB drive
+✅ **No administrator privileges required**
+✅ **No .NET installation needed** — self-contained
+✅ **Portable** — can run from a USB drive
 
-### Option 2: Build from Source
+To compare the two interfaces, extract each version into its own folder.
 
-**Prerequisites:**
-- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
-- Visual Studio 2025+ or Visual Studio Code
+### Updating
 
-**Steps:**
+From v2.0.0 on, Foscamun updates itself: when a newer release is published it asks at startup, downloads the new files and restarts. You can also extract a new ZIP over the old folder by hand.
+
+Your data is not in the application folder but in `%LocalAppData%\Foscamun\` (database `Foscamun.db` and committee logos), so replacing the program never touches it.
+
+### Build from source
+
+**Prerequisites:** [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0), Windows.
+
 ```bash
-# Clone the repository
-git clone https://github.com/nanedb/Foscamun2026.git
-cd Foscamun2026
-
-# Restore dependencies
+git clone https://github.com/nanedb/Foscamun.git
+cd Foscamun
 dotnet restore
-
-# Build
-dotnet build -c Release
-
-# Run
+dotnet build
 dotnet run
 ```
 
-**Or build self-contained executable:**
-```bash
-dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
-```
+The new interface lives on the `nuova-interfaccia` branch until it is merged into `master`.
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick start
 
-### First Launch
+1. **Setup** (gear icon at the bottom of the sidebar): choose the language and the year, then add a committee with its countries, or add the ICJ
+2. Select the committee in the list: it becomes the current committee
+3. **Roll call**: mark the delegates present, choose the session number, then *Proceed to session*
+4. **Session**: click countries to put them on the speakers list, start the timer, give warnings, *Next* for the next speaker
+5. **Open voting**: each delegate votes with A / S / D; the result comes by itself after the last vote
+6. **Result / Final result**: go to the next round, back to the session, or home
 
-1. **Select Language**: Choose between English, French, or Spanish
-2. **Set Year**: Enter the MUN conference year
-3. **Create Committee**: Add your first committee with details
-4. **Add Countries**: Assign participating countries to the committee
-
-### Running a Session
-
-1. **Roll Call**: Mark present delegates
-2. **Start Session**: Begin the committee session
-3. **Manage Speakers**: Add delegates to the speakers list
-4. **Use Timer**: Track speaking time
-5. **Voting**: Conduct votes when needed
-6. **View Results**: See final voting outcomes
-
-📖 For detailed instructions, see [USER_GUIDE.md](USER_GUIDE.md)
+📖 Step by step: [USER_GUIDE.md](USER_GUIDE.md)
 
 ---
 
-## 🛠️ Technology Stack
+## 🗳️ Voting rules
 
-- **Framework**: .NET 10
-- **UI**: WPF (Windows Presentation Foundation)
-- **Architecture**: MVVM (Model-View-ViewModel)
-- **Database**: SQLite with Dapper ORM
-- **MVVM Toolkit**: CommunityToolkit.Mvvm
-- **Vector Graphics**: SharpVectors for SVG rendering
-- **DI Container**: Microsoft.Extensions.DependencyInjection
+| Round | Committees | ICJ |
+|---|---|---|
+| 1 | Decided only by **unanimity** | Decided by **majority of the votes cast** (abstentions do not count) |
+| 2 | Decided by a **two-thirds majority** of the votes cast | Decided by **simple majority**, no abstaining |
+| 3 | **Simple majority**, no abstaining; a tie rejects | **Simple majority**, no abstaining; a tie rejects |
 
-### Key Packages
-
-| Package | Version | Purpose |
-|---------|---------|---------|
-| Microsoft.Data.Sqlite | 10.0.1 | Database access |
-| Dapper | 2.1.66 | Micro ORM |
-| CommunityToolkit.Mvvm | 8.4.0 | MVVM helpers |
-| SharpVectors.Wpf | 1.8.5 | SVG rendering |
-| Extended.Wpf.Toolkit | 5.0.0 | Additional WPF controls |
+A round that reaches no decision leads to the Result page, from which the next round starts.
 
 ---
 
-## 📁 Project Structure
+## 🛠️ Technology
+
+- **.NET 10**, **WPF**, MVVM with **CommunityToolkit.Mvvm**
+- **SQLite** through Microsoft.Data.Sqlite (raw ADO.NET)
+- **SharpVectors** for SVG flags, icons and logos
+- **Microsoft.Extensions.DependencyInjection**
+
+### Project structure
 
 ```
 Foscamun/
-├── Data/                   # Database access layer
-├── Models/                 # Data models
-├── ViewModels/            # MVVM ViewModels
-├── Views/                 # WPF Pages and Windows
-├── Repositories/          # Data repositories
-├── Helpers/               # Utility classes
-├── Resources/             # Images, icons, logos, sounds
-│   ├── CommitteeLogo/    # Committee SVG logos
-│   ├── Icons/            # Application icons
-│   ├── flags/            # Country flags
-│   └── Sounds/           # Audio files
-├── Strings/               # Language resource dictionaries
-├── Styles/                # WPF styles and themes
-├── Fonts/                 # Custom fonts
-└── Foscamun.db           # SQLite database (auto-generated)
+├── Data/            # Database access, schema version check (DatabaseGuard)
+├── Models/          # Data models
+├── Repositories/    # Committee, country and ICJ repositories
+├── Services/        # Update check (UpdateService)
+├── ViewModels/      # MVVM view models
+├── Views/           # Pages, shared panels, dialogs
+├── Converters/      # WPF value converters
+├── Resources/       # Flags, icons, committee logos, sounds
+├── Strings/         # Language dictionaries (en, fr, es)
+├── Styles/          # Colours, typography, buttons, inputs
+├── Fonts/           # Akko Pro
+└── Foscamun.db      # Seed database, copied to %LocalAppData% on first run
 ```
 
 ---
 
 ## 🎨 Customization
 
-### Committee Logos
+### Committee logos
 
-Add custom committee logos by placing SVG files in `Resources\CommitteeLogo\`:
+Logos live in `%LocalAppData%\Foscamun\CommitteeLogo\`. To use your own, save a white SVG on a transparent background named after the committee (e.g. `ECOSOC.svg`) in that folder. Committees without a logo get a copy of `Generic.svg`.
 
-1. Create an SVG file named after your committee (e.g., `ECOSOC.svg`)
-2. Place it in the `Resources\CommitteeLogo\` folder
-3. Restart the application
+### Languages
 
-If no custom logo exists, `Generic.svg` is used as fallback.
-
-### Language Resources
-
-Language files are located in `Strings\`:
-- `Strings.en.xaml` - English
-- `Strings.fr.xaml` - French
-- `Strings.es.xaml` - Spanish
-
-To add a new language, create a new resource dictionary following the same pattern.
+The strings are in `Strings\Strings.en.xaml`, `Strings.fr.xaml` and `Strings.es.xaml`. Every new string goes into all three.
 
 ---
 
-## 🧪 Building and Testing
+## 📦 Releasing
 
-### Build for Development
-
-```bash
-dotnet build
-```
-
-### Run Tests
-
-```bash
-dotnet test
-```
-
-### Build Release
-
-```bash
-dotnet build -c Release
-```
-
-### Create Deployment Package
-
-Use the provided scripts:
-
-**PowerShell** (all platforms):
-```powershell
-.\publish.ps1 -Version "1.0.0"
-```
-
-**Batch** (Windows x64 only):
-```cmd
-publish-quick.bat
-```
-
-📖 See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions.
+Pushing a tag `v*` starts the GitHub Actions workflow that builds the three ZIPs, the SHA256SUMS.txt file and the release. The updater relies on the asset names `Foscamun-{win-x64|win-x86|win-arm64}-v{version}.zip`. See [DEPLOYMENT.md](DEPLOYMENT.md) and [DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md).
 
 ---
 
 ## 📚 Documentation
 
-- [USER_GUIDE.md](USER_GUIDE.md) - Complete user guide
-- [DEPLOYMENT.md](DEPLOYMENT.md) - Deployment and build guide
-- [DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md) - Release checklist
+- [USER_GUIDE.md](USER_GUIDE.md) — user guide
+- [DEPLOYMENT.md](DEPLOYMENT.md) — build and release guide
+- [DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md) — release checklist
+- [CONTRIBUTING.md](CONTRIBUTING.md) — how to contribute
 
 ---
 
-## 🤝 Contributing
+## 🐛 Bugs and requests
 
-Contributions are welcome! Here's how you can help:
-
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/AmazingFeature`)
-3. **Commit** your changes (`git commit -m 'Add some AmazingFeature'`)
-4. **Push** to the branch (`git push origin feature/AmazingFeature`)
-5. **Open** a Pull Request
-
-### Development Guidelines
-
-- Follow existing code style and conventions
-- Write clear commit messages
-- Test thoroughly before submitting
-- Update documentation as needed
-- Add comments for complex logic
+- [Report a bug](https://github.com/nanedb/Foscamun/issues/new?labels=bug)
+- [Request a feature](https://github.com/nanedb/Foscamun/issues/new?labels=enhancement)
 
 ---
 
-## 🐛 Bug Reports and Feature Requests
+## 🔄 Version history
 
-Found a bug or have a feature request? Please use GitHub Issues:
+### v2.0.0 (2026-11-08) — pre-release
+- New interface: guided sidebar, redesigned Home, Setup, Roll call, Session, Voting, Result and Final result
+- Timer built into the session page; voting with the A / S / D keys; Final result with the history of every round
+- Automatic update check and installation from GitHub
+- Database compatibility check with a warning, instead of failing
 
-- [Report a Bug](https://github.com/nanedb/Foscamun2026/issues/new?labels=bug)
-- [Request a Feature](https://github.com/nanedb/Foscamun2026/issues/new?labels=enhancement)
-- [Ask a Question](https://github.com/nanedb/Foscamun2026/discussions)
+### v1.3.0 (2026-10-28)
+- ICJ: any number of plaintiff and defense advocates, each with their own country
+- Taller main window, reduced automatically on small screens
+
+### v1.2.0 (2026-07-02)
+- Modernized look on every page, sidebar collapsed at startup
+- SQLite security fix (GHSA-2m69-gcr7-jv3q); settings kept when upgrading
+
+### v1.0.0 (2026-03-01)
+- First release: committees, ICJ, roll call, session with speakers list and timer, multi-round voting, three languages
+
+Full notes for every version: [Releases](https://github.com/nanedb/Foscamun/releases)
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT — see [LICENSE](LICENSE).
 
----
-
-## 👥 Authors and Acknowledgments
-
-- **Developer**: [nanedb](https://github.com/nanedb)
-- **Repository**: [Foscamun2026](https://github.com/nanedb/Foscamun2026)
-
-Special thanks to all contributors and the MUN community for their support and feedback.
-
----
-
-## 🌟 Star History
-
-If you find this project useful, please consider giving it a star ⭐!
-
----
-
-## 📞 Support
-
-- **Issues**: https://github.com/nanedb/Foscamun2026/issues
-- **Discussions**: https://github.com/nanedb/Foscamun2026/discussions
-- **Documentation**: See the `docs/` folder
-
----
-
-## 🔄 Version History
-
-### v1.0.0 (2026-03-01)
-- Initial release
-- Complete MUN management system
-- ICJ support
-- Multi-language support
-- Voting system with multiple rounds
-- See [RELEASE_NOTES](RELEASE_NOTES_TEMPLATE.md) for full details
-
----
-
-## 🚦 Status
-
-- ✅ Stable Release
-- ✅ Production Ready
-- ✅ Actively Maintained
-
----
+**Developer**: [nanedb](https://github.com/nanedb)
 
 <div align="center">
 
 **Made with ❤️ for the MUN Community**
 
-[Download Latest Release](https://github.com/nanedb/Foscamun2026/releases/latest) | [View Documentation](USER_GUIDE.md) | [Report Issue](https://github.com/nanedb/Foscamun2026/issues)
+[Releases](https://github.com/nanedb/Foscamun/releases) | [User guide](USER_GUIDE.md) | [Report an issue](https://github.com/nanedb/Foscamun/issues)
 
 </div>

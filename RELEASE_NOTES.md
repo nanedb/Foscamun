@@ -1,114 +1,43 @@
-# Foscamun v1.0.0
+# Foscamun v2.0.0
 
-**Release Date**: [Date]
+**Release Date**: 2026-11-08
+
+> **Preview of the new interface.** This release and **v1.3.0** (the previous interface) are both available, so you can try them side by side and choose. They share the same database: committees, countries and ICJ data work in both.
 
 ## 🎉 What's New
 
-- Complete MUN committee management system
-- ICJ (International Court of Justice) support
-- Roll call system for delegates
-- Session management with speakers list
-- Multi-round voting system
-- Integrated timer for speeches
-- Multi-language support (English, French, Spanish)
-- SQLite database for data persistence
-- Customizable committee logos
+### 🎨 New interface
+- New sidebar: previous page, current page and next page of the flow, with Setup and Exit at the bottom; it can be collapsed to icons only
+- Redesigned pages: Home, Setup, Roll call, Session, Voting, Result and Final result, for committees and ICJ
+- **Session** with the timer built into the page: speaking time ±15 s, presets 1:00 / 1:30 / 2:00 / 3:00, Start/Pause (also with the space bar), Next, warnings, sounds
+- **Voting** one delegate at a time, with the keys A (approve), S (abstain), D (reject)
+- **Result** and **Final result** with a bar per round, who voted what, and the history of every round of the vote
+- Animated page changes
+- App-styled dialogs instead of the Windows message boxes
 
-## 📋 Features
+### 🔄 Automatic updates
+- At startup Foscamun checks GitHub for a newer version and offers to download and install it; the download is verified against the published SHA256 checksum
+- "Don't remind me about this version" to skip a release
 
-### Committee Management
-- Create and edit committees
-- Assign president, vice-president, and moderator
-- Manage participating countries
-- Topics and sessions
-
-### Session System
-- Dynamic speakers list
-- Timer for speeches
-- Warning system
-- Remove speakers
-
-### Voting System
-- Voting for approval/abstention/rejection
-- Multiple voting rounds
-- Final results with statistics
-
-### Special ICJ
-- Manage judges (main and vice)
-- Manage advocates and jurors
-- Custom voting system
+### 💾 Database
+- The existing database is always kept. If it was saved by a newer version or cannot be read, a warning offers to set it aside (renamed, never deleted) and start with a new one, or to exit without changing anything
 
 ## 💾 Download
 
-Choose the appropriate version for your system:
-
-### Windows 64-bit (Recommended)
-**Foscamun-win-x64-v1.0.0.zip** (~68 MB)
-- For most modern PCs
-- Windows 10/11 64-bit
-
-### Windows 32-bit
-**Foscamun-win-x86-v1.0.0.zip** (~63 MB)
-- For older PCs
-- Windows 10/11 32-bit
-
-### Windows ARM64
-**Foscamun-win-arm64-v1.0.0.zip** (~64 MB)
-- For Windows ARM devices (e.g., Surface Pro X)
+| Package | System |
+|---|---|
+| **Foscamun-win-x64-v2.0.0.zip** | Windows 10/11 64-bit (recommended) |
+| **Foscamun-win-x86-v2.0.0.zip** | Windows 10/11 32-bit (older PCs) |
+| **Foscamun-win-arm64-v2.0.0.zip** | Windows ARM devices (e.g., Surface Pro X) |
 
 ## 📥 Installation
 
 1. Download the appropriate ZIP file
-2. Extract contents to a user folder (Desktop, Documents, etc.)
-   - ⚠️ Avoid protected folders like `C:\Program Files\`
-3. Run `Foscamun.exe`
-   - ✅ **No administrator privileges required**
-   - ✅ **No installation needed** - Application is portable and self-contained
-4. Database will be created automatically on first launch
+2. Extract contents to a user folder (Desktop, Documents, etc.) — avoid protected folders like `C:\Program Files\`, otherwise automatic updates cannot replace the files
+3. Run `Foscamun.exe` — no installation or administrator privileges required
 
-## ⚙️ System Requirements
-
-- **Operating System**: Windows 10 or higher
-- **RAM**: 4 GB minimum (8 GB recommended)
-- **Disk Space**: 500 MB free
-- **Resolution**: 1024x768 minimum (1920x1080 recommended)
-
-## 🐛 Bug Fixes
-
-- Fixed XML encoding errors with special characters
-- Fixed Back navigation from SessionPage to RollCallPage
-- Normalized language codes (en-US → en)
-- Optimized resource management
-
-## 📚 Documentation
-
-For more information see:
-- [DEPLOYMENT.md](DEPLOYMENT.md) - Deployment guide
-- [README.md](README.md) - Main documentation
+To compare with the previous interface, extract **v1.3.0** into a different folder.
 
 ## 🔄 Upgrading from Previous Versions
 
-First installation - no upgrade needed.
-
-## 🆘 Support
-
-- **Issues**: https://github.com/nanedb/Foscamun2026/issues
-- **Discussions**: https://github.com/nanedb/Foscamun2026/discussions
-
-## 📝 Notes
-
-- Database `Foscamun.db` is created automatically on first launch
-- Settings are saved automatically
-- Committee logos can be customized in `Resources\CommitteeLogo\`
-
----
-
-**SHA256 Checksums** (for integrity verification):
-```
-Foscamun-win-x64-v1.0.0.zip:   [To be calculated]
-Foscamun-win-x86-v1.0.0.zip:   [To be calculated]
-Foscamun-win-arm64-v1.0.0.zip: [To be calculated]
-```
-
-**Repository**: https://github.com/nanedb/Foscamun2026  
-**License**: [Your license]
+Extract and run — the database `Foscamun.db` and committee logos live in `%LocalAppData%\Foscamun\` and are not affected by replacing the executable. Settings are kept when the new version is extracted into the same folder as the old one.
