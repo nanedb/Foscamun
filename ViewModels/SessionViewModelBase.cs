@@ -45,8 +45,8 @@ namespace Foscamun.ViewModels
     public abstract partial class SessionViewModelBase<TSpeaker> : ObservableObject, ISessionSpeakers
         where TSpeaker : class, ISpeaker
     {
-        private const int TimeStepSeconds = 15;
-        private const int MinSpeakingSeconds = 15;
+        private const int TimeStepSeconds = 10;
+        private const int MinSpeakingSeconds = 10;
         private const int MaxSpeakingSeconds = 10 * 60;
         private const int FinalSecondsThreshold = 10;
 
