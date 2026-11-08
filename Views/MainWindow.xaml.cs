@@ -187,10 +187,19 @@ namespace Foscamun.Views
         // Exit and the window's X take the same way out, through OnClosing
         private void ExitBtn_Click(object sender, RoutedEventArgs e) => Close();
 
+        private bool _closingForUpdate;
+
+        /// <summary>Closes the app without questions, so that the update can replace its files.</summary>
+        public static void CloseForUpdate()
+        {
+            Instance._closingForUpdate = true;
+            Instance.Close();
+        }
+
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
-            if (e.Cancel)
+            if (e.Cancel || _closingForUpdate)
                 return;
 
             // Unsaved changes: that question is enough, no second one to exit

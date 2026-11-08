@@ -199,4 +199,24 @@
     <sys:String x:Key="MotionAdoptedLbl">Moción aprobada</sys:String>
     <sys:String x:Key="MotionRejectedLbl">Moción rechazada</sys:String>
 
+    <!-- Database compatibility and updates -->
+    <sys:String x:Key="DbIncompatibleTitle" xml:space="preserve">Base de datos incompatible</sys:String>
+    <sys:String x:Key="DbTooNewMsg" xml:space="preserve">La base de datos de este ordenador fue guardada por una versión más reciente de Foscamun (formato {0}); esta versión solo lee hasta el formato {1}.</sys:String>
+    <sys:String x:Key="DbInvalidMsg" xml:space="preserve">La base de datos de este ordenador no se puede leer: está dañada o no es una base de datos de Foscamun.</sys:String>
+    <sys:String x:Key="DbResetQuestion" xml:space="preserve">¿Apartarla y empezar con una base de datos nueva? El archivo actual se renombrará, no se borrará:&#10;{0}&#10;&#10;Elija No para salir sin cambiar nada.</sys:String>
+    <sys:String x:Key="DbBackupDoneMsg" xml:space="preserve">La base de datos anterior se ha guardado como:&#10;{0}</sys:String>
+    <sys:String x:Key="UpdateAvailableTitle" xml:space="preserve">Nueva versión</sys:String>
+    <sys:String x:Key="UpdateAvailableMsg" xml:space="preserve">Foscamun {0} está disponible (usted tiene la {1}).&#10;&#10;¿Descargarla e instalarla ahora? Sus comités y ajustes se conservan.</sys:String>
+    <sys:String x:Key="UpdateSkipVersion" xml:space="preserve">No recordármelo para esta versión</sys:String>
+    <sys:String x:Key="UpdateDownloadingTitle" xml:space="preserve">Descargando Foscamun {0}</sys:String>
+    <sys:String x:Key="UpdateDownloading" xml:space="preserve">Conectando…</sys:String>
+    <sys:String x:Key="UpdateProgressFmt" xml:space="preserve">{0:0.0} de {1:0.0} MB</sys:String>
+    <sys:String x:Key="UpdateProgressNoTotalFmt" xml:space="preserve">{0:0.0} MB</sys:String>
+    <sys:String x:Key="UpdateVerifying" xml:space="preserve">Comprobando la descarga…</sys:String>
+    <sys:String x:Key="UpdateChecksumMsg" xml:space="preserve">El archivo descargado no coincide con la suma de comprobación publicada.</sys:String>
+    <sys:String x:Key="UpdateReadyMsg" xml:space="preserve">La nueva versión está lista. Foscamun se cerrará, la instalará y se volverá a abrir.</sys:String>
+    <sys:String x:Key="UpdateFailedMsg" xml:space="preserve">No se ha podido descargar la actualización:&#10;{0}</sys:String>
+    <sys:String x:Key="UpdateNoAccessMsg" xml:space="preserve">Foscamun no puede escribir en su carpeta, así que no puede actualizarse:&#10;{0}</sys:String>
+    <sys:String x:Key="UpdateOpenPageQuestion" xml:space="preserve">¿Abrir la página de descarga para instalarla a mano?</sys:String>
+
 </ResourceDictionary>

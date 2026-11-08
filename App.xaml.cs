@@ -1,10 +1,11 @@
-using System;
+﻿using System;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Foscamun.Data;
 using Foscamun.ViewModels;
 using Foscamun.Views;
 using Foscamun.Properties;
+using Foscamun.Services;
 
 namespace Foscamun
 {
@@ -27,14 +28,26 @@ namespace Foscamun
                 Settings.Default.Save();
             }
 
-            // Inizializza il database (crea le cartelle e il file .db se non esistono)
-            var db = new SqliteDataAccess();
+            // Gli avvisi possono arrivare prima della finestra principale: chiuderli non deve chiudere l'app
+            ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
+            // La lingua prima di tutto: serve anche agli avvisi sul database
             var lang = Settings.Default.Lang;
             if (string.IsNullOrEmpty(lang))
                 lang = "en"; // default
 
             ChangeLanguage(lang);
+
+            // Il database esistente si tiene, a meno che non sia incompatibile con questa versione
+            if (!DatabaseGuard.EnsureCompatible())
+            {
+                Shutdown();
+                return;
+            }
+
+            // Inizializza il database (crea le cartelle e il file .db se non esistono, aggiorna lo schema)
+            var db = new SqliteDataAccess();
+            DatabaseGuard.StampVersion();
 
             var services = new ServiceCollection();
 
@@ -59,7 +72,12 @@ namespace Foscamun
 
             // Mostra MainWindow come prima finestra
             var welcomeWindow = new MainWindow();
+            MainWindow = welcomeWindow;
+            ShutdownMode = ShutdownMode.OnMainWindowClose;
             welcomeWindow.Show();
+
+            // Nuove versioni su GitHub: il controllo non blocca l'avvio
+            _ = UpdateService.CheckAtStartupAsync();
         }
 
         public static void ChangeLanguage(string langCode)
