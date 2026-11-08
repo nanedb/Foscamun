@@ -178,4 +178,13 @@
     <sys:String x:Key="CastVoteTitle">Emitir el voto</sys:String>
     <sys:String x:Key="NextVotersLbl">Siguientes:</sys:String>
 
+    <!-- Result page (redesign) -->
+    <sys:String x:Key="ResultRoundFmt">RESULTADO DE LA RONDA {0}</sys:String>
+    <sys:String x:Key="RoundOfFmt">Ronda {0} de 3</sys:String>
+    <sys:String x:Key="NoUnanimityLbl">Sin unanimidad</sys:String>
+    <sys:String x:Key="NoTwoThirdsLbl">Sin mayoría de dos tercios</sys:String>
+    <sys:String x:Key="NoMajorityLbl">Sin mayoría</sys:String>
+    <sys:String x:Key="TieLbl">Empate</sys:String>
+    <sys:String x:Key="BackToSessionBtn">Volver a la sesión</sys:String>
+
 </ResourceDictionary>

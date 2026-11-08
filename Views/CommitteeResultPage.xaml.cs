@@ -13,9 +13,6 @@ namespace Foscamun.Views
         public FlowLink? Next { get; }
 
         private readonly List<Country> _voters;
-        private readonly List<int> _inFavorIndices;
-        private readonly List<int> _abstainedIndices;
-        private readonly List<int> _againstIndices;
         private readonly CommitteeSessionPage? _sessionPage;
 
         public CommitteeResultPage(List<Country> voters, List<int> inFavorIndices, List<int> abstainedIndices, List<int> againstIndices, CommitteeSessionPage? sessionPage = null)
@@ -23,89 +20,38 @@ namespace Foscamun.Views
             InitializeComponent();
 
             _voters = voters;
-            _inFavorIndices = inFavorIndices;
-            _abstainedIndices = abstainedIndices;
-            _againstIndices = againstIndices;
             _sessionPage = sessionPage;
             Previous = new FlowLink("SessionLbl2", new RelayCommand(BackToSession));
             Next = new FlowLink("NextRoundLbl", new RelayCommand(StartNextRound));
 
-            UpdateRoundText();
-            DisplayResults();
+            // Round 1 needs unanimity, round 2 a two-thirds majority (round 3 always ends the vote)
+            int round = CommitteeVotingPage.Round;
+            string headline = (string)FindResource(round == 1 ? "NoUnanimityLbl" : "NoTwoThirdsLbl");
+            Panel.Show(round, headline, Voters(inFavorIndices), Voters(abstainedIndices), Voters(againstIndices));
+
+            Panel.BackRequested += (_, _) => BackToSession();
+            Panel.NextRoundRequested += (_, _) => StartNextRound();
         }
 
-        private void UpdateRoundText()
-        {
-            RoundTextBlock.Text = Properties.Settings.Default.Lang switch
-            {
-                "fr" => $"Tour: {CommitteeVotingPage.Round}",
-                "es" => $"Ronda: {CommitteeVotingPage.Round}",
-                _ => $"Round: {CommitteeVotingPage.Round}"
-            };
-        }
-
-        private void DisplayResults()
-        {
-            InFavorCount.Text = _inFavorIndices.Count.ToString();
-            AbstainedCount.Text = _abstainedIndices.Count.ToString();
-            AgainstCount.Text = _againstIndices.Count.ToString();
-
-            foreach (var index in _inFavorIndices)
-            {
-                InFavorList.Items.Add(_voters[index]);
-            }
-
-            foreach (var index in _abstainedIndices)
-            {
-                AbstainedList.Items.Add(_voters[index]);
-            }
-
-            foreach (var index in _againstIndices)
-            {
-                AgainstList.Items.Add(_voters[index]);
-            }
-        }
-
-        private void NewRoundBtn_Click(object sender, RoutedEventArgs e) => StartNextRound();
+        private List<ResultVoter> Voters(List<int> indices) =>
+            indices.Select(i => new ResultVoter(_voters[i].Name, _voters[i].FlagPath)).ToList();
 
         private void StartNextRound()
         {
             CommitteeVotingPage.Round++;
-            var committeeVotingPage = new CommitteeVotingPage(_voters, _sessionPage);
-            NavigationService?.Navigate(committeeVotingPage);
+            NavigationService?.Navigate(new CommitteeVotingPage(_voters, _sessionPage));
         }
-
-        private void BackBtn_Click(object sender, RoutedEventArgs e) => BackToSession();
 
         private void BackToSession()
         {
-            var result = AppDialog.Show(
-                Properties.Settings.Default.Lang switch
-                {
-                    "fr" => "Êtes-vous sûr de vouloir revenir en arrière? Le vote en cours sera perdu.",
-                    "es" => "¿Estás seguro de que quieres volver atrás? La votación en curso se perderá.",
-                    _ => "Are you sure you want to go back? The current vote will be lost."
-                },
-                Properties.Settings.Default.Lang switch
-                {
-                    "fr" => "Confirmation",
-                    "es" => "Confirmación",
-                    _ => "Confirmation"
-                },
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning);
+            if (AppDialog.Show((string)FindResource("LeaveVotingMsg"), (string)FindResource("ConfirmTitle"),
+                               MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
+                return;
 
-            if (result == MessageBoxResult.Yes)
-            {
-                if (_sessionPage != null && NavigationService != null)
-                {
-                    NavigationService.Navigate(_sessionPage);
-                }
-                else if (NavigationService != null && NavigationService.CanGoBack)
-                {
-                    NavigationService.GoBack();
-                }
-            }
+            if (_sessionPage != null)
+                NavigationService?.Navigate(_sessionPage);
+            else if (NavigationService?.CanGoBack == true)
+                NavigationService.GoBack();
         }
     }
 }

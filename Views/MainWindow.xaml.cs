@@ -226,9 +226,17 @@ namespace Foscamun.Views
 
         // ------------------- ANIMATED NAVIGATION -------------------
 
+        private bool _isTransitioning;        // a slide-out is running
+        private bool _navigatingAnimated;     // the navigation comes from NavigateRightFrame
+
         /// <summary>Slides the current page out, navigates, then slides the new page in.</summary>
         public void NavigateRightFrame(Page page)
         {
+            // A second request during the slide-out (a double click) is ignored
+            if (_isTransitioning)
+                return;
+            _isTransitioning = true;
+
             var slideOut = (Storyboard)Resources["RightFrameSlideOut"];
 
             slideOut.Completed -= SlideOutCompleted;
@@ -238,9 +246,27 @@ namespace Foscamun.Views
             void SlideOutCompleted(object? s, EventArgs e)
             {
                 slideOut.Completed -= SlideOutCompleted;
-                RightFrame.Navigate(page);
+                _navigatingAnimated = true;
+                try { RightFrame.Navigate(page); }
+                finally { _navigatingAnimated = false; }
+                _isTransitioning = false;
                 ((Storyboard)Resources["RightFrameSlideIn"]).Begin();
             }
+        }
+
+        /// <summary>
+        /// The flow pages navigate through their own NavigationService: those navigations
+        /// are stopped here and taken again through <see cref="NavigateRightFrame"/>, so that
+        /// every page change is animated. The first page and Back navigations go straight.
+        /// </summary>
+        private void RightFrame_Navigating(object sender, NavigatingCancelEventArgs e)
+        {
+            if (_navigatingAnimated || RightFrame.Content == null ||
+                e.NavigationMode != NavigationMode.New || e.Content is not Page page)
+                return;
+
+            e.Cancel = true;
+            NavigateRightFrame(page);
         }
 
         // --------------------------- MISC ---------------------------

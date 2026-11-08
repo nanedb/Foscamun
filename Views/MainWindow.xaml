@@ -189,7 +189,7 @@
         <!-- ====================== CONTENT AREA ====================== -->
         <Grid Grid.Column="1" Background="{DynamicResource PrimaryBrush}" ClipToBounds="True">
             <Frame x:Name="RightFrame" NavigationUIVisibility="Hidden" RenderTransformOrigin="0,0"
-                   Navigated="RightFrame_Navigated">
+                   Navigating="RightFrame_Navigating" Navigated="RightFrame_Navigated">
                 <Frame.RenderTransform>
                     <TranslateTransform X="0"/>
                 </Frame.RenderTransform>

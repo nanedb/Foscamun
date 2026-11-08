@@ -20,6 +20,9 @@
 
     <!-- States -->
     <Color x:Key="WarningColor">#FFFFA500</Color>
+    <!-- Votes in favor / against (results) -->
+    <Color x:Key="InFavorColor">#FF23964B</Color>
+    <Color x:Key="AgainstColor">#FFE5484D</Color>
 
     <!-- ======================== BRUSHES ======================== -->
 
@@ -36,6 +39,8 @@
     <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondaryColor}"/>
     <SolidColorBrush x:Key="TextMutedBrush" Color="{StaticResource TextMutedColor}"/>
     <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource WarningColor}"/>
+    <SolidColorBrush x:Key="InFavorBrush" Color="{StaticResource InFavorColor}"/>
+    <SolidColorBrush x:Key="AgainstBrush" Color="{StaticResource AgainstColor}"/>
 
     <!-- Light input surfaces (text boxes, combos, lists) -->
     <SolidColorBrush x:Key="InputBackgroundBrush" Color="#FFF2F2EA"/>
