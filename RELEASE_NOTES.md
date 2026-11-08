@@ -2,7 +2,7 @@
 
 **Release Date**: 2026-11-08
 
-> **Preview of the new interface.** This release and **v1.3.0** (the previous interface) are both available, so you can try them side by side and choose. They share the same database: committees, countries and ICJ data work in both.
+> **New interface.** This release and **v1.3.0 — old interface** are both available, so you can try them side by side and choose. They share the same database: committees, countries and ICJ data work in both.
 
 ## 🎉 What's New
 

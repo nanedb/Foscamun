@@ -1,6 +1,6 @@
 # 📖 Foscamun - User Guide
 
-This guide describes **version 2.0.0** (new interface). Version 1.3.0, with the previous interface, works on the same data.
+This guide describes **version 2.0.0** (new interface). Version 1.3.0 (old interface) works on the same data.
 
 ## 🚀 First launch
 

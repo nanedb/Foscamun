@@ -9,7 +9,7 @@ A desktop application for running Model United Nations (MUN) conferences: roll c
 
 ![Foscamun Logo](Resources/FoscamunLogo.svg)
 
-> **Version 2.0.0 brings a completely new interface.** While the choice is being made, two releases are available side by side: **v2.0.0** (new interface) and **v1.3.0** (previous interface). They share the same database, so you can try both on the same computer. See [Installation](#-installation).
+> **Version 2.0.0 brings a completely new interface.** While the choice is being made, two releases are available side by side: **v2.0.0 — new interface** and **v1.3.0 — old interface**. They share the same database, so you can try both on the same computer. See [Installation](#-installation).
 
 ---
 
@@ -71,8 +71,8 @@ A desktop application for running Model United Nations (MUN) conferences: roll c
 
 1. Go to [Releases](https://github.com/nanedb/Foscamun/releases)
 2. Choose the version:
-   - **v2.0.0** — new interface (pre-release, for comparison)
-   - **v1.3.0** — previous interface
+   - **v2.0.0 — new interface** (latest)
+   - **v1.3.0 — old interface**
 3. Download the ZIP for your system:
    - `Foscamun-win-x64-v2.0.0.zip` — Windows 10/11 64-bit (most common)
    - `Foscamun-win-x86-v2.0.0.zip` — Windows 10/11 32-bit
@@ -196,13 +196,13 @@ Pushing a tag `v*` starts the GitHub Actions workflow that builds the three ZIPs
 
 ## 🔄 Version history
 
-### v2.0.0 (2026-11-08) — pre-release
+### v2.0.0 (2026-11-08) — new interface
 - New interface: guided sidebar, redesigned Home, Setup, Roll call, Session, Voting, Result and Final result
 - Timer built into the session page; voting with the A / S / D keys; Final result with the history of every round
 - Automatic update check and installation from GitHub
 - Database compatibility check with a warning, instead of failing
 
-### v1.3.0 (2026-10-28)
+### v1.3.0 (2026-10-28) — old interface
 - ICJ: any number of plaintiff and defense advocates, each with their own country
 - Taller main window, reduced automatically on small screens
 

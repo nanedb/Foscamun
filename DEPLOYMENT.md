@@ -32,7 +32,7 @@ Tags with a hyphen (e.g. `v2.1.0-beta.1`) become **pre-releases**.
 7. Optional: mark it as pre-release or change which release is "Latest":
    ```bash
    gh release edit v2.0.1 --prerelease
-   gh release edit v1.3.0 --latest
+   gh release edit v2.0.1 --title "Foscamun v2.0.1 — new interface"
    ```
 
 Running versions see the new release at their next start and offer to install it.
