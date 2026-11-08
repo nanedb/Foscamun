@@ -70,7 +70,10 @@ For the ICJ the lists contain advocates (with their country's flag) and jurors.
 - The first in the speakers list is **now speaking**, shown with flag and name
 - **Timer**:
   - **Start / Pause** — also with the **space bar**
-  - **Speaking time** — `−` / `+` change it by 15 seconds; the presets 1:00, 1:30, 2:00, 3:00 set it at once
+  - **Reset** (the round arrow next to Start/Pause) — puts the clock back to the full speaking time, stopped, for the same speaker
+  - **Speaking time** — click the time and type it, then **Enter** (**Esc** gives up): `1:30` is a minute and a half, a number up to 10 is minutes (`2` = 2:00), a larger one is seconds (`45` = 0:45); from 0:10 to 10:00
+  - `−` / `+` change it by 10 seconds; the presets 1:00, 1:30, 2:00, 3:00 set it at once
+  - a new speaking time applies at once if the speaker has not started yet, otherwise from the next speaker (or after Reset)
   - **Next** — the next speaker takes the floor
   - the last seconds tick, a bell rings at the end, and the panel turns orange in overtime
 - **Warn** gives a warning to the current speaker; the **Warnings** list keeps the count. Select a delegate there and click **Remove Warning** to take one away
@@ -174,6 +177,6 @@ If the database was saved by a newer version of Foscamun, or cannot be read, Fos
 
 ---
 
-**Version**: 2.0.1
+**Version**: 2.0.2
 **Last updated**: November 2026
 **Repository**: https://github.com/nanedb/Foscamun

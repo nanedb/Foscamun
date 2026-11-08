@@ -172,6 +172,8 @@
     <sys:String x:Key="AddSpeakerTip">Cliquez sur un pays pour l'ajouter à la liste des orateurs</sys:String>
     <sys:String x:Key="RemoveSpeakerTip">Cliquez sur un pays pour le retirer de la liste des orateurs</sys:String>
     <sys:String x:Key="StartPauseTip">Barre d'espace : démarrer / pause</sys:String>
+    <sys:String x:Key="ResetTimerTip">Remettre le chrono au temps de parole complet</sys:String>
+    <sys:String x:Key="SpeakingTimeEditTip">Cliquez et tapez le temps de parole (par ex. 1:30, 2 pour deux minutes, 45 pour 45 secondes), puis Entrée</sys:String>
 
     <!-- Page Vote (nouvelle interface) -->
     <sys:String x:Key="VotingProgressFmt">TOUR {0} · {1} SUR {2} ONT VOTÉ</sys:String>

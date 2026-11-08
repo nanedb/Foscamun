@@ -172,6 +172,8 @@
     <sys:String x:Key="AddSpeakerTip">Click a country to add it to the speakers list</sys:String>
     <sys:String x:Key="RemoveSpeakerTip">Click a country to remove it from the speakers list</sys:String>
     <sys:String x:Key="StartPauseTip">Spacebar: start / pause</sys:String>
+    <sys:String x:Key="ResetTimerTip">Reset the clock to the full speaking time</sys:String>
+    <sys:String x:Key="SpeakingTimeEditTip">Click and type the speaking time (e.g. 1:30, 2 for two minutes, 45 for 45 seconds), then Enter</sys:String>
 
     <!-- Voting page (redesign) -->
     <sys:String x:Key="VotingProgressFmt">ROUND {0} · {1} OF {2} VOTED</sys:String>

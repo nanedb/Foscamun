@@ -77,6 +77,7 @@ namespace Foscamun.ViewModels
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(SpeakingTimeText))]
+        [NotifyPropertyChangedFor(nameof(SpeakingTimeInput))]
         private TimeSpan speakingTime = TimeSpan.FromSeconds(90);
 
         [ObservableProperty]
@@ -93,6 +94,23 @@ namespace Foscamun.ViewModels
         private bool isRunning;
 
         public string SpeakingTimeText => Format(SpeakingTime);
+
+        /// <summary>
+        /// The speaking time as typed in its box: "1:30", "2" (minutes, up to 10) or "45" (seconds).
+        /// Anything unreadable leaves the time as it was; the box then shows it again.
+        /// </summary>
+        public string SpeakingTimeInput
+        {
+            get => SpeakingTimeText;
+            set
+            {
+                if (TryParseSpeakingTime(value, out var time))
+                {
+                    ApplySpeakingTime(time);
+                }
+                OnPropertyChanged(); // the box shows the time as it is now, e.g. "2" becomes "02:00"
+            }
+        }
         public string TimerText => (IsOvertime ? "+" : "") + Format(Remaining);
 
         /// <summary>Last seconds before time runs out: the countdown turns red.</summary>
@@ -254,6 +272,36 @@ namespace Foscamun.ViewModels
             }
         }
 
+        /// <summary>
+        /// Reads a typed speaking time: m:ss (also m.ss or m,ss), or a plain number taken as
+        /// minutes up to 10 and as seconds above. Kept within 0:10 and 10:00.
+        /// </summary>
+        public static bool TryParseSpeakingTime(string? text, out TimeSpan time)
+        {
+            time = TimeSpan.Zero;
+            if (string.IsNullOrWhiteSpace(text)) return false;
+
+            var parts = text.Trim().Split(':', '.', ',');
+            int seconds;
+            if (parts.Length == 1 && int.TryParse(parts[0], out int number) && number > 0)
+            {
+                seconds = number <= MaxSpeakingSeconds / 60 ? number * 60 : number;
+            }
+            else if (parts.Length == 2 &&
+                     int.TryParse(parts[0], out int min) && min >= 0 &&
+                     int.TryParse(parts[1], out int sec) && sec is >= 0 and < 60 && parts[1].Length == 2)
+            {
+                seconds = min * 60 + sec;
+            }
+            else
+            {
+                return false;
+            }
+
+            time = TimeSpan.FromSeconds(Math.Clamp(seconds, MinSpeakingSeconds, MaxSpeakingSeconds));
+            return true;
+        }
+
         private void UpdatePresetSelection()
         {
             foreach (var p in Presets)
@@ -275,6 +323,7 @@ namespace Foscamun.ViewModels
 
             IsRunning = true;
             _speechStarted = true;
+            ResetTimerCommand.NotifyCanExecuteChanged();
             _timer.Start();
 
             // Resuming inside the last seconds: the tick goes on
@@ -291,12 +340,19 @@ namespace Foscamun.ViewModels
             StopTick();
         }
 
+        private bool CanResetTimer() => HasSpeaker() && _speechStarted;
+
+        /// <summary>The clock goes back to the full speaking time, stopped, for the same speaker.</summary>
+        [RelayCommand(CanExecute = nameof(CanResetTimer))]
+        private void ResetTimer() => ResetClock();
+
         private void ResetClock()
         {
             PauseClock();
             _speechStarted = false;
             IsOvertime = false;
             Remaining = SpeakingTime;
+            ResetTimerCommand.NotifyCanExecuteChanged();
         }
 
         private void Timer_Tick(object? sender, EventArgs e)

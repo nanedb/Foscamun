@@ -49,6 +49,52 @@ namespace Foscamun.Views
             }
         }
 
+        // ---------------- Speaking time box ----------------
+
+        // Enter applies the typed time, Esc gives up; either way the focus leaves the box,
+        // so that the spacebar starts the clock again
+        private void SpeakingTimeBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (sender is not TextBox box) return;
+            var binding = box.GetBindingExpression(TextBox.TextProperty);
+
+            if (e.Key == Key.Enter)
+                binding?.UpdateSource();
+            else if (e.Key == Key.Escape)
+                binding?.UpdateTarget();
+            else
+                return;
+
+            e.Handled = true;
+            LeaveSpeakingTimeBox(box);
+        }
+
+        // Entering the box selects the whole time, ready to be typed over
+        private void SpeakingTimeBox_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (sender is TextBox box) box.SelectAll();
+        }
+
+        // The first click focuses and selects everything, instead of placing the caret
+        private void SpeakingTimeBox_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is TextBox { IsKeyboardFocusWithin: false } box)
+            {
+                e.Handled = true;
+                box.Focus();
+            }
+        }
+
+        private void LeaveSpeakingTimeBox(TextBox box)
+        {
+            // The panel takes the focus: the box loses it without a button getting it
+            // (the spacebar would press that button)
+            Focusable = true;
+            FocusVisualStyle = null;
+            Focus();
+            box.ScrollToHome();
+        }
+
         // A click on a row moves the speaker between the two lists
         private void AvailableList_Click(object sender, MouseButtonEventArgs e)
         {

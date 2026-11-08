@@ -1,4 +1,4 @@
-<UserControl x:Class="Foscamun.Views.SessionSpeakersPanel"
+﻿<UserControl x:Class="Foscamun.Views.SessionSpeakersPanel"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -233,12 +233,42 @@
                             </TextBlock>
                             <Button Style="{StaticResource ChipButton}" Content="–" FontWeight="Bold" Padding="0"
                                     Command="{Binding DecreaseTimeCommand}"/>
+                            <!-- Editable: click, type (1:30, 2, 45...), Enter; Esc gives up -->
                             <Border MinWidth="62" Height="26" Margin="6,0" CornerRadius="7"
-                                    Background="{StaticResource ChipBrush}">
-                                <TextBlock Text="{Binding SpeakingTimeText}" FontSize="15"
-                                           HorizontalAlignment="Center" VerticalAlignment="Center"
-                                           Typography.NumeralAlignment="Tabular"
-                                           Foreground="{StaticResource CardTextBrush}"/>
+                                    BorderThickness="1" ToolTip="{DynamicResource SpeakingTimeEditTip}">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="Background" Value="{StaticResource ChipBrush}"/>
+                                        <Setter Property="BorderBrush" Value="Transparent"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="BorderBrush" Value="{StaticResource CardMutedBrush}"/>
+                                            </Trigger>
+                                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                                <Setter Property="Background" Value="White"/>
+                                                <Setter Property="BorderBrush" Value="{StaticResource AccentOnLightBrush}"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <TextBox x:Name="SpeakingTimeBox" Text="{Binding SpeakingTimeInput}"
+                                         FontSize="15" Width="54" Height="22" MinHeight="0" Padding="0" Margin="0" MaxLength="5"
+                                         HorizontalContentAlignment="Center" VerticalAlignment="Center"
+                                         Typography.NumeralAlignment="Tabular"
+                                         Foreground="{StaticResource CardTextBrush}"
+                                         CaretBrush="{StaticResource CardTextBrush}"
+                                         PreviewKeyDown="SpeakingTimeBox_PreviewKeyDown"
+                                         GotKeyboardFocus="SpeakingTimeBox_GotKeyboardFocus"
+                                         PreviewMouseLeftButtonDown="SpeakingTimeBox_PreviewMouseLeftButtonDown">
+                                    <TextBox.Template>
+                                        <!-- Bare text: the app-wide input style would draw its own box -->
+                                        <ControlTemplate TargetType="TextBox">
+                                            <ScrollViewer x:Name="PART_ContentHost" Focusable="False" VerticalAlignment="Center" Padding="0" Margin="0"
+                                                          HorizontalScrollBarVisibility="Hidden"
+                                                          VerticalScrollBarVisibility="Hidden"/>
+                                        </ControlTemplate>
+                                    </TextBox.Template>
+                                </TextBox>
                             </Border>
                             <Button Style="{StaticResource ChipButton}" Content="+" FontWeight="Bold" Padding="0"
                                     Command="{Binding IncreaseTimeCommand}"/>
@@ -276,8 +306,24 @@
                 </Grid>
             </Border>
 
-            <!-- Start/Pause, Warn, Next -->
+            <!-- Start/Pause (with Reset beside it), Warn, Next -->
             <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                <DockPanel>
+                <Button DockPanel.Dock="Right" Width="38" Margin="8,0,0,0"
+                        Command="{Binding ResetTimerCommand}" ToolTip="{DynamicResource ResetTimerTip}">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource GlassButton}">
+                            <Style.Triggers>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.45"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <!-- The button template keeps 12 px of margin each side: the icon reaches into it, or it would be cut -->
+                    <svgc:SvgViewbox Width="16" Height="16" Margin="-6,0" Stretch="Uniform"
+                                     Source="pack://application:,,,/Resources/Icons/reset.svg"/>
+                </Button>
                 <Button Command="{Binding StartPauseCommand}" ToolTip="{DynamicResource StartPauseTip}"
                         ContentTemplate="{StaticResource IconLabel}">
                     <Button.Style>
@@ -293,6 +339,7 @@
                         </Style>
                     </Button.Style>
                 </Button>
+                </DockPanel>
 
                 <!-- Warn: orange with navy icon and text -->
                 <Button Command="{Binding WarnCurrentSpeakerCommand}" Margin="0,8">

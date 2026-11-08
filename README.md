@@ -32,7 +32,7 @@ A desktop application for running Model United Nations (MUN) conferences: roll c
 ### 🎤 Session
 - Available countries and speakers list side by side: a click moves a country from one to the other
 - The head of the speakers list is the current speaker, shown with flag and name
-- **Timer built into the page**: speaking time ±15 s, presets 1:00 / 1:30 / 2:00 / 3:00, Start/Pause (also with the space bar), Next; tick and bell sounds; the panel turns orange in overtime
+- **Timer built into the page**: speaking time typed in (e.g. 1:30) or set with ±10 s and the presets 1:00 / 1:30 / 2:00 / 3:00; Start/Pause (also with the space bar), Reset, Next; tick and bell sounds; the panel turns orange in overtime
 - Warnings per delegate, kept in the database
 
 ### 🗳️ Voting
@@ -69,14 +69,14 @@ A desktop application for running Model United Nations (MUN) conferences: roll c
 ## 📥 Installation
 
 Go to [Releases](https://github.com/nanedb/Foscamun/releases) and choose the version:
-- **new interface** — v2.0.1 and later (Latest)
+- **new interface** — v2.0.2 (Latest)
 - **v1.3.0 — old interface**
 
 Each release comes in two forms, for Windows 10/11 64-bit (`win-x64`, most PCs), 32-bit (`win-x86`) and ARM (`win-arm64`).
 
 ### Installer (recommended)
 
-1. Download `Foscamun-Setup-win-x64-v2.0.1.exe` (or the x86 / ARM64 one)
+1. Download `Foscamun-Setup-win-x64-v2.0.2.exe` (or the x86 / ARM64 one)
 2. Run it and follow the steps: Foscamun is installed for your user in `%LocalAppData%\Programs\Foscamun`, with a Start menu shortcut (and a desktop one, if you tick it)
 3. Uninstall it from **Settings → Apps** like any other program
 
@@ -87,7 +87,7 @@ Each release comes in two forms, for Windows 10/11 64-bit (`win-x64`, most PCs),
 
 ### Portable ZIP
 
-1. Download `Foscamun-win-x64-v2.0.1.zip` (or the x86 / ARM64 one)
+1. Download `Foscamun-win-x64-v2.0.2.zip` (or the x86 / ARM64 one)
 2. Extract it to a user folder (Desktop, Documents, a USB drive…), not `C:\Program Files\`
 3. Run `Foscamun.exe`
 
@@ -203,6 +203,9 @@ Pushing a tag `v*` starts the GitHub Actions workflow that builds the three inst
 ---
 
 ## 🔄 Version history
+
+### v2.0.2 (2026-11-08) — new interface
+- Session timer: Reset button, and the speaking time can be typed in (e.g. 1:30, 2, 45)
 
 ### v2.0.1 (2026-11-08) — new interface
 - Windows installer (per user, no administrator rights), next to the portable ZIP
