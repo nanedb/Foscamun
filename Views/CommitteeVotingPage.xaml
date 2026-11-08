@@ -3,88 +3,15 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+      xmlns:local="clr-namespace:Foscamun.Views"
       mc:Ignorable="d"
-      d:DesignWidth="900"
-      d:DesignHeight="600"
+      d:DesignWidth="800"
+      d:DesignHeight="680"
       Background="{DynamicResource PrimaryBrush}"
       Foreground="{DynamicResource TextPrimaryBrush}"
+      FontFamily="{DynamicResource FontPrimary}"
       Title="Cast Vote">
 
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-
-        <!-- Header -->
-        <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,20,0,30">
-            <TextBlock Text="Voting" 
-                       Style="{StaticResource H1}"
-                       HorizontalAlignment="Center"
-                       Margin="0,0,0,10"/>
-            <TextBlock x:Name="RoundTextBlock"
-                       Style="{StaticResource H2}"
-                       HorizontalAlignment="Center"/>
-        </StackPanel>
-
-        <!-- Current Voter -->
-        <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <svgc:SvgViewbox Grid.Column="0"
-                             x:Name="CurrentVoterFlag"
-                             Width="120" Height="82"
-                             Stretch="Uniform"
-                             VerticalAlignment="Center"
-                             Margin="0,0,30,0"/>
-
-            <TextBlock Grid.Column="1"
-                       x:Name="CurrentVoterText"
-                       Style="{StaticResource H1}"
-                       VerticalAlignment="Center"
-                       TextWrapping="Wrap"
-                       MaxWidth="400"/>
-        </Grid>
-
-        <!-- Voting Buttons -->
-        <Grid Grid.Row="2" Margin="30,30,30,0" Cursor="">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" x:Name="FavorBtn"
-                    Click="FavorBtn_Click"
-                    Style="{StaticResource MenuButton}"
-                    Padding="30,15" HorizontalAlignment="Left">
-                <TextBlock Text="{DynamicResource ApproveBtn}"
-                           FontSize="18"
-                           HorizontalAlignment="Left"/>
-            </Button>
-
-            <Button Grid.Column="1" x:Name="AbstainBtn"
-                    Click="AbstainBtn_Click"
-                    Style="{StaticResource MenuButton}"
-                    Margin="10,0,10,0"
-                    Padding="0,15" HorizontalAlignment="Center">
-                <TextBlock Text="{DynamicResource AbstainBtn}"
-                           FontSize="18"
-                           HorizontalAlignment="Center"/>
-            </Button>
-
-            <Button Grid.Column="2" x:Name="AgainstBtn"
-                    Click="AgainstBtn_Click"
-                    Style="{StaticResource MenuButton}"
-                    Padding="30,15" HorizontalAlignment="Right">
-                <TextBlock Text="{DynamicResource RejectBtn}"
-                           FontSize="18"
-                           HorizontalAlignment="Right"/>
-            </Button>
-        </Grid>
-    </Grid>
+    <!-- One voter at a time (shared with the ICJ voting page) -->
+    <local:VotingPanel x:Name="Panel"/>
 </Page>

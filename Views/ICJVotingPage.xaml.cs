@@ -33,32 +33,25 @@ namespace Foscamun.Views
             _sessionPage = sessionPage;
             Previous = new FlowLink("SessionLbl2", new RelayCommand(BackToSession));
 
-            UpdateRoundText();
-
-            // Nelle round 2 e 3, nascondi il pulsante Abstain
-            if (Round >= 2)
+            // No abstaining from the second round on
+            Panel.CanAbstain = Round == 1;
+            if (_sessionPage?.DataContext is ViewModels.ICJSessionViewModel session)
             {
-                AbstainBtn.Visibility = Visibility.Collapsed;
+                Panel.SetContext($"{FindResource("ICJTitle")} · {FindResource("SessionLbl2")} {session.Session}");
             }
+            Panel.Approved += (_, _) => CastVote(_inFavorIndices);
+            Panel.Abstained += (_, _) => CastVote(_abstainedIndices);
+            Panel.Rejected += (_, _) => CastVote(_againstIndices);
 
             ShowVoter(_currentVoterIndex);
         }
 
-        private void UpdateRoundText()
-        {
-            RoundTextBlock.Text = Properties.Settings.Default.Lang switch
-            {
-                "fr" => $"Tour: {Round}",
-                "es" => $"Ronda: {Round}",
-                _ => $"Round: {Round}"
-            };
-        }
-
+        // Jurors: no flag, and the name without "Juror" in front
         private void ShowVoter(int index)
         {
             var voter = _voters[index];
-            // Mostra solo il nome senza "Juror" davanti
-            CurrentVoterText.Text = voter.Member.Name ?? "";
+            Panel.ShowVoter(Round, index, _numVoters, voter.FlagPath, voter.Member.Name ?? "",
+                            _voters.Skip(index + 1).Select(v => v.Member.Name ?? ""));
         }
 
         /// <summary>
@@ -77,23 +70,13 @@ namespace Foscamun.Views
                 NavigationService.GoBack();
         }
 
-        private void FavorBtn_Click(object sender, RoutedEventArgs e)
+        /// <summary>Records the current voter's vote and moves on.</summary>
+        private void CastVote(List<int> votes)
         {
-            _inFavorIndices.Add(_currentVoterIndex);
-            _currentVoterIndex++;
-            ProcessVote();
-        }
+            // Votes arriving after the last voter (a quick key press) are ignored
+            if (_currentVoterIndex >= _numVoters) return;
 
-        private void AbstainBtn_Click(object sender, RoutedEventArgs e)
-        {
-            _abstainedIndices.Add(_currentVoterIndex);
-            _currentVoterIndex++;
-            ProcessVote();
-        }
-
-        private void AgainstBtn_Click(object sender, RoutedEventArgs e)
-        {
-            _againstIndices.Add(_currentVoterIndex);
+            votes.Add(_currentVoterIndex);
             _currentVoterIndex++;
             ProcessVote();
         }

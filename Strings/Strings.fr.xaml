@@ -173,4 +173,9 @@
     <sys:String x:Key="RemoveSpeakerTip">Cliquez sur un pays pour le retirer de la liste des orateurs</sys:String>
     <sys:String x:Key="StartPauseTip">Barre d'espace : démarrer / pause</sys:String>
 
+    <!-- Page Vote (nouvelle interface) -->
+    <sys:String x:Key="VotingProgressFmt">TOUR {0} · {1} SUR {2} ONT VOTÉ</sys:String>
+    <sys:String x:Key="CastVoteTitle">Vote</sys:String>
+    <sys:String x:Key="NextVotersLbl">Suivants :</sys:String>
+
 </ResourceDictionary>

@@ -173,4 +173,9 @@
     <sys:String x:Key="RemoveSpeakerTip">Haga clic en un país para quitarlo de la lista de oradores</sys:String>
     <sys:String x:Key="StartPauseTip">Barra espaciadora: iniciar / pausa</sys:String>
 
+    <!-- Página Votación (nueva interfaz) -->
+    <sys:String x:Key="VotingProgressFmt">RONDA {0} · {1} DE {2} HAN VOTADO</sys:String>
+    <sys:String x:Key="CastVoteTitle">Emitir el voto</sys:String>
+    <sys:String x:Key="NextVotersLbl">Siguientes:</sys:String>
+
 </ResourceDictionary>
