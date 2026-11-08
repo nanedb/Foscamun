@@ -3,7 +3,7 @@ using Foscamun.Properties;
 /// <summary>
 /// Represents a country with multilingual names and flag resources.
 /// </summary>
-public class Country
+public class Country : Foscamun.Models.ISpeaker
 {
     public string IsoCode { get; set; } = "";
     public string EnglishName { get; set; } = "";

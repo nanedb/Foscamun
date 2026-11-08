@@ -1,111 +1,43 @@
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Foscamun.Data;
 using Foscamun.Models;
-using System.Collections;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.IO;
 using System.Windows;
-using System.Windows.Data;
+using System.Windows.Data;
 using Foscamun.Views;
 
 namespace Foscamun.ViewModels
 {
     /// <summary>
-    /// ViewModel for managing an ICJ session.
-    /// Handles speakers list, warnings for advocates/jurors, and voting navigation.
+    /// ViewModel for an ICJ session: the speakers are the present advocates and jurors,
+    /// and only jurors vote. Lists, clock and warnings live in <see cref="SessionViewModelBase{TSpeaker}"/>.
     /// </summary>
-    public partial class ICJSessionViewModel : ObservableObject
+    public partial class ICJSessionViewModel : SessionViewModelBase<ICJRollCallMember>
     {
         private readonly SqliteDataAccess _dataAccess;
         private readonly List<ICJRollCallMember> _presentMembers; // Immutable list of present members
         private readonly Action<List<ICJRollCallMember>> _navigateToVoting;
 
-        [ObservableProperty]
-        private string judge = string.Empty;
-
-        [ObservableProperty]
-        private string viceJudge1 = string.Empty;
-
-        [ObservableProperty]
-        private string viceJudge2 = string.Empty;
-
-        [ObservableProperty]
-        private string topic = string.Empty;
-
-        [ObservableProperty]
-        private int session;
-
-        [ObservableProperty]
-        private ICJRollCallMember? selectedSpeaker;
-
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(RemoveCurrentSpeakerCommand))]
-        [NotifyCanExecuteChangedFor(nameof(WarnCurrentSpeakerCommand))]
-        private ICJRollCallMember? currentSpeaker;
-
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(RemoveWarningCommand))]
-        private ICJRollCallMember? selectedWarnedMember;
-
-        public ObservableCollection<ICJRollCallMember> AvailableSpeakers { get; } = new();
-
-        public ObservableCollection<ICJRollCallMember> SpeakersList { get; } = new();
-
-        public ObservableCollection<ICJRollCallMember> WarnedList { get; } = new();
-
-        public string CommitteeLogoPath
-        {
-            get
-            {
-                string logoPath = Path.Combine(SqliteDataAccess.CommitteeLogoFolder, "ICJ.svg");
-                if (File.Exists(logoPath))
-                {
-                    return logoPath;
-                }
-                return Path.Combine(SqliteDataAccess.CommitteeLogoFolder, "Generic.svg");
-            }
-        }
-
-        public IRelayCommand<ICJRollCallMember> AddSpeakerCommand { get; }
-        public IRelayCommand RemoveCurrentSpeakerCommand { get; }
-        public IRelayCommand WarnCurrentSpeakerCommand { get; }
-        public IRelayCommand<ICJRollCallMember> RemoveWarningCommand { get; }
-        public IRelayCommand OpenTimerCommand { get; }
-        public IRelayCommand OpenVotingCommand { get; }
+        public string Judge { get; }
+        public string ViceJudge1 { get; }
+        public string ViceJudge2 { get; }
+        public string Topic { get; }
 
         public ICJSessionViewModel(string judge, string viceJudge1, string viceJudge2, string topic, int session, List<ICJRollCallMember> presentMembers, Action<List<ICJRollCallMember>> navigateToVoting, SqliteDataAccess dataAccess)
+            : base(session, presentMembers)
         {
             _dataAccess = dataAccess;
             _presentMembers = presentMembers;
             _navigateToVoting = navigateToVoting;
 
-            this.judge = judge;
-            this.viceJudge1 = viceJudge1;
-            this.viceJudge2 = viceJudge2;
-            this.topic = topic;
-            this.session = session;
+            Judge = judge;
+            ViceJudge1 = viceJudge1;
+            ViceJudge2 = viceJudge2;
+            Topic = topic;
 
-            // Aggiungi i membri presenti alla lista degli speakers disponibili
-            foreach (var member in presentMembers.OrderBy(m => m.DisplayName))
-            {
-                AvailableSpeakers.Add(member);
-            }
-
-            // Custom sorting: first by role (Defense, Plaintiff, Juror), then by last name
+            // Sorted by role (Defense, Plaintiff, Juror), then by last name
             var viewAvailable = (ListCollectionView)CollectionViewSource.GetDefaultView(AvailableSpeakers);
-            viewAvailable.SortDescriptions.Clear();
             viewAvailable.CustomSort = new ICJMemberComparer();
 
-            AddSpeakerCommand = new RelayCommand<ICJRollCallMember>(AddSpeaker);
-            RemoveCurrentSpeakerCommand = new RelayCommand(RemoveCurrentSpeaker, CanRemoveCurrentSpeaker);
-            WarnCurrentSpeakerCommand = new RelayCommand(WarnCurrentSpeaker, CanWarnCurrentSpeaker);
-            RemoveWarningCommand = new RelayCommand<ICJRollCallMember>(RemoveWarning, CanRemoveWarning);
-            OpenTimerCommand = new RelayCommand(OpenTimer);
-            OpenVotingCommand = new RelayCommand(OpenVoting);
-
-            // Carica warnings esistenti
             _ = LoadWarningsAsync();
         }
 
@@ -117,13 +49,12 @@ namespace Foscamun.ViewModels
 
                 foreach (var warnedMember in warnedMembers)
                 {
-                    // Cerca il membro nella lista presente per usare la stessa istanza
-                    var existingMember = AvailableSpeakers.FirstOrDefault(m => 
+                    // Use the same instance as the available list, so counts stay in sync
+                    var existingMember = AvailableSpeakers.FirstOrDefault(m =>
                         m.Member.Name == warnedMember.Name && m.Member.Kind == warnedMember.Kind);
 
                     if (existingMember != null)
                     {
-                        // Aggiorna i warnings dell'istanza esistente
                         existingMember.Warnings = warnedMember.Warnings;
                         WarnedList.Add(existingMember);
                     }
@@ -135,115 +66,18 @@ namespace Foscamun.ViewModels
             }
         }
 
-        private void AddSpeaker(ICJRollCallMember? speaker)
+        protected override async Task SaveWarningsAsync(ICJRollCallMember member)
         {
-            if (speaker != null && !SpeakersList.Contains(speaker))
+            if (!string.IsNullOrEmpty(member.Member.Name) && !string.IsNullOrEmpty(member.Member.Kind))
             {
-                // Aggiungi alla lista degli speakers
-                SpeakersList.Add(speaker);
-
-                // Rimuovi dalla lista degli available speakers
-                AvailableSpeakers.Remove(speaker);
+                await _dataAccess.UpdateICJMemberWarningsAsync(member.Member.Name, member.Member.Kind, member.Warnings);
             }
         }
 
-        private bool CanRemoveCurrentSpeaker() => CurrentSpeaker != null;
-
-        private void RemoveCurrentSpeaker()
-        {
-            if (CurrentSpeaker != null)
-            {
-                var speakerToRemove = CurrentSpeaker;
-
-                // Rimuovi dalla lista degli speakers
-                SpeakersList.Remove(speakerToRemove);
-
-                // Riportalo nella lista degli available speakers
-                if (!AvailableSpeakers.Contains(speakerToRemove))
-                {
-                    AvailableSpeakers.Add(speakerToRemove);
-                }
-
-                CurrentSpeaker = null;
-            }
-        }
-
-        private bool CanWarnCurrentSpeaker() => CurrentSpeaker != null;
-
-        private async void WarnCurrentSpeaker()
-        {
-            if (CurrentSpeaker != null)
-            {
-                CurrentSpeaker.Warnings++;
-
-                // Aggiorna o aggiungi alla lista warned
-                var existing = WarnedList.FirstOrDefault(m => 
-                    m.Member.Name == CurrentSpeaker.Member.Name && 
-                    m.Member.Kind == CurrentSpeaker.Member.Kind);
-
-                if (existing != null)
-                {
-                    WarnedList.Remove(existing);
-                }
-                WarnedList.Add(CurrentSpeaker);
-
-                // Salva nel database
-                if (!string.IsNullOrEmpty(CurrentSpeaker.Member.Name) && 
-                    !string.IsNullOrEmpty(CurrentSpeaker.Member.Kind))
-                {
-                    await _dataAccess.UpdateICJMemberWarningsAsync(
-                        CurrentSpeaker.Member.Name, 
-                        CurrentSpeaker.Member.Kind, 
-                        CurrentSpeaker.Warnings);
-                }
-
-                // Refresh della visualizzazione
-                CollectionViewSource.GetDefaultView(WarnedList).Refresh();
-            }
-        }
-
-        private bool CanRemoveWarning(ICJRollCallMember? member) => member != null;
-
-        private async void RemoveWarning(ICJRollCallMember? member)
-        {
-            if (member != null)
-            {
-                if (member.Warnings > 0)
-                {
-                    member.Warnings--;
-
-                    // Salva nel database
-                    if (!string.IsNullOrEmpty(member.Member.Name) && 
-                        !string.IsNullOrEmpty(member.Member.Kind))
-                    {
-                        await _dataAccess.UpdateICJMemberWarningsAsync(
-                            member.Member.Name, 
-                            member.Member.Kind, 
-                            member.Warnings);
-                    }
-                }
-
-                if (member.Warnings == 0)
-                {
-                    WarnedList.Remove(member);
-                }
-
-                // Refresh della visualizzazione
-                CollectionViewSource.GetDefaultView(WarnedList).Refresh();
-            }
-        }
-
-        private void OpenTimer()
-        {
-            // Open non-modal timer window
-            var timer = new Views.TimerWindow();
-            timer.Owner = Application.Current.MainWindow;
-            timer.Show();
-        }
-
+        /// <summary>Opens voting: only the present jurors vote in the ICJ.</summary>
+        [RelayCommand]
         private void OpenVoting()
         {
-            // Solo i Jurors possono votare nell'ICJ
             var voters = _presentMembers
                 .Where(m => m.Member.Kind != null && m.Member.Kind.Equals("juror", StringComparison.OrdinalIgnoreCase))
                 .ToList();
@@ -268,9 +102,8 @@ namespace Foscamun.ViewModels
                 return;
             }
 
-            // Navigate to ICJ-specific voting page
+            PauseClock();
             _navigateToVoting(voters);
         }
     }
 }
-

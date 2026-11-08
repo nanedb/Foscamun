@@ -3,7 +3,6 @@ using Foscamun.Data;
 using Foscamun.Models;
 using Foscamun.ViewModels;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace Foscamun.Views
 {
@@ -14,7 +13,7 @@ namespace Foscamun.Views
         public FlowLink? Previous { get; }
         public FlowLink? Next => new("VotingBtn", _viewModel.OpenVotingCommand);
 
-        private ICJSessionViewModel _viewModel = null!;
+        private readonly ICJSessionViewModel _viewModel;
         private readonly SqliteDataAccess _dataAccess;
 
         public ICJSessionPage(string judge, string viceJudge1, string viceJudge2, string topic, int session, List<ICJRollCallMember> presentMembers, SqliteDataAccess dataAccess)
@@ -31,28 +30,12 @@ namespace Foscamun.Views
         private void NavigateToVoting(List<ICJRollCallMember> voters)
         {
             ICJVotingPage.Round = 1;
-            var votingPage = new ICJVotingPage(voters, this);
-            NavigationService?.Navigate(votingPage);
+            NavigationService?.Navigate(new ICJVotingPage(voters, this));
         }
-
-        private void AvailableSpeakers_Click(object sender, MouseButtonEventArgs e)
-        {
-            if (_viewModel.SelectedSpeaker != null)
-            {
-                _viewModel.AddSpeakerCommand.Execute(_viewModel.SelectedSpeaker);
-            }
-        }
-
-        private void BackButton_Click(object sender, System.Windows.RoutedEventArgs e) => BackToRollCall();
 
         private void BackToRollCall()
         {
-            if (NavigationService != null)
-            {
-                // Torna alla ICJRollCallPage
-                var rollCallPage = new ICJRollCallPage(_dataAccess);
-                NavigationService.Navigate(rollCallPage);
-            }
+            NavigationService?.Navigate(new ICJRollCallPage(_dataAccess));
         }
     }
 }

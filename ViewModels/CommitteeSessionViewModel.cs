@@ -1,84 +1,31 @@
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Foscamun.Data;
 using Foscamun.Models;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
-using System.Windows;
-using System.Windows.Data;
+using System.Windows.Data;
 using Foscamun.Views;
 
 namespace Foscamun.ViewModels
 {
     /// <summary>
-    /// ViewModel for managing a committee session.
-    /// Handles speakers list, warnings, and voting navigation.
+    /// ViewModel for a committee session: the speakers are the present countries,
+    /// and all of them vote. Lists, clock and warnings live in <see cref="SessionViewModelBase{TSpeaker}"/>.
     /// </summary>
-    public partial class CommitteeSessionViewModel : ObservableObject
+    public partial class CommitteeSessionViewModel : SessionViewModelBase<Country>
     {
         private readonly Committee _committee;
         private readonly Action<List<Country>> _navigateToVoting;
         private readonly SqliteDataAccess _dataAccess;
         private readonly List<Country> _presentCountries; // Immutable list of present countries
 
-        [ObservableProperty]
-        private string committeeName = string.Empty;
-
-        [ObservableProperty]
-        private string president = string.Empty;
-
-        [ObservableProperty]
-        private string vicePresident = string.Empty;
-
-        [ObservableProperty]
-        private string moderator = string.Empty;
-
-        [ObservableProperty]
-        private string topic = string.Empty;
-
-        [ObservableProperty]
-        private int session;
-
-        [ObservableProperty]
-        private Country? selectedSpeaker;
-
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(RemoveCurrentSpeakerCommand))]
-        [NotifyCanExecuteChangedFor(nameof(WarnCurrentSpeakerCommand))]
-        private Country? currentSpeaker;
-
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(RemoveWarningCommand))]
-        private Country? selectedWarnedCountry;
-
-        public ObservableCollection<Country> AvailableSpeakers { get; } = new();
-
-        public ObservableCollection<Country> SpeakersList { get; } = new();
-
-        public ObservableCollection<Country> WarnedList { get; } = new();
-
-        public string CommitteeLogoPath
-        {
-            get
-            {
-                string logoPath = Path.Combine(SqliteDataAccess.CommitteeLogoFolder, $"{_committee.Name}.svg");
-                if (File.Exists(logoPath))
-                {
-                    return logoPath;
-                }
-                return Path.Combine(SqliteDataAccess.CommitteeLogoFolder, "Generic.svg");
-            }
-        }
-
-        public IRelayCommand<Country> AddSpeakerCommand { get; }
-        public IRelayCommand RemoveCurrentSpeakerCommand { get; }
-        public IRelayCommand WarnCurrentSpeakerCommand { get; }
-        public IRelayCommand<Country> RemoveWarningCommand { get; }
-        public IRelayCommand OpenTimerCommand { get; }
-        public IRelayCommand OpenVotingCommand { get; }
+        public string CommitteeName { get; }
+        public string President { get; }
+        public string VicePresident { get; }
+        public string Moderator { get; }
+        public string Topic { get; }
 
         public CommitteeSessionViewModel(Committee committee, string topic, int session, List<Country> presentCountries, Action<List<Country>> navigateToVoting, SqliteDataAccess dataAccess)
+            : base(session, presentCountries)
         {
             _committee = committee;
             _navigateToVoting = navigateToVoting;
@@ -90,30 +37,11 @@ namespace Foscamun.ViewModels
             VicePresident = committee.VicePresident;
             Moderator = committee.Moderator;
             Topic = topic;
-            Session = session;
 
-            // Add present countries to available speakers list
-            foreach (var country in presentCountries.OrderBy(c => c.Name))
-            {
-                AvailableSpeakers.Add(country);
-            }
-
-            // Enable sorting by country name
-            var viewAvailable = CollectionViewSource.GetDefaultView(AvailableSpeakers);
-            viewAvailable.SortDescriptions.Add(
+            // Keep the available list alphabetical as countries come back to it
+            CollectionViewSource.GetDefaultView(AvailableSpeakers).SortDescriptions.Add(
                 new SortDescription(nameof(Country.Name), ListSortDirection.Ascending));
 
-            // Refresh country names when language changes
-            App.LanguageChanged += OnLanguageChanged;
-
-            AddSpeakerCommand = new RelayCommand<Country>(AddSpeaker);
-            RemoveCurrentSpeakerCommand = new RelayCommand(RemoveCurrentSpeaker, CanRemoveCurrentSpeaker);
-            WarnCurrentSpeakerCommand = new RelayCommand(WarnCurrentSpeaker, CanWarnCurrentSpeaker);
-            RemoveWarningCommand = new RelayCommand<Country>(RemoveWarning, CanRemoveWarning);
-            OpenTimerCommand = new RelayCommand(OpenTimer);
-            OpenVotingCommand = new RelayCommand(OpenVoting);
-
-            // Load existing warnings from database
             _ = LoadWarningsAsync();
         }
 
@@ -128,7 +56,7 @@ namespace Foscamun.ViewModels
 
                 foreach (var country in warnedCountries)
                 {
-                    // Find if country is in available speakers to use the same instance
+                    // Use the same instance as the available list, so counts stay in sync
                     var existingCountry = AvailableSpeakers.FirstOrDefault(c => c.IsoCode == country.IsoCode);
                     if (existingCountry != null)
                     {
@@ -148,101 +76,14 @@ namespace Foscamun.ViewModels
             }
         }
 
-        private void OnLanguageChanged()
-        {
-            CollectionViewSource.GetDefaultView(AvailableSpeakers).Refresh();
-        }
-
-        private void AddSpeaker(Country? speaker)
-        {
-            if (speaker != null && !SpeakersList.Contains(speaker))
-            {
-                // Aggiungi alla lista degli speakers
-                SpeakersList.Add(speaker);
-
-                // Rimuovi dalla lista degli available speakers
-                AvailableSpeakers.Remove(speaker);
-            }
-        }
-
-        private bool CanRemoveCurrentSpeaker() => CurrentSpeaker != null;
-
-        private void RemoveCurrentSpeaker()
-        {
-            if (CurrentSpeaker != null)
-            {
-                var speakerToRemove = CurrentSpeaker;
-
-                // Rimuovi dalla lista degli speakers
-                SpeakersList.Remove(speakerToRemove);
-
-                // Riportalo nella lista degli available speakers
-                if (!AvailableSpeakers.Contains(speakerToRemove))
-                {
-                    AvailableSpeakers.Add(speakerToRemove);
-                }
-
-                CurrentSpeaker = null;
-            }
-        }
-
-        private bool CanWarnCurrentSpeaker() => CurrentSpeaker != null;
-
-        private async void WarnCurrentSpeaker()
-        {
-            if (CurrentSpeaker != null)
-            {
-                CurrentSpeaker.Warnings++;
-
-                // Update or add to warned list
-                var existing = WarnedList.FirstOrDefault(c => c.IsoCode == CurrentSpeaker.IsoCode);
-                if (existing != null)
-                {
-                    WarnedList.Remove(existing);
-                }
-                WarnedList.Add(CurrentSpeaker);
-
-                // Save to database
-                await _dataAccess.UpdateCountryWarningsAsync(_committee.CommID, CurrentSpeaker.IsoCode, CurrentSpeaker.Warnings);
-
-                CollectionViewSource.GetDefaultView(WarnedList).Refresh();
-            }
-        }
-
-        private bool CanRemoveWarning(Country? country) => country != null;
-
-        private async void RemoveWarning(Country? country)
-        {
-            if (country != null)
-            {
-                if (country.Warnings > 0)
-                {
-                    country.Warnings--;
-
-                    // Update in database
-                    await _dataAccess.UpdateCountryWarningsAsync(_committee.CommID, country.IsoCode, country.Warnings);
-                }
-
-                if (country.Warnings == 0)
-                {
-                    WarnedList.Remove(country);
-                }
-
-                CollectionViewSource.GetDefaultView(WarnedList).Refresh();
-            }
-        }
-
-        private void OpenTimer()
-        {
-            var timer = new Views.TimerWindow();
-            timer.Owner = Application.Current.MainWindow;
-            timer.Show();
-        }
+        protected override Task SaveWarningsAsync(Country country) =>
+            _dataAccess.UpdateCountryWarningsAsync(_committee.CommID, country.IsoCode, country.Warnings);
 
         /// <summary>
         /// Opens voting page with the original list of present countries.
         /// All present countries can vote, regardless of speakers list.
         /// </summary>
+        [RelayCommand]
         private void OpenVoting()
         {
             var voters = _presentCountries;
@@ -267,6 +108,7 @@ namespace Foscamun.ViewModels
                 return;
             }
 
+            PauseClock();
             _navigateToVoting(voters);
         }
     }

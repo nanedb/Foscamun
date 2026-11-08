@@ -2,7 +2,6 @@ using CommunityToolkit.Mvvm.Input;
 using Foscamun.Data;
 using Foscamun.Models;
 using Foscamun.ViewModels;
-using System.Windows;
 using System.Windows.Controls;
 
 namespace Foscamun.Views
@@ -14,7 +13,7 @@ namespace Foscamun.Views
         public FlowLink? Previous { get; }
         public FlowLink? Next => new("VotingBtn", _viewModel.OpenVotingCommand);
 
-        private CommitteeSessionViewModel _viewModel = null!;
+        private readonly CommitteeSessionViewModel _viewModel;
         private readonly Committee _committee;
         private readonly SqliteDataAccess _dataAccess;
 
@@ -33,30 +32,12 @@ namespace Foscamun.Views
         private void NavigateToVoting(List<Country> voters)
         {
             CommitteeVotingPage.Round = 1;
-            var committeeVotingPage = new CommitteeVotingPage(voters, this);
-            NavigationService?.Navigate(committeeVotingPage);
+            NavigationService?.Navigate(new CommitteeVotingPage(voters, this));
         }
-
-        private void AvailableSpeakers_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            if (_viewModel.SelectedSpeaker != null)
-            {
-                _viewModel.AddSpeakerCommand.Execute(_viewModel.SelectedSpeaker);
-                // Reset della selezione
-                _viewModel.SelectedSpeaker = null;
-            }
-        }
-
-        private void BackButton_Click(object sender, RoutedEventArgs e) => BackToRollCall();
 
         private void BackToRollCall()
         {
-            if (NavigationService != null)
-            {
-                // Torna alla RollCallPage
-                var rollCallPage = new CommitteeRollCallPage(_committee, _dataAccess);
-                NavigationService.Navigate(rollCallPage);
-            }
+            NavigationService?.Navigate(new CommitteeRollCallPage(_committee, _dataAccess));
         }
     }
 }

@@ -21,6 +21,7 @@
             
             <local:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
             <local:CommitteeEmblemConverter x:Key="CommitteeEmblemConverter"/>
+            <local:IndexToNumberConverter x:Key="IndexToNumberConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 

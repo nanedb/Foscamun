@@ -160,4 +160,17 @@
     <sys:String x:Key="ModeratorRole">Modérateur</sys:String>
     <sys:String x:Key="ViceJudgeRole">Vice-juge</sys:String>
 
+    <!-- Page Séance (nouvelle interface) -->
+    <sys:String x:Key="NowSpeakingLbl">ORATEUR EN COURS</sys:String>
+    <sys:String x:Key="SpeakingTimeLbl">TEMPS DE PAROLE</sys:String>
+    <sys:String x:Key="NoSpeakerLbl">Aucun orateur</sys:String>
+    <sys:String x:Key="AvailableHeader">DISPONIBLES</sys:String>
+    <sys:String x:Key="SpeakersHeader">LISTE DES ORATEURS</sys:String>
+    <sys:String x:Key="WarningsHeader">AVERTISSEMENTS</sys:String>
+    <sys:String x:Key="NoWarningsLbl">Aucun avertissement</sys:String>
+    <sys:String x:Key="OpenVotingBtn">Ouvrir le vote</sys:String>
+    <sys:String x:Key="AddSpeakerTip">Cliquez sur un pays pour l'ajouter à la liste des orateurs</sys:String>
+    <sys:String x:Key="RemoveSpeakerTip">Cliquez sur un pays pour le retirer de la liste des orateurs</sys:String>
+    <sys:String x:Key="StartPauseTip">Barre d'espace : démarrer / pause</sys:String>
+
 </ResourceDictionary>

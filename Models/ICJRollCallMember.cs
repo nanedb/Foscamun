@@ -5,7 +5,7 @@ namespace Foscamun.Models
     /// <summary>
     /// Wrapper class for ICJMember to display in Roll Call with formatted names
     /// </summary>
-    public partial class ICJRollCallMember : ObservableObject
+    public partial class ICJRollCallMember : ObservableObject, ISpeaker
     {
         public ICJMember Member { get; set; }
 
@@ -39,6 +39,9 @@ namespace Foscamun.Models
                 };
             }
         }
+
+        /// <summary>Name shown in the session page (same as <see cref="DisplayName"/>).</summary>
+        public string Name => DisplayName;
 
         public ICJRollCallMember(ICJMember member)
         {
