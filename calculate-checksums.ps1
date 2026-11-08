@@ -16,8 +16,11 @@ if (-not (Test-Path $PublishFolder)) {
     exit 1
 }
 
-# Cerca tutti i file ZIP
-$zipFiles = Get-ChildItem -Path $PublishFolder -Filter "*.zip" -Recurse
+# I pacchetti da pubblicare: gli ZIP e gli installer (solo nella cartella principale,
+# non i Foscamun.exe dentro le cartelle di build)
+$zipFiles = @(Get-ChildItem -Path $PublishFolder -File |
+    Where-Object { $_.Name -like "Foscamun-*.zip" -or $_.Name -like "Foscamun-Setup-*.exe" } |
+    Sort-Object Name)
 
 if ($zipFiles.Count -eq 0) {
     Write-Host "Nessun file ZIP trovato in $PublishFolder" -ForegroundColor Red

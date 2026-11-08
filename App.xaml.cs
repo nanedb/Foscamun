@@ -24,6 +24,11 @@ namespace Foscamun
             if (!Settings.Default.SettingsUpgraded)
             {
                 Settings.Default.Upgrade();
+
+                // Nothing from an older version in this folder: take the settings of the last copy used
+                if (!Settings.Default.SettingsUpgraded)
+                    SettingsImport.FromLatestCopy();
+
                 Settings.Default.SettingsUpgraded = true;
                 Settings.Default.Save();
             }

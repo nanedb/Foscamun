@@ -33,17 +33,18 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for the details of each step.
   git push origin vX.Y.Z
   ```
 - [ ] Workflow "Build and Release" green in the Actions tab
-- [ ] Release contains `Foscamun-win-x64-vX.Y.Z.zip`, `Foscamun-win-x86-vX.Y.Z.zip`, `Foscamun-win-arm64-vX.Y.Z.zip`, `SHA256SUMS.txt`
+- [ ] Release contains, for win-x64, win-x86 and win-arm64, `Foscamun-Setup-{rid}-vX.Y.Z.exe` and `Foscamun-{rid}-vX.Y.Z.zip`, plus `SHA256SUMS.txt`
 - [ ] Pre-release / Latest set as wanted (`gh release edit …`)
 
 ## After the release
 
-- [ ] Download the x64 ZIP as an anonymous user, extract, run
+- [ ] Download the x64 installer as an anonymous user, install, run; uninstall from Settings → Apps leaves `%LocalAppData%\Foscamun` in place
+- [ ] Download the x64 ZIP, extract, run
 - [ ] Checksum matches:
   ```powershell
   Get-FileHash -Path "Foscamun-win-x64-vX.Y.Z.zip" -Algorithm SHA256
   ```
-- [ ] An installed previous version offers the update at startup and installs it
+- [ ] An installed previous version and a portable one both offer the update at startup and install it
 
 ---
 

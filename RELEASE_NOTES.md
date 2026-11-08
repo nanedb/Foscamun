@@ -1,43 +1,41 @@
-# Foscamun v2.0.0
+# Foscamun v2.0.1
 
 **Release Date**: 2026-11-08
 
-> **New interface.** This release and **v1.3.0 — old interface** are both available, so you can try them side by side and choose. They share the same database: committees, countries and ICJ data work in both.
+> **New interface.** The previous interface stays available as **v1.3.0 — old interface**. Both use the same database, so you can try them side by side.
 
 ## 🎉 What's New
 
-### 🎨 New interface
-- New sidebar: previous page, current page and next page of the flow, with Setup and Exit at the bottom; it can be collapsed to icons only
-- Redesigned pages: Home, Setup, Roll call, Session, Voting, Result and Final result, for committees and ICJ
-- **Session** with the timer built into the page: speaking time ±15 s, presets 1:00 / 1:30 / 2:00 / 3:00, Start/Pause (also with the space bar), Next, warnings, sounds
-- **Voting** one delegate at a time, with the keys A (approve), S (abstain), D (reject)
-- **Result** and **Final result** with a bar per round, who voted what, and the history of every round of the vote
-- Animated page changes
-- App-styled dialogs instead of the Windows message boxes
+### 📦 Windows installer
+- New **`Foscamun-Setup-…exe`**: installs Foscamun for your user in `%LocalAppData%\Programs\Foscamun`, with a Start menu shortcut and an optional desktop one; no administrator rights needed
+- Uninstall from **Settings → Apps** like any other program; your committees, database and logos in `%LocalAppData%\Foscamun` are kept
+- The portable ZIP is still available
 
-### 🔄 Automatic updates
-- At startup Foscamun checks GitHub for a newer version and offers to download and install it; the download is verified against the published SHA256 checksum
-- "Don't remind me about this version" to skip a release
+### 🔄 Updates
+- An installed Foscamun updates itself with the new installer, silently, and starts again; a portable copy keeps updating from the ZIP
+- Settings (language, year, selected committee) are carried over from the copy you used last, also when switching from the ZIP to the installer
 
-### 💾 Database
-- The existing database is always kept. If it was saved by a newer version or cannot be read, a warning offers to set it aside (renamed, never deleted) and start with a new one, or to exit without changing anything
+Everything else is as in [v2.0.0](https://github.com/nanedb/Foscamun/releases/tag/v2.0.0): new interface, timer in the session page, voting with A / S / D, rounds history in Final result, database compatibility check.
 
 ## 💾 Download
 
 | Package | System |
 |---|---|
-| **Foscamun-win-x64-v2.0.0.zip** | Windows 10/11 64-bit (recommended) |
-| **Foscamun-win-x86-v2.0.0.zip** | Windows 10/11 32-bit (older PCs) |
-| **Foscamun-win-arm64-v2.0.0.zip** | Windows ARM devices (e.g., Surface Pro X) |
+| **Foscamun-Setup-win-x64-v2.0.1.exe** | Installer — Windows 10/11 64-bit (recommended) |
+| **Foscamun-Setup-win-x86-v2.0.1.exe** | Installer — Windows 10/11 32-bit |
+| **Foscamun-Setup-win-arm64-v2.0.1.exe** | Installer — Windows on ARM |
+| **Foscamun-win-x64-v2.0.1.zip** | Portable — Windows 10/11 64-bit |
+| **Foscamun-win-x86-v2.0.1.zip** | Portable — Windows 10/11 32-bit |
+| **Foscamun-win-arm64-v2.0.1.zip** | Portable — Windows on ARM |
 
 ## 📥 Installation
 
-1. Download the appropriate ZIP file
-2. Extract contents to a user folder (Desktop, Documents, etc.) — avoid protected folders like `C:\Program Files\`, otherwise automatic updates cannot replace the files
-3. Run `Foscamun.exe` — no installation or administrator privileges required
+**Installer**: run `Foscamun-Setup-…exe` and follow the steps. If Windows shows "Windows protected your PC" (the installer is not signed with a paid certificate), click **More info → Run anyway**.
 
-To compare with the previous interface, extract **v1.3.0** into a different folder.
+**Portable**: extract the ZIP to a user folder (Desktop, Documents, USB drive…) — not `C:\Program Files\` — and run `Foscamun.exe`.
 
-## 🔄 Upgrading from Previous Versions
+## 🔄 Upgrading
 
-Extract and run — the database `Foscamun.db` and committee logos live in `%LocalAppData%\Foscamun\` and are not affected by replacing the executable. Settings are kept when the new version is extracted into the same folder as the old one.
+Version 2.0.0 offers this update at startup. Your data in `%LocalAppData%\Foscamun\` is never touched by installing, updating or uninstalling.
+
+The SHA256 checksums of all packages are in `SHA256SUMS.txt`.

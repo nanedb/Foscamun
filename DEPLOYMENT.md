@@ -5,12 +5,14 @@
 Releases are built by GitHub Actions (`.github/workflows/release.yml`) when a **version tag** (`v*`) is pushed:
 
 1. it publishes self-contained single-file builds for **win-x64**, **win-x86** and **win-arm64**
-2. it zips them as `Foscamun-{rid}-v{version}.zip` and writes `SHA256SUMS.txt`
-3. it creates the GitHub release with those files and the text of `RELEASE_NOTES.md`
+2. it zips them as `Foscamun-{rid}-v{version}.zip`
+3. it builds an installer for each with Inno Setup (`installer/Foscamun.iss`): `Foscamun-Setup-{rid}-v{version}.exe`
+4. it writes `SHA256SUMS.txt` for all six packages
+5. it creates the GitHub release with those files and the text of `RELEASE_NOTES.md`
 
 Tags with a hyphen (e.g. `v2.1.0-beta.1`) become **pre-releases**.
 
-⚠️ **Keep the asset names as they are.** The app's updater (`Services/UpdateService.cs`) looks for `Foscamun-{rid}-{tag}.zip` and checks it against `SHA256SUMS.txt`. It offers releases whose tag is a plain version (`v2.0.1`), pre-releases included, and ignores drafts and tags with a hyphen.
+⚠️ **Keep the asset names as they are.** The app's updater (`Services/UpdateService.cs`) looks for `Foscamun-Setup-{rid}-{tag}.exe` (installed copies) and `Foscamun-{rid}-{tag}.zip` (portable copies) and checks them against `SHA256SUMS.txt`. It offers releases whose tag is a plain version (`v2.0.1`), pre-releases included, and ignores drafts and tags with a hyphen.
 
 ## Releasing a new version
 
@@ -45,7 +47,21 @@ Running versions see the new release at their next start and offer to install it
 .\publish.ps1 -Version "2.0.1"
 ```
 
-The ZIPs and the checksums end up in `.\Publish\`. They can be uploaded by hand with `gh release upload v2.0.1 .\Publish\*.zip`.
+The ZIPs, the installers and the checksums end up in `.\Publish\`. The installers need [Inno Setup 6](https://jrsoftware.org/isdl.php) (per-user or machine-wide installation; without it only the ZIPs are made). They can be uploaded by hand with `gh release upload v2.0.1 .\Publish\*.zip .\Publish\*.exe .\Publish\SHA256SUMS.txt`.
+
+### The installer alone
+
+```powershell
+ISCC.exe /DAppVersion=2.0.1 /DArch=win-x64 /DSourceDir=<published folder> /DOutputDir=<folder> installer\Foscamun.iss
+```
+
+What the installer does:
+- per-user installation (`PrivilegesRequired=lowest`) in `%LocalAppData%\Programs\Foscamun`: no administrator rights, and the app can update itself
+- Start menu shortcut, optional desktop shortcut, entry in **Settings → Apps**
+- languages English, Italian, French, Spanish
+- `/RELAUNCH` (used by the updater together with `/VERYSILENT /SUPPRESSMSGBOXES /NORESTART`) starts the app at the end
+- never touches `%LocalAppData%\Foscamun` (database, logos), not even when uninstalling
+- **never change `AppId`** in the script: Windows recognises upgrades by it
 
 ### Windows x64 only
 
@@ -81,25 +97,29 @@ v1.3.0 and v2.0.0 use the same schema, so they can share the database.
 ## 🔄 How the update works
 
 1. At startup the app reads `https://api.github.com/repos/nanedb/Foscamun/releases` (10-second timeout; no connection = no message)
-2. It takes the highest version above its own that has a ZIP for its architecture
-3. If the user accepts, the ZIP is downloaded to `%TEMP%\Foscamun-update\`, checked against `SHA256SUMS.txt` and extracted
-4. A small script (`%TEMP%\Foscamun-update.cmd`) waits for the app to close, copies the new files over the app folder with `robocopy`, starts the new version and cleans up
+2. It takes the highest version above its own with a package for its architecture: the **installer** if the app was installed (`unins000.exe` next to the exe), the **ZIP** if it is portable (each falls back on the other)
+3. If the user accepts, the package is downloaded to `%TEMP%\Foscamun-update\` and checked against `SHA256SUMS.txt`
+4. A small script (`%TEMP%\Foscamun-update.cmd`) waits for the app to close, then runs the installer silently (it restarts the app with `/RELAUNCH`) or copies the extracted ZIP over the app folder with `robocopy` and starts the new version, and cleans up
 
 If the app folder is not writable (e.g. under `C:\Program Files\`), the app offers to open the release page instead.
 
+### Settings across folders
+
+.NET keeps user settings per exe path. When a copy runs from a new folder (installed after the ZIP, or a ZIP extracted elsewhere) and `Settings.Upgrade()` finds nothing, `Properties/SettingsImport.cs` takes the settings of the most recently used copy from `%LocalAppData%\Foscamun\Foscamun_*\*\user.config`.
+
 ## 📄 Notes
 
-### Files in each package
+### Files in each package (ZIP and installer)
 - `Foscamun.exe` — single-file executable with the .NET runtime
 - `Foscamun.db` — starting database
 - `Resources\CommitteeLogo\*.svg` — committee logos (copied to `%LocalAppData%`)
 - `Resources\Sounds\*.wav` — timer sounds
-- `README.txt`
+- `README.txt` (ZIP only)
 
 ### End-user requirements
 - Windows 10 or later, x64, x86 or ARM64
 - No administrator privileges, no .NET installation
-- Extract to a user folder, so that updates can replace the files
+- Portable copies: extract to a user folder, so that updates can replace the files
 
 ## 🔧 Troubleshooting
 

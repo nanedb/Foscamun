@@ -14,15 +14,23 @@ using System.Windows;
 namespace Foscamun.Services
 {
     /// <summary>
-    /// Looks for newer releases on GitHub at startup and, if the user agrees, downloads the ZIP
-    /// for this architecture, checks it against SHA256SUMS.txt, and replaces the app's files once
-    /// the app has closed. The database and the logos in %LocalAppData% are not touched.
+    /// Looks for newer releases on GitHub at startup and, if the user agrees, downloads the new
+    /// version for this architecture and checks it against SHA256SUMS.txt. An installed copy runs
+    /// the new installer silently; a portable copy (from the ZIP) gets its files replaced. Both
+    /// happen once the app has closed. The database and the logos in %LocalAppData% are not touched.
     /// </summary>
     public static class UpdateService
     {
         private const string ReleasesApi = "https://api.github.com/repos/nanedb/Foscamun/releases?per_page=30";
 
-        private record Release(Version Version, string Tag, string PageUrl, string ZipName, string ZipUrl, string? SumsUrl);
+        /// <param name="AssetName">The installer (installed copy) or the ZIP (portable copy) to download.</param>
+        private record Release(Version Version, string Tag, string PageUrl, string AssetName, string AssetUrl,
+                               bool IsInstaller, string? SumsUrl);
+
+        private static string AppFolder => AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar);
+
+        /// <summary>Installed with the installer (its uninstaller sits next to the exe), not extracted from a ZIP.</summary>
+        private static bool IsInstalled => File.Exists(Path.Combine(AppFolder, "unins000.exe"));
 
         private static readonly HttpClient Http = CreateClient();
 
@@ -83,7 +91,7 @@ namespace Foscamun.Services
             await DownloadAndInstallAsync(release);
         }
 
-        /// <summary>The newest release above this version that has a ZIP for this architecture, or null.</summary>
+        /// <summary>The newest release above this version with a package for this copy and architecture, or null.</summary>
         private static async Task<Release?> FindNewerReleaseAsync(CancellationToken token)
         {
             using var response = await Http.GetAsync(ReleasesApi, token);
@@ -105,17 +113,24 @@ namespace Foscamun.Services
                     continue;
 
                 string zipName = $"Foscamun-{rid}-{tag}.zip";
-                string? zipUrl = null, sumsUrl = null;
+                string setupName = $"Foscamun-Setup-{rid}-{tag}.exe";
+                string? zipUrl = null, setupUrl = null, sumsUrl = null;
                 foreach (var asset in item.GetProperty("assets").EnumerateArray())
                 {
                     string name = asset.GetProperty("name").GetString() ?? "";
                     string url = asset.GetProperty("browser_download_url").GetString() ?? "";
                     if (name.Equals(zipName, StringComparison.OrdinalIgnoreCase)) zipUrl = url;
+                    else if (name.Equals(setupName, StringComparison.OrdinalIgnoreCase)) setupUrl = url;
                     else if (name.Equals("SHA256SUMS.txt", StringComparison.OrdinalIgnoreCase)) sumsUrl = url;
                 }
 
-                if (zipUrl != null)
-                    best = new Release(version, tag, item.GetProperty("html_url").GetString() ?? "", zipName, zipUrl, sumsUrl);
+                // An installed copy updates with the installer (so that Windows keeps the right
+                // version under Apps), a portable one with the ZIP; failing that, the other package
+                string page = item.GetProperty("html_url").GetString() ?? "";
+                if (setupUrl != null && (IsInstalled || zipUrl == null))
+                    best = new Release(version, tag, page, setupName, setupUrl, true, sumsUrl);
+                else if (zipUrl != null)
+                    best = new Release(version, tag, page, zipName, zipUrl, false, sumsUrl);
             }
 
             return best;
@@ -130,7 +145,7 @@ namespace Foscamun.Services
 
         private static async Task DownloadAndInstallAsync(Release release)
         {
-            string appFolder = AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar);
+            string appFolder = AppFolder;
 
             // The new files go where the app is: without write access, the user installs by hand
             if (!CanWriteTo(appFolder))
@@ -140,7 +155,7 @@ namespace Foscamun.Services
             }
 
             string work = Path.Combine(Path.GetTempPath(), "Foscamun-update");
-            string zipPath = Path.Combine(work, release.ZipName);
+            string packagePath = Path.Combine(work, release.AssetName);
             string filesPath = Path.Combine(work, "files");
 
             var progress = new UpdateProgressWindow(release.Version.ToString(3));
@@ -151,15 +166,18 @@ namespace Foscamun.Services
                     Directory.Delete(work, recursive: true);
                 Directory.CreateDirectory(work);
 
-                await DownloadAsync(release.ZipUrl, zipPath, progress);
+                await DownloadAsync(release.AssetUrl, packagePath, progress);
 
                 progress.SetStatus(AppDialog.Text("UpdateVerifying"));
                 if (release.SumsUrl != null)
-                    await VerifyAsync(zipPath, release, progress.Token);
+                    await VerifyAsync(packagePath, release, progress.Token);
 
-                ZipFile.ExtractToDirectory(zipPath, filesPath);
-                if (!File.Exists(Path.Combine(filesPath, "Foscamun.exe")))
-                    throw new InvalidDataException("Foscamun.exe not found in the downloaded package.");
+                if (!release.IsInstaller)
+                {
+                    ZipFile.ExtractToDirectory(packagePath, filesPath);
+                    if (!File.Exists(Path.Combine(filesPath, "Foscamun.exe")))
+                        throw new InvalidDataException("Foscamun.exe not found in the downloaded package.");
+                }
             }
             catch (OperationCanceledException)
             {
@@ -176,7 +194,7 @@ namespace Foscamun.Services
             progress.Close();
             AppDialog.Show(AppDialog.Text("UpdateReadyMsg"), AppDialog.Text("UpdateAvailableTitle"));
 
-            StartInstaller(work, filesPath, appFolder);
+            StartInstaller(work, release.IsInstaller ? packagePath : null, filesPath, appFolder);
             MainWindow.CloseForUpdate();
         }
 
@@ -199,41 +217,52 @@ namespace Foscamun.Services
             }
         }
 
-        // The ZIP must match the checksum published with the release
-        private static async Task VerifyAsync(string zipPath, Release release, CancellationToken token)
+        // The package must match the checksum published with the release
+        private static async Task VerifyAsync(string packagePath, Release release, CancellationToken token)
         {
             string sums = await Http.GetStringAsync(release.SumsUrl, token);
             string? expected = sums.Split('\n')
                 .Select(line => line.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries))
-                .FirstOrDefault(parts => parts.Length == 2 && parts[1].Equals(release.ZipName, StringComparison.OrdinalIgnoreCase))?[0];
+                .FirstOrDefault(parts => parts.Length == 2 && parts[1].Equals(release.AssetName, StringComparison.OrdinalIgnoreCase))?[0];
             if (expected == null)
                 return; // no line for this file: nothing to compare with
 
-            await using var stream = File.OpenRead(zipPath);
+            await using var stream = File.OpenRead(packagePath);
             string actual = Convert.ToHexString(await SHA256.HashDataAsync(stream, token));
             if (!actual.Equals(expected, StringComparison.OrdinalIgnoreCase))
                 throw new InvalidDataException(AppDialog.Text("UpdateChecksumMsg"));
         }
 
         /// <summary>
-        /// A small script waits for the app to close, copies the new files over the old ones,
-        /// starts the new version and removes the downloaded files.
+        /// A small script waits for the app to close, then either runs the new installer silently
+        /// (it starts the new version itself, see /RELAUNCH in installer\Foscamun.iss) or copies the
+        /// new files over the old ones and starts the new version; finally it removes the downloads.
         /// </summary>
-        private static void StartInstaller(string work, string filesPath, string appFolder)
+        private static void StartInstaller(string work, string? setupPath, string filesPath, string appFolder)
         {
             string script = Path.Combine(Path.GetTempPath(), "Foscamun-update.cmd");
             string exe = Path.Combine(appFolder, "Foscamun.exe");
+            string[] install = setupPath != null
+                ? new[] { $"start \"\" /wait \"{setupPath}\" /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /RELAUNCH" }
+                : new[]
+                {
+                    $"robocopy \"{filesPath}\" \"{appFolder}\" /e /r:10 /w:1 /njh /njs /nfl /ndl >nul",
+                    $"start \"\" \"{exe}\""
+                };
             var lines = new[]
             {
                 "@echo off",
                 "chcp 65001 >nul", // the paths below are UTF-8
                 ":wait",
-                $"tasklist /fi \"PID eq {Environment.ProcessId}\" | find \"{Environment.ProcessId}\" >nul && (timeout /t 1 /nobreak >nul & goto wait)",
-                $"robocopy \"{filesPath}\" \"{appFolder}\" /e /r:10 /w:1 /njh /njs /nfl /ndl >nul",
-                $"start \"\" \"{exe}\"",
+                $"tasklist /fi \"PID eq {Environment.ProcessId}\" | find \"{Environment.ProcessId}\" >nul && (timeout /t 1 /nobreak >nul & goto wait)"
+            }
+            .Concat(install)
+            .Concat(new[]
+            {
                 $"rmdir /s /q \"{work}\"",
                 "(goto) 2>nul & del \"%~f0\""
-            };
+            })
+            .ToArray();
             File.WriteAllLines(script, lines, new UTF8Encoding(false));
 
             Process.Start(new ProcessStartInfo("cmd.exe", $"/c \"{script}\"")

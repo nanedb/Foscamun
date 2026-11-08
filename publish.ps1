@@ -20,6 +20,16 @@ if (Test-Path ".\Publish") {
 # Crea directory di output
 New-Item -ItemType Directory -Force -Path ".\Publish" | Out-Null
 
+# Inno Setup (per gli installer): installato per utente o per tutti
+$iscc = @(
+    "$env:LOCALAPPDATA\Programs\Inno Setup 6\ISCC.exe",
+    "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe",
+    "$env:ProgramFiles\Inno Setup 6\ISCC.exe"
+) | Where-Object { Test-Path $_ } | Select-Object -First 1
+if (-not $iscc) {
+    Write-Host "Inno Setup 6 non trovato: verranno creati solo gli ZIP (https://jrsoftware.org/isdl.php)" -ForegroundColor Yellow
+}
+
 # Configurazioni di build
 $configurations = @(
     @{Name="win-x64"; Display="Windows 64-bit"},
@@ -76,6 +86,17 @@ Repository GitHub: https://github.com/nanedb/Foscamun
         $zipPath = ".\Publish\Foscamun-$($config.Name)-v$Version.zip"
         Compress-Archive -Path "$outputPath\*" -DestinationPath $zipPath -Force
         Write-Host "✓ Archivio creato: $zipPath" -ForegroundColor Green
+
+        # Installer (installazione per utente, senza amministratore)
+        if ($iscc) {
+            Write-Host "Creazione installer..." -ForegroundColor Yellow
+            & $iscc /Q "/DAppVersion=$Version" "/DArch=$($config.Name)" "/DSourceDir=$((Resolve-Path $outputPath).Path)" "/DOutputDir=$((Resolve-Path '.\Publish').Path)" ".\installer\Foscamun.iss"
+            if ($LASTEXITCODE -eq 0) {
+                Write-Host "✓ Installer creato: .\Publish\Foscamun-Setup-$($config.Name)-v$Version.exe" -ForegroundColor Green
+            } else {
+                Write-Host "✗ Errore durante la creazione dell'installer" -ForegroundColor Red
+            }
+        }
     }
     else {
         Write-Host "✗ Errore durante il build di $($config.Display)" -ForegroundColor Red

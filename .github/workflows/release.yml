@@ -89,10 +89,22 @@ jobs:
         Compress-Archive -Path "./publish/win-x86/*" -DestinationPath "./Foscamun-win-x86-$version.zip"
         Compress-Archive -Path "./publish/win-arm64/*" -DestinationPath "./Foscamun-win-arm64-$version.zip"
         
+    - name: Create Installers
+      shell: pwsh
+      run: |
+        # Inno Setup 6 is preinstalled on the Windows runners
+        $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+        if (-not (Test-Path $iscc)) { choco install innosetup -y --no-progress }
+        $version = "${{ github.ref_name }}".TrimStart('v')
+        foreach ($rid in "win-x64", "win-x86", "win-arm64") {
+          & $iscc /Q "/DAppVersion=$version" "/DArch=$rid" "/DSourceDir=$PWD\publish\$rid" "/DOutputDir=$PWD" installer\Foscamun.iss
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        }
+
     - name: Calculate Checksums
       shell: pwsh
       run: |
-        $files = Get-ChildItem -Filter "Foscamun-*.zip"
+        $files = Get-ChildItem -File | Where-Object { $_.Name -like "Foscamun-*.zip" -or $_.Name -like "Foscamun-Setup-*.exe" }
         $checksums = @("# SHA256 Checksums", "")
         foreach ($file in $files) {
           $hash = (Get-FileHash -Path $file.FullName -Algorithm SHA256).Hash
@@ -108,6 +120,7 @@ jobs:
           Foscamun-win-x64-*.zip
           Foscamun-win-x86-*.zip
           Foscamun-win-arm64-*.zip
+          Foscamun-Setup-*.exe
           SHA256SUMS.txt
         body_path: RELEASE_NOTES.md
         draft: false

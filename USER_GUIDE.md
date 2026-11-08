@@ -1,13 +1,23 @@
 # 📖 Foscamun - User Guide
 
-This guide describes **version 2.0.0** (new interface). Version 1.3.0 (old interface) works on the same data.
+This guide describes **version 2** (new interface). Version 1.3.0 (old interface) works on the same data.
 
-## 🚀 First launch
+## 🚀 Installation
 
-1. **Extract** the ZIP to a user folder (Desktop, Documents…)
+### With the installer (recommended)
+1. Download `Foscamun-Setup-win-x64-vX.Y.Z.exe` from the [releases](https://github.com/nanedb/Foscamun/releases) (x86 or ARM64 for those PCs)
+2. Run it: choose the language, optionally tick the desktop shortcut, and install. No administrator rights are needed
+   - If Windows shows "Windows protected your PC", click **More info → Run anyway** (the installer is not signed with a paid certificate)
+3. Start Foscamun from the Start menu
+
+Foscamun is installed in `%LocalAppData%\Programs\Foscamun`. To remove it: **Settings → Apps → Foscamun → Uninstall**. Your data stays (see [Data and backup](#-data-and-backup)).
+
+### Portable, from the ZIP
+1. **Extract** the ZIP to a user folder (Desktop, Documents, a USB drive…)
    - ⚠️ Avoid protected folders like `C:\Program Files\`: Foscamun could not update itself there
-2. **Run** `Foscamun.exe` — no installation and no administrator privileges needed
-3. On the first launch the database is created in `%LocalAppData%\Foscamun\`
+2. **Run** `Foscamun.exe`
+
+On the first launch the database is created in `%LocalAppData%\Foscamun\`. If you used Foscamun before from another folder, its settings (language, year, selected committee) are carried over.
 
 ## 🧭 Moving around
 
@@ -107,7 +117,7 @@ From here go **Back to session** or **Home**.
 
 At every start Foscamun checks GitHub for a newer version. If there is one:
 
-- **Yes** downloads it (a window shows the progress; **Cancel** stops it), checks it, closes Foscamun, replaces the files and starts the new version
+- **Yes** downloads it (a window shows the progress; **Cancel** stops it), checks it, closes Foscamun, installs the new version (with the new installer if Foscamun was installed, by replacing the files if it runs from a ZIP) and starts it
 - **No** asks again at the next start; tick **Don't remind me about this version** to skip that version
 
 Your committees, settings and logos are kept. Without an internet connection nothing is shown. If Foscamun cannot write to its own folder, it offers to open the download page instead.
@@ -148,7 +158,7 @@ If the database was saved by a newer version of Foscamun, or cannot be read, Fos
 - Make sure you downloaded the right architecture (x64, x86, ARM64)
 
 ### Updates do not install
-- Foscamun must be able to write to its folder: move it out of `C:\Program Files\` to a user folder
+- A portable copy must be able to write to its folder: move it out of `C:\Program Files\` to a user folder, or use the installer
 
 ### A logo is missing
 - Check that the SVG in `%LocalAppData%\Foscamun\CommitteeLogo\` has exactly the committee's name
@@ -164,6 +174,6 @@ If the database was saved by a newer version of Foscamun, or cannot be read, Fos
 
 ---
 
-**Version**: 2.0.0
+**Version**: 2.0.1
 **Last updated**: November 2026
 **Repository**: https://github.com/nanedb/Foscamun

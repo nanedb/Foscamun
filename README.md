@@ -9,7 +9,7 @@ A desktop application for running Model United Nations (MUN) conferences: roll c
 
 ![Foscamun Logo](Resources/FoscamunLogo.svg)
 
-> **Version 2.0.0 brings a completely new interface.** While the choice is being made, two releases are available side by side: **v2.0.0 — new interface** and **v1.3.0 — old interface**. They share the same database, so you can try both on the same computer. See [Installation](#-installation).
+> **Version 2 brings a completely new interface.** While the choice is being made, both are available: the **new interface** (v2.0.1 and later) and **v1.3.0 — old interface**. They share the same database, so you can try both on the same computer. See [Installation](#-installation).
 
 ---
 
@@ -49,6 +49,7 @@ A desktop application for running Model United Nations (MUN) conferences: roll c
 - English, French and Spanish, switched at runtime without restarting
 
 ### 🔄 Updates and data
+- Installer for Windows (per user, no administrator rights) or portable ZIP
 - At startup Foscamun checks GitHub for a newer version and offers to download and install it (verified against the published SHA256 checksum)
 - The database is kept across installations; if it cannot work with the installed version, a warning explains what to do and nothing is deleted
 
@@ -67,30 +68,36 @@ A desktop application for running Model United Nations (MUN) conferences: roll c
 
 ## 📥 Installation
 
-### Download a release (recommended)
+Go to [Releases](https://github.com/nanedb/Foscamun/releases) and choose the version:
+- **new interface** — v2.0.1 and later (Latest)
+- **v1.3.0 — old interface**
 
-1. Go to [Releases](https://github.com/nanedb/Foscamun/releases)
-2. Choose the version:
-   - **v2.0.0 — new interface** (latest)
-   - **v1.3.0 — old interface**
-3. Download the ZIP for your system:
-   - `Foscamun-win-x64-v2.0.0.zip` — Windows 10/11 64-bit (most common)
-   - `Foscamun-win-x86-v2.0.0.zip` — Windows 10/11 32-bit
-   - `Foscamun-win-arm64-v2.0.0.zip` — Windows on ARM
-4. Extract it to a user folder (Desktop, Documents…), not `C:\Program Files\`
-5. Run `Foscamun.exe`
+Each release comes in two forms, for Windows 10/11 64-bit (`win-x64`, most PCs), 32-bit (`win-x86`) and ARM (`win-arm64`).
+
+### Installer (recommended)
+
+1. Download `Foscamun-Setup-win-x64-v2.0.1.exe` (or the x86 / ARM64 one)
+2. Run it and follow the steps: Foscamun is installed for your user in `%LocalAppData%\Programs\Foscamun`, with a Start menu shortcut (and a desktop one, if you tick it)
+3. Uninstall it from **Settings → Apps** like any other program
 
 ✅ **No administrator privileges required**
 ✅ **No .NET installation needed** — self-contained
-✅ **Portable** — can run from a USB drive
 
-To compare the two interfaces, extract each version into its own folder.
+> Windows may show "Windows protected your PC" because the installer is not signed with a paid certificate: click **More info → Run anyway**.
+
+### Portable ZIP
+
+1. Download `Foscamun-win-x64-v2.0.1.zip` (or the x86 / ARM64 one)
+2. Extract it to a user folder (Desktop, Documents, a USB drive…), not `C:\Program Files\`
+3. Run `Foscamun.exe`
+
+The ZIP is also the way to keep both interfaces: install the new one and extract **v1.3.0 — old interface** (ZIP only) into a folder of its own.
 
 ### Updating
 
-From v2.0.0 on, Foscamun updates itself: when a newer release is published it asks at startup, downloads the new files and restarts. You can also extract a new ZIP over the old folder by hand.
+Foscamun updates itself: when a newer release is published it asks at startup, downloads it and restarts. An installed copy is updated with the new installer (silently), a portable copy with the new ZIP.
 
-Your data is not in the application folder but in `%LocalAppData%\Foscamun\` (database `Foscamun.db` and committee logos), so replacing the program never touches it.
+Your data is not in the application folder but in `%LocalAppData%\Foscamun\` (database `Foscamun.db` and committee logos): installing, updating or uninstalling the program never touches it. The settings (language, year, selected committee) are carried over from the copy you used last.
 
 ### Build from source
 
@@ -148,6 +155,7 @@ Foscamun/
 ├── Models/          # Data models
 ├── Repositories/    # Committee, country and ICJ repositories
 ├── Services/        # Update check (UpdateService)
+├── installer/       # Inno Setup script of the installer
 ├── ViewModels/      # MVVM view models
 ├── Views/           # Pages, shared panels, dialogs
 ├── Converters/      # WPF value converters
@@ -174,7 +182,7 @@ The strings are in `Strings\Strings.en.xaml`, `Strings.fr.xaml` and `Strings.es.
 
 ## 📦 Releasing
 
-Pushing a tag `v*` starts the GitHub Actions workflow that builds the three ZIPs, the SHA256SUMS.txt file and the release. The updater relies on the asset names `Foscamun-{win-x64|win-x86|win-arm64}-v{version}.zip`. See [DEPLOYMENT.md](DEPLOYMENT.md) and [DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md).
+Pushing a tag `v*` starts the GitHub Actions workflow that builds the three installers, the three ZIPs, the SHA256SUMS.txt file and the release. The updater relies on the asset names `Foscamun-Setup-{rid}-v{version}.exe` and `Foscamun-{rid}-v{version}.zip` (`rid` = win-x64, win-x86, win-arm64). The installer is made with [Inno Setup 6](https://jrsoftware.org/isinfo.php) from `installer/Foscamun.iss`. See [DEPLOYMENT.md](DEPLOYMENT.md) and [DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md).
 
 ---
 
@@ -195,6 +203,11 @@ Pushing a tag `v*` starts the GitHub Actions workflow that builds the three ZIPs
 ---
 
 ## 🔄 Version history
+
+### v2.0.1 (2026-11-08) — new interface
+- Windows installer (per user, no administrator rights), next to the portable ZIP
+- Installed copies update themselves with the new installer
+- Settings carried over from the copy used last, when Foscamun runs from a new folder
 
 ### v2.0.0 (2026-11-08) — new interface
 - New interface: guided sidebar, redesigned Home, Setup, Roll call, Session, Voting, Result and Final result
