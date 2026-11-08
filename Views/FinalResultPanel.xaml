@@ -1,0 +1,107 @@
+<UserControl x:Class="Foscamun.Views.FinalResultPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+             xmlns:local="clr-namespace:Foscamun.Views"
+             mc:Ignorable="d"
+             d:DesignWidth="800"
+             d:DesignHeight="600"
+             Foreground="{DynamicResource TextPrimaryBrush}"
+             FontFamily="{DynamicResource FontPrimary}">
+
+    <!-- Body of the committee and ICJ final result pages: the outcome, every round of the
+         vote in a table (the decisive one on cream), and who voted what in the last round.
+         The page feeds it with Show. -->
+
+    <UserControl.Resources>
+        <!-- One round: name, bar, tally, outcome. The decisive round stands out on cream. -->
+        <DataTemplate x:Key="RoundRow" DataType="{x:Type local:FinalRoundRow}">
+            <Border x:Name="Row" Padding="16,11" Margin="0,0,0,8" CornerRadius="11" Background="#21FFFFFF">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="*"/>
+                        <!-- Shared across the rows, so that the bars line up -->
+                        <ColumnDefinition Width="Auto" MinWidth="76" SharedSizeGroup="Tally"/>
+                        <ColumnDefinition Width="Auto" MinWidth="100" SharedSizeGroup="Outcome"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="Label" Text="{Binding Label}" FontSize="15" Foreground="White"
+                               VerticalAlignment="Center"/>
+                    <Border Grid.Column="1" Height="8" CornerRadius="4" Background="{Binding Bar}"
+                            VerticalAlignment="Center"/>
+                    <TextBlock x:Name="Tally" Grid.Column="2" Text="{Binding Tally}" FontSize="15"
+                               Foreground="White" TextAlignment="Right" Margin="16,0,0,0"
+                               VerticalAlignment="Center"/>
+                    <TextBlock x:Name="Outcome" Grid.Column="3" Text="{Binding Outcome}" FontSize="14"
+                               Foreground="{DynamicResource TextSecondaryBrush}" TextAlignment="Right"
+                               Margin="16,0,0,0" VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding IsFinal}" Value="True">
+                    <Setter TargetName="Row" Property="Background" Value="{DynamicResource InputBackgroundBrush}"/>
+                    <Setter TargetName="Label" Property="Foreground" Value="{DynamicResource PrimaryDarkBrush}"/>
+                    <Setter TargetName="Label" Property="FontWeight" Value="Bold"/>
+                    <Setter TargetName="Tally" Property="Foreground" Value="{DynamicResource PrimaryDarkBrush}"/>
+                    <Setter TargetName="Outcome" Property="Foreground" Value="{Binding OutcomeBrush}"/>
+                    <Setter TargetName="Outcome" Property="FontWeight" Value="Bold"/>
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid Margin="34,26,34,30">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- TOP: committee, session, how many rounds -->
+        <TextBlock x:Name="ContextText" FontSize="11.5" Foreground="{DynamicResource TextSecondaryBrush}"/>
+
+        <!-- The outcome, and the decisive tally -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,4,0,18">
+            <TextBlock x:Name="HeadlineText" FontSize="32" FontWeight="Bold"/>
+            <TextBlock x:Name="FinalVoteText" FontSize="15" Margin="14,0,0,6" VerticalAlignment="Bottom"
+                       Foreground="{DynamicResource TextSecondaryBrush}"/>
+        </StackPanel>
+
+        <!-- EVERY ROUND -->
+        <ItemsControl x:Name="RoundList" Grid.Row="2" Focusable="False" Grid.IsSharedSizeScope="True"
+                      ItemTemplate="{StaticResource RoundRow}"/>
+
+        <!-- WHO VOTED WHAT in the decisive round -->
+        <local:VoteGroups x:Name="Groups" Grid.Row="3" Margin="0,12,0,0"/>
+
+        <!-- WAYS ON: back to the session, or home (main) -->
+        <UniformGrid Grid.Row="4" Rows="1" Margin="-5,18,-5,0">
+            <Button Style="{StaticResource OutlineButton}" Height="48" FontSize="16" Margin="5,0"
+                    BorderBrush="#80FFFFFF" Click="Back_Click">
+                <StackPanel Orientation="Horizontal">
+                    <svgc:SvgViewbox Width="16" Height="16" Margin="0,0,8,0" Stretch="Uniform"
+                                     Source="pack://application:,,,/Resources/Icons/back.svg"/>
+                    <TextBlock Text="{DynamicResource BackToSessionBtn}" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+
+            <Button Style="{StaticResource PrimaryButton}" Height="48" FontWeight="Bold" Margin="5,0"
+                    Click="Home_Click">
+                <StackPanel Orientation="Horizontal">
+                    <!-- The house of the sidebar, in the button's blue -->
+                    <Viewbox Width="18" Height="18" Margin="0,0,9,0" VerticalAlignment="Center">
+                        <Path Data="M104,216V152h48v64h64V120a8,8,0,0,0-2.34-5.66l-80-80a8,8,0,0,0-11.32,0l-80,80A8,8,0,0,0,40,120v96Z"
+                              Stroke="{DynamicResource AccentOnLightBrush}" StrokeThickness="18"
+                              StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round"/>
+                    </Viewbox>
+                    <TextBlock Text="{DynamicResource HomeBtn}" VerticalAlignment="Center"
+                               Foreground="{DynamicResource AccentOnLightBrush}"/>
+                </StackPanel>
+            </Button>
+        </UniformGrid>
+    </Grid>
+</UserControl>

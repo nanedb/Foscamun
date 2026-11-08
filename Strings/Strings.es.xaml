@@ -187,4 +187,16 @@
     <sys:String x:Key="TieLbl">Empate</sys:String>
     <sys:String x:Key="BackToSessionBtn">Volver a la sesión</sys:String>
 
+    <!-- Final result page (redesign) -->
+    <sys:String x:Key="OneRoundLbl">1 ronda</sys:String>
+    <sys:String x:Key="RoundsCountFmt">{0} rondas</sys:String>
+    <sys:String x:Key="RoundNumFmt">Ronda {0}</sys:String>
+    <sys:String x:Key="FinalVoteFmt">voto final {0}</sys:String>
+    <sys:String x:Key="AdoptedLbl">Aprobada</sys:String>
+    <sys:String x:Key="RejectedLbl">Rechazada</sys:String>
+    <sys:String x:Key="ResolutionAdoptedLbl">Resolución aprobada</sys:String>
+    <sys:String x:Key="ResolutionRejectedLbl">Resolución rechazada</sys:String>
+    <sys:String x:Key="MotionAdoptedLbl">Moción aprobada</sys:String>
+    <sys:String x:Key="MotionRejectedLbl">Moción rechazada</sys:String>
+
 </ResourceDictionary>

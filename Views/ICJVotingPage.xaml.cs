@@ -16,6 +16,9 @@ namespace Foscamun.Views
         private int _currentVoterIndex;
         private readonly int _numVoters;
         public static int Round { get; set; } = 1;
+
+        /// <summary>Tallies of the rounds of the current vote, for the final result.</summary>
+        public static List<RoundTally> History { get; } = new();
         private readonly ICJSessionPage? _sessionPage;
 
         private readonly List<int> _inFavorIndices = new();
@@ -97,6 +100,12 @@ namespace Foscamun.Views
         {
             int inFavorCount = _inFavorIndices.Count;
             int againstCount = _againstIndices.Count;
+
+            // A new vote starts its history again
+            if (Round == 1)
+                History.Clear();
+            History.Add(new RoundTally(inFavorCount, _abstainedIndices.Count, againstCount, Round == 1,
+                                       Round == 1 ? "NoMajorityLbl" : "TieLbl"));
             int abstainedCount = _abstainedIndices.Count;
             int totalVoters = _numVoters;
 
@@ -109,7 +118,7 @@ namespace Foscamun.Views
                 if (inFavorCount >= requiredVotes || againstCount >= requiredVotes)
                 {
                     // Maggioranza raggiunta: vai a ICJFinalResultPage
-                    var resultPage = new ICJFinalResultPage(_voters, _inFavorIndices, _againstIndices, _sessionPage);
+                    var resultPage = new ICJFinalResultPage(_voters, _inFavorIndices, _abstainedIndices, _againstIndices, _sessionPage);
                     NavigationService?.Navigate(resultPage);
                 }
                 else
@@ -125,13 +134,13 @@ namespace Foscamun.Views
                 if (inFavorCount > againstCount)
                 {
                     // Maggioranza in favore: vai a ICJFinalResultPage
-                    var resultPage = new ICJFinalResultPage(_voters, _inFavorIndices, _againstIndices, _sessionPage);
+                    var resultPage = new ICJFinalResultPage(_voters, _inFavorIndices, _abstainedIndices, _againstIndices, _sessionPage);
                     NavigationService?.Navigate(resultPage);
                 }
                 else if (againstCount > inFavorCount)
                 {
                     // Maggioranza contro: vai a ICJFinalResultPage
-                    var resultPage = new ICJFinalResultPage(_voters, _inFavorIndices, _againstIndices, _sessionPage);
+                    var resultPage = new ICJFinalResultPage(_voters, _inFavorIndices, _abstainedIndices, _againstIndices, _sessionPage);
                     NavigationService?.Navigate(resultPage);
                 }
                 else
@@ -145,7 +154,7 @@ namespace Foscamun.Views
             {
                 // Round 3: Se c'è parità, vincono gli Against
                 bool tieInRound3 = inFavorCount == againstCount;
-                var resultPage = new ICJFinalResultPage(_voters, _inFavorIndices, _againstIndices, _sessionPage, tieInRound3);
+                var resultPage = new ICJFinalResultPage(_voters, _inFavorIndices, _abstainedIndices, _againstIndices, _sessionPage, tieInRound3);
                 NavigationService?.Navigate(resultPage);
             }
         }

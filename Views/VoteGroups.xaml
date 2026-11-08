@@ -1,0 +1,122 @@
+<UserControl x:Class="Foscamun.Views.VoteGroups"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+             mc:Ignorable="d"
+             d:DesignWidth="700"
+             d:DesignHeight="300">
+
+    <!-- Who voted what, in three groups of chips (in favor, abstained, against) with their counts.
+         Shared by the Result and Final result panels. -->
+
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="InFavorChipBrush" Color="#BFE6CB"/>
+        <SolidColorBrush x:Key="AbstainedChipBrush" Color="#F7D9A6"/>
+        <SolidColorBrush x:Key="AgainstChipBrush" Color="#F4C2C0"/>
+
+        <!-- Group caption above the chips; the count chip sits on the right, level with the first row -->
+        <Style x:Key="GroupCaption" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="0,0,0,7"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+        </Style>
+        <!-- Count chip: same colour as the group's voter chips, and as tall -->
+        <Style x:Key="CountChip" TargetType="Border">
+            <Setter Property="DockPanel.Dock" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Height" Value="29"/>
+            <Setter Property="MinWidth" Value="44"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="Margin" Value="12,0,0,0"/>
+            <Setter Property="CornerRadius" Value="8"/>
+        </Style>
+        <Style x:Key="GroupCount" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="17"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <!-- Voter chip: flag (if any) and name; the chip colour comes from the list's Tag -->
+        <DataTemplate x:Key="VoterChip">
+            <Border Padding="9,6" Margin="0,0,6,6" CornerRadius="8"
+                    Background="{Binding Tag, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
+                <StackPanel Orientation="Horizontal">
+                    <svgc:SvgViewbox Width="22" Height="15" Margin="0,0,7,0" Stretch="Uniform"
+                                     Source="{Binding FlagPath}">
+                        <svgc:SvgViewbox.Style>
+                            <Style TargetType="svgc:SvgViewbox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding FlagPath}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </svgc:SvgViewbox.Style>
+                    </svgc:SvgViewbox>
+                    <TextBlock Text="{Binding Name}" FontSize="13" Foreground="Black"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+
+        <ItemsPanelTemplate x:Key="ChipsPanel">
+            <WrapPanel/>
+        </ItemsPanelTemplate>
+
+        <!-- Chips wrap and scroll when there are many voters -->
+        <Style x:Key="ChipList" TargetType="ItemsControl">
+            <Setter Property="ItemTemplate" Value="{StaticResource VoterChip}"/>
+            <Setter Property="ItemsPanel" Value="{StaticResource ChipsPanel}"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ItemsControl">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" Focusable="False">
+                            <ItemsPresenter/>
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <!-- In favor takes the free space, the others sit below -->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <DockPanel>
+            <TextBlock x:Name="InFavorCaption" DockPanel.Dock="Top" Style="{StaticResource GroupCaption}"/>
+            <Border Style="{StaticResource CountChip}" Background="{StaticResource InFavorChipBrush}">
+                <TextBlock x:Name="InFavorCount" Style="{StaticResource GroupCount}"/>
+            </Border>
+            <ItemsControl x:Name="InFavorList" Style="{StaticResource ChipList}"
+                          Tag="{StaticResource InFavorChipBrush}"/>
+        </DockPanel>
+
+        <DockPanel x:Name="AbstainedGroup" Grid.Row="1" Margin="0,8,0,0">
+            <TextBlock x:Name="AbstainedCaption" DockPanel.Dock="Top" Style="{StaticResource GroupCaption}"/>
+            <Border Style="{StaticResource CountChip}" Background="{StaticResource AbstainedChipBrush}">
+                <TextBlock x:Name="AbstainedCount" Style="{StaticResource GroupCount}"/>
+            </Border>
+            <ItemsControl x:Name="AbstainedList" Style="{StaticResource ChipList}" MaxHeight="84"
+                          Tag="{StaticResource AbstainedChipBrush}"/>
+        </DockPanel>
+
+        <DockPanel Grid.Row="2" Margin="0,8,0,0">
+            <TextBlock x:Name="AgainstCaption" DockPanel.Dock="Top" Style="{StaticResource GroupCaption}"/>
+            <Border Style="{StaticResource CountChip}" Background="{StaticResource AgainstChipBrush}">
+                <TextBlock x:Name="AgainstCount" Style="{StaticResource GroupCount}"/>
+            </Border>
+            <ItemsControl x:Name="AgainstList" Style="{StaticResource ChipList}" MaxHeight="84"
+                          Tag="{StaticResource AgainstChipBrush}"/>
+        </DockPanel>
+    </Grid>
+</UserControl>

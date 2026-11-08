@@ -1,6 +1,5 @@
 using CommunityToolkit.Mvvm.Input;
 using Foscamun.Models;
-using System.Windows;
 using System.Windows.Controls;
 
 namespace Foscamun.Views
@@ -13,85 +12,47 @@ namespace Foscamun.Views
         public FlowLink? Next => new(FlowLink.HomeKey, MainWindow.Instance.GoHomeCommand);
 
         private readonly List<Country> _voters;
-        private readonly List<int> _inFavorIndices;
-        private readonly List<int> _againstIndices;
         private readonly CommitteeSessionPage? _sessionPage;
 
-        public CommitteeFinalResultPage(List<Country> voters, List<int> inFavorIndices, List<int> againstIndices, CommitteeSessionPage? sessionPage = null)
+        public CommitteeFinalResultPage(List<Country> voters, List<int> inFavorIndices, List<int> abstainedIndices,
+                                        List<int> againstIndices, CommitteeSessionPage? sessionPage = null)
         {
             InitializeComponent();
 
             _voters = voters;
-            _inFavorIndices = inFavorIndices;
-            _againstIndices = againstIndices;
             _sessionPage = sessionPage;
             Previous = new FlowLink("SessionLbl2", new RelayCommand(BackToSession));
 
-            DisplayResults();
+            // Simple majority: a tie goes against
+            bool adopted = inFavorIndices.Count > againstIndices.Count;
+            string? context = _sessionPage?.DataContext is ViewModels.CommitteeSessionViewModel session
+                ? $"{session.CommitteeName} · {FindResource("SessionLbl2")} {session.Session}"
+                : null;
+
+            Panel.Show(context, (string)FindResource(adopted ? "ResolutionAdoptedLbl" : "ResolutionRejectedLbl"),
+                       adopted, CommitteeVotingPage.History,
+                       Voters(inFavorIndices), Voters(abstainedIndices), Voters(againstIndices));
+            Panel.BackRequested += (_, _) => BackToSession();
         }
 
-        private void DisplayResults()
-        {
-            InFavorCount.Text = _inFavorIndices.Count.ToString();
-            AgainstCount.Text = _againstIndices.Count.ToString();
+        private List<ResultVoter> Voters(List<int> indices) =>
+            indices.Select(i => new ResultVoter(_voters[i].Name, _voters[i].FlagPath)).ToList();
 
-            foreach (var index in _inFavorIndices)
-            {
-                InFavorList.Items.Add(_voters[index]);
-            }
-
-            foreach (var index in _againstIndices)
-            {
-                AgainstList.Items.Add(_voters[index]);
-            }
-
-            string outcome;
-            // Simple majority: in case of tie, against wins
-            if (_inFavorIndices.Count > _againstIndices.Count)
-            {
-                outcome = Properties.Settings.Default.Lang switch
-                {
-                    "fr" => "La motion est ADOPTÉE",
-                    "es" => "La moción es ADOPTADA",
-                    _ => "The motion PASSES"
-                };
-            }
-            else
-            {
-                // Against wins if count is greater OR equal (tie)
-                outcome = Properties.Settings.Default.Lang switch
-                {
-                    "fr" => "La motion est REJETÉE",
-                    "es" => "La moción es RECHAZADA",
-                    _ => "The motion FAILS"
-                };
-            }
-
-            OutcomeTextBlock.Text = outcome;
-        }
-
-        private void BackBtn_Click(object sender, RoutedEventArgs e) => BackToSession();
-
+        // The vote is over: nothing to lose, no question
         private void BackToSession()
         {
-            if (_sessionPage != null && NavigationService != null)
+            if (_sessionPage != null)
             {
-                NavigationService.Navigate(_sessionPage);
+                NavigationService?.Navigate(_sessionPage);
+                return;
             }
-            else if (NavigationService != null && NavigationService.CanGoBack)
+
+            // Without the session page, go back through the history until it shows up
+            while (NavigationService?.CanGoBack == true)
             {
-                // Fallback: torna indietro come prima
-                bool sessionPageFound = false;
-
-                while (NavigationService.CanGoBack && !sessionPageFound)
-                {
-                    NavigationService.GoBack();
-
-                    if (NavigationService.Content is CommitteeSessionPage)
-                    {
-                        sessionPageFound = true;
-                    }
-                }
+                NavigationService.GoBack();
+                if (NavigationService.Content is CommitteeSessionPage)
+                    break;
             }
         }
     }

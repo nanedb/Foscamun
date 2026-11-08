@@ -187,4 +187,16 @@
     <sys:String x:Key="TieLbl">Tie</sys:String>
     <sys:String x:Key="BackToSessionBtn">Back to session</sys:String>
 
+    <!-- Final result page (redesign) -->
+    <sys:String x:Key="OneRoundLbl">1 round</sys:String>
+    <sys:String x:Key="RoundsCountFmt">{0} rounds</sys:String>
+    <sys:String x:Key="RoundNumFmt">Round {0}</sys:String>
+    <sys:String x:Key="FinalVoteFmt">final vote {0}</sys:String>
+    <sys:String x:Key="AdoptedLbl">Adopted</sys:String>
+    <sys:String x:Key="RejectedLbl">Rejected</sys:String>
+    <sys:String x:Key="ResolutionAdoptedLbl">Resolution adopted</sys:String>
+    <sys:String x:Key="ResolutionRejectedLbl">Resolution rejected</sys:String>
+    <sys:String x:Key="MotionAdoptedLbl">Motion adopted</sys:String>
+    <sys:String x:Key="MotionRejectedLbl">Motion rejected</sys:String>
+
 </ResourceDictionary>
